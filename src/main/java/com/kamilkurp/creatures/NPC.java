@@ -1,7 +1,7 @@
 package com.kamilkurp.creatures;
 
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.gui.Dialogue;
+import com.kamilkurp.dialogue.DialogueWindow;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.utils.Timer;
 import com.kamilkurp.terrain.TerrainTile;
@@ -18,17 +18,16 @@ public class NPC extends Creature {
 
     public Random random = new Random();
 
-    private Dialogue dialogue;
-    private int currentDialogue = 0;
-    private List<Integer> dialogues;
+    private DialogueWindow dialogueWindow;
+    private int dialogueStart = 0;
 
     private Timer dialogueResetTimer;
 
-    public NPC(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem, Dialogue dialogue, List<Integer> dialogues) throws SlickException {
+    public NPC(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem, DialogueWindow dialogueWindow, int dialogueStart) throws SlickException {
         super(id, posX, posY, creatures, lootSystem);
 
-        this.dialogue = dialogue;
-        this.dialogues = dialogues;
+        this.dialogueWindow = dialogueWindow;
+        this.dialogueStart = dialogueStart;
 
         actionTimer = new Timer();
         dialogueResetTimer = new Timer();
@@ -64,7 +63,7 @@ public class NPC extends Creature {
         }
 
         if (dialogueResetTimer.getTime() > 6000) {
-            currentDialogue = 0;
+            dialogueStart = 0;
         }
     }
 
@@ -74,11 +73,12 @@ public class NPC extends Creature {
     }
 
     public void triggerDialogue() {
+        if (!dialogueWindow.isActivated()) {
+            dialogueWindow.showDialogue(dialogueStart);
 
-        dialogue.showDialogue(dialogues.get(currentDialogue));
+            dialogueResetTimer.reset();
+        }
 
-        currentDialogue = (currentDialogue + 1)% dialogues.size();
 
-        dialogueResetTimer.reset();
     }
 }

@@ -1,7 +1,7 @@
 package com.kamilkurp.items;
 
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.gui.OptionWindow;
+import com.kamilkurp.gui.LootOptionWindow;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.Globals;
 import com.kamilkurp.Renderable;
@@ -14,11 +14,11 @@ import java.util.Map;
 
 public class LootSystem implements Renderable {
     private List<LootPile> lootPileList;
-    private OptionWindow optionWindow;
+    private LootOptionWindow lootOptionWindow;
     private Map<String, ItemType> itemTypes;
 
-    public LootSystem(OptionWindow optionWindow, Map<String, ItemType> itemTypes) {
-        this.optionWindow = optionWindow;
+    public LootSystem(LootOptionWindow lootOptionWindow, Map<String, ItemType> itemTypes) {
+        this.lootOptionWindow = lootOptionWindow;
         this.itemTypes = itemTypes;
 
         lootPileList = new LinkedList<>();
@@ -41,7 +41,7 @@ public class LootSystem implements Renderable {
         List<Item> visibleItems = new ArrayList<>();
         for (LootPile lootPile : lootPileList) {
             if (Globals.distance(character.getRect(), lootPile.getRect()) < 40f) {
-                optionWindow.setVisible(true);
+                lootOptionWindow.setVisible(true);
 
                 visibleLootPile.add(lootPile);
                 visibleItems.addAll(lootPile.getItemList());
@@ -50,8 +50,8 @@ public class LootSystem implements Renderable {
 
         }
 
-        optionWindow.setLootOptions(visibleItems);
-        optionWindow.update(keyInput);
+        lootOptionWindow.setLootOptions(visibleItems);
+        lootOptionWindow.update(keyInput);
 
 
     }

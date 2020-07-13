@@ -71,9 +71,9 @@ public class Character extends Creature {
             attackSound.play(1.0f, 0.1f);
         }
         //rewrite
-//        if (input.isKeyPressed(Input.KEY_E)) {
-//            interact(creatures);
-//        }
+        if (keyInput.isKeyPressed(KeyInput.Key.E)) {
+            interact(creatures);
+        }
     }
 
     @Override

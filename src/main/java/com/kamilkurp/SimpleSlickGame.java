@@ -7,9 +7,9 @@ import java.util.logging.Logger;
 import com.kamilkurp.creatures.Character;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.NPC;
-import com.kamilkurp.gui.Dialogue;
+import com.kamilkurp.dialogue.DialogueWindow;
 import com.kamilkurp.gui.HUD;
-import com.kamilkurp.gui.OptionWindow;
+import com.kamilkurp.gui.LootOptionWindow;
 import com.kamilkurp.items.Inventory;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.terrain.Terrain;
@@ -33,16 +33,19 @@ public class SimpleSlickGame extends BasicGame {
 
     private Inventory inventory;
 
-    private Dialogue dialogue;
+    private DialogueWindow dialogueWindow;
 
     private LootSystem lootSystem;
 
-    private OptionWindow optionWindow;
+    private LootOptionWindow lootOptionWindow;
 
     private KeyInput keyInput;
 
     private SpawnPoint spawnPoint1;
     private SpawnPoint spawnPoint2;
+
+    private Music townMusic;
+
 
     public SimpleSlickGame(String gamename) {
         super(gamename);
@@ -52,21 +55,21 @@ public class SimpleSlickGame extends BasicGame {
     public void init(GameContainer gc) throws SlickException {
         gc.getGraphics().setAntiAlias(true);
 
-        dialogue = new Dialogue("dialogues.txt");
+        dialogueWindow = new DialogueWindow("dialogues.txt");
 
 
         creatures = new TreeMap<>();
 
         inventory = new Inventory();
 
-        optionWindow = new OptionWindow(inventory);
+        lootOptionWindow = new LootOptionWindow(inventory);
 
-        lootSystem = new LootSystem(optionWindow, inventory.getItemTypes());
+        lootSystem = new LootSystem(lootOptionWindow, inventory.getItemTypes());
 
 
         character = new Character("protagonist", 400, 400, creatures, lootSystem);
         //Enemy enemy = new Enemy("skellie", 400, 1200, creatures, lootSystem);
-        NPC npc = new NPC("johnny", 600, 600, creatures, lootSystem, dialogue, Arrays.asList(0,1,2));
+        NPC npc = new NPC("johnny", 600, 600, creatures, lootSystem, dialogueWindow, 0);
 
 
 
@@ -92,6 +95,11 @@ public class SimpleSlickGame extends BasicGame {
         keyInput = new KeyInput();
 
         loadGame();
+
+        townMusic = new Music("town_song.wav");
+
+//        townMusic.play();
+        townMusic.loop(1.0f, 0.5f);
     }
 
     @Override
@@ -102,9 +110,11 @@ public class SimpleSlickGame extends BasicGame {
 
         int enemyAlive = 0;
 
+        dialogueWindow.update(keyInput);
+
         for (Creature creature : creatures.values()) {
             if (creature instanceof Character) {
-                if (!inventory.isVisible() && !optionWindow.isActivated()) {
+                if (!inventory.isVisible() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
                     creature.update(gc, i, terrain.getTiles(), creatures.values(), keyInput);
                 }
             }
@@ -128,7 +138,6 @@ public class SimpleSlickGame extends BasicGame {
 
         camera.update(gc, character.getRect());
 
-        dialogue.update(i);
 
         inventory.update(keyInput);
 
@@ -155,9 +164,9 @@ public class SimpleSlickGame extends BasicGame {
 
         HUD.render(g);
 
-        dialogue.render(g);
+        dialogueWindow.render(g);
 
-        optionWindow.render(g, camera);
+        lootOptionWindow.render(g, camera);
 
     }
 
