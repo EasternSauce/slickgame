@@ -169,6 +169,7 @@ public class DialogueWindow {
 //            currentDialogue = -1;
 //        }
 
+        dialogueNPC = null;
     }
 
     private Dialogue findDialogueById(String dialogueId) {

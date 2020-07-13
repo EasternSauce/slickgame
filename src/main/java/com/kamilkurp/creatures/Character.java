@@ -104,6 +104,7 @@ public class Character extends Creature {
             if (creature == this) continue;
 //                System.out.println(attackRect.getCenterX() + " " + attackRect.getCenterY() + " " + creature.rect.getCenterX() + " " + creature.rect.getCenterY());
             if (attackRect.intersects(creature.rect) && creature instanceof NPC) {
+                System.out.println("nearby npc");
                 ((NPC)creature).triggerDialogue();
                 //creature.takeDamage();
             }
