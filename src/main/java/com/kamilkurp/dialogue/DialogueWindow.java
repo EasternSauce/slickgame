@@ -2,11 +2,11 @@ package com.kamilkurp.dialogue;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
+import com.kamilkurp.creatures.NPC;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,12 +15,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DialogueWindow {
-    List<Dialogue> dialogueText;
+    List<Dialogue> dialogueList;
 
     private boolean activated;
-    private boolean recentlyDeactivated;
 
-    int currentDialogue = -1;
+    Dialogue currentDialogue = null;
+
+    private NPC dialogueNPC;
 
     List<Dialogue> currentDialogueChoices = null;
 
@@ -29,7 +30,7 @@ public class DialogueWindow {
     Timer dialogueTimer = new Timer();
 
     public DialogueWindow(String filename) {
-        dialogueText = new ArrayList<>();
+        dialogueList = new ArrayList<>();
 
         BufferedReader reader;
         try {
@@ -41,25 +42,36 @@ public class DialogueWindow {
                 String[] split = line.split(";");
 
                 Dialogue.Action action = null;
-                int actionArgument = -1;
+                String actionArgument = null;
 
-                if (split.length > 1) {
-                    if (split[1].startsWith("g")) {
+                String id = split[0];
+
+                String text = split[1];
+
+                String actionCode;
+
+                if (split.length > 2) {
+                    actionCode = split[2];
+
+                    if (actionCode.startsWith("g")) {
                         action = Dialogue.Action.GOTO;
-                        actionArgument = Integer.parseInt(split[1].substring(1));
-                    } else if (split[1].startsWith("t")) {
+                        actionArgument = actionCode.substring(1);
+                    } else if (actionCode.startsWith("t")) {
                         action = Dialogue.Action.TRADE;
-                    } else if (split[1].startsWith("c")) {
+                    } else if (actionCode.startsWith("c")) {
                         action = Dialogue.Action.CHOICE;
-                        actionArgument = Integer.parseInt(split[1].substring(1));
-
+                        actionArgument = actionCode.substring(1);
+                    } else if (actionCode.startsWith("e")) {
+                        action = Dialogue.Action.GOODBYE;
                     }
                 }
 
 
-                Dialogue dialogue = new Dialogue(split[0].startsWith(">") ? split[0].substring(1) : split[0], action, actionArgument);
 
-                dialogueText.add(dialogue);
+
+                Dialogue dialogue = new Dialogue(id, text.startsWith(">") ? text.substring(1) : text, action, actionArgument);
+
+                dialogueList.add(dialogue);
                 line = reader.readLine();
             }
             reader.close();
@@ -68,7 +80,6 @@ public class DialogueWindow {
         }
 
         activated = false;
-        recentlyDeactivated = false;
 
     }
 
@@ -77,7 +88,7 @@ public class DialogueWindow {
 
 
         if (activated) {
-            g.drawString(dialogueText.get(currentDialogue).getText(), 10, Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION + 10);
+            g.drawString(currentDialogue.getText(), 10, Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION + 10);
             if (currentDialogueChoices != null) {
                 for (int i = 0; i < currentDialogueChoices.size(); i++) {
                     String text = currentDialogueChoices.get(i).getText();
@@ -89,21 +100,53 @@ public class DialogueWindow {
     }
 
     public void update(KeyInput keyInput) {
-        recentlyDeactivated = false;
 
         if (keyInput.isKeyPressed(KeyInput.Key.ESC)) {
-            if (activated) {
-                activated = false;
-                recentlyDeactivated = true;
-            }
+
+
+
+//            if (activated) {
+//                activated = false;
+//            }
 
 //            System.out.println("toggle activated, now activated=" + activated);
 
         }
 
         if (keyInput.isKeyPressed(KeyInput.Key.E)) {
-            if (activated) {
+            System.out.println("pressed EEEE!");
+            if (!activated && dialogueNPC != null) {
+                System.out.println("talking with " + dialogueNPC.getId());
 
+                activated = true;
+
+                currentDialogue = findDialogueById(dialogueNPC.getDialogueStartId());
+
+
+                setDialogueChoices();
+
+            } else {
+
+                System.out.println("E in update");
+                if (currentDialogueChoices != null) {
+
+                    Dialogue dialogue = currentDialogueChoices.get(currentSelected);
+                    if (dialogue.getAction() == Dialogue.Action.GOTO) {
+                        System.out.println("setting curr dialogue");
+                        currentDialogue = findDialogueById(dialogue.getActionArgument());
+
+                        setDialogueChoices();
+                    }
+                    else if (dialogue.getAction() == Dialogue.Action.GOODBYE) {
+                        activated = false;
+                    }
+                } else {
+                    if (currentDialogue.getAction() == Dialogue.Action.GOTO) {
+                        currentDialogue = findDialogueById(currentDialogue.getActionArgument());
+
+                        setDialogueChoices();
+                    }
+                }
             }
 
         }
@@ -128,33 +171,37 @@ public class DialogueWindow {
 
     }
 
-    public void showDialogue(int dialogueId) {
-//        System.out.println("trying to show dialugue, activated before = " + activated);
-        System.out.println("choose dialogue. curr_dialogue=" + dialogueId);
-        currentDialogue = dialogueId;
-        
-        if (!recentlyDeactivated) {
-            activated = true;
-
-            System.out.println("pressed E");
-            Dialogue dialogue = dialogueText.get(currentDialogue);
-
-            if (dialogue.getAction() == Dialogue.Action.CHOICE) {
-                System.out.println("setting choices");
-                currentDialogueChoices = new LinkedList<>();
-                for (int i = currentDialogue + 1; i < currentDialogue + 1 + dialogue.getActionArgument(); i++) {
-                    currentDialogueChoices.add(dialogueText.get(i));
-                }
-                System.out.println("setting " + currentDialogueChoices.size() + " dialogue choices");
-            }
-            else {
-                currentDialogueChoices = null;
-                System.out.println("choices is null");
+    private Dialogue findDialogueById(String dialogueId) {
+        for (int i = 0; i < dialogueList.size(); i++) {
+            if (dialogueList.get(i).getId().equals(dialogueId)) {
+                return dialogueList.get(i);
             }
         }
+        return null;
+    }
 
+    public void setDialogueChoices() {
+        currentSelected = 0;
 
-            //dialogueTimer.reset();
+        if (currentDialogue.getAction() == Dialogue.Action.CHOICE) {
+            System.out.println("setting choices");
+            currentDialogueChoices = new LinkedList<>();
+
+            int dialogueIndex = dialogueList.indexOf(currentDialogue);
+
+            for (int i = dialogueIndex + 1; i < dialogueIndex + 1 + Integer.parseInt(currentDialogue.getActionArgument()); i++) {
+                currentDialogueChoices.add(dialogueList.get(i));
+            }
+            System.out.println("setting " + currentDialogueChoices.size() + " dialogue choices");
+        }
+        else {
+            currentDialogueChoices = null;
+            System.out.println("choices is null");
+        }
+    }
+
+    public void setDialogueNPC(NPC npc) {
+        dialogueNPC = npc;
     }
 
     public boolean isActivated() {

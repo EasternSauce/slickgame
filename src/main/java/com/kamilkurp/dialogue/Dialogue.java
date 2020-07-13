@@ -1,18 +1,24 @@
 package com.kamilkurp.dialogue;
 
 public class Dialogue {
+    private String id;
     private String text;
     private Action action;
-    private int actionArgument;
+    private String actionArgument;
 
-    public Dialogue(String text, Action action, int actionArgument) {
+    public Dialogue(String id, String text, Action action, String actionArgument) {
+        this.id = id;
         this.text = text;
         this.action = action;
         this.actionArgument = actionArgument;
     }
 
     enum Action {
-        GOTO, TRADE, CHOICE
+        GOTO, TRADE, CHOICE, GOODBYE
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getText() {
@@ -23,7 +29,7 @@ public class Dialogue {
         return action;
     }
 
-    public int getActionArgument() {
+    public String getActionArgument() {
         return actionArgument;
     }
 }

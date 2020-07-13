@@ -19,18 +19,15 @@ public class NPC extends Creature {
     public Random random = new Random();
 
     private DialogueWindow dialogueWindow;
-    private int dialogueStart = 0;
+    private String dialogueStartId = null;
 
-    private Timer dialogueResetTimer;
-
-    public NPC(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem, DialogueWindow dialogueWindow, int dialogueStart) throws SlickException {
+    public NPC(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem, DialogueWindow dialogueWindow, String dialogueStartId) throws SlickException {
         super(id, posX, posY, creatures, lootSystem);
 
         this.dialogueWindow = dialogueWindow;
-        this.dialogueStart = dialogueStart;
+        this.dialogueStartId = dialogueStartId;
 
         actionTimer = new Timer();
-        dialogueResetTimer = new Timer();
     }
 
     @Override
@@ -62,9 +59,7 @@ public class NPC extends Creature {
             immune = false;
         }
 
-        if (dialogueResetTimer.getTime() > 6000) {
-            dialogueStart = 0;
-        }
+
     }
 
     @Override
@@ -74,11 +69,13 @@ public class NPC extends Creature {
 
     public void triggerDialogue() {
         if (!dialogueWindow.isActivated()) {
-            dialogueWindow.showDialogue(dialogueStart);
-
-            dialogueResetTimer.reset();
+            dialogueWindow.setDialogueNPC(this);
         }
 
 
+    }
+
+    public String getDialogueStartId() {
+        return dialogueStartId;
     }
 }

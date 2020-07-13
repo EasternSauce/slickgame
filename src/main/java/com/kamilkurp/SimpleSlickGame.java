@@ -69,7 +69,7 @@ public class SimpleSlickGame extends BasicGame {
 
         character = new Character("protagonist", 400, 400, creatures, lootSystem);
         //Enemy enemy = new Enemy("skellie", 400, 1200, creatures, lootSystem);
-        NPC npc = new NPC("johnny", 600, 600, creatures, lootSystem, dialogueWindow, 0);
+        NPC npc = new NPC("johnny", 600, 600, creatures, lootSystem, dialogueWindow, "a1");
 
 
 
@@ -110,7 +110,6 @@ public class SimpleSlickGame extends BasicGame {
 
         int enemyAlive = 0;
 
-        dialogueWindow.update(keyInput);
 
         for (Creature creature : creatures.values()) {
             if (creature instanceof Character) {
@@ -122,6 +121,7 @@ public class SimpleSlickGame extends BasicGame {
                 creature.update(gc, i, terrain.getTiles(), creatures.values(), keyInput);
             }
 
+
 //
 //            if (creature instanceof Enemy && creature.getHealthPoints() > 0f) {
 //                enemyAlive++;
@@ -129,6 +129,9 @@ public class SimpleSlickGame extends BasicGame {
 
 
         }
+
+        dialogueWindow.update(keyInput);
+
 
 //
 //        if (enemyAlive < 1) {
