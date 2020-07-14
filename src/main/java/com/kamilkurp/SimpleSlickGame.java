@@ -46,7 +46,6 @@ public class SimpleSlickGame extends BasicGame {
 
     private Music townMusic;
 
-
     public SimpleSlickGame(String gamename) {
         super(gamename);
     }
@@ -55,14 +54,15 @@ public class SimpleSlickGame extends BasicGame {
     public void init(GameContainer gc) throws SlickException {
         gc.getGraphics().setAntiAlias(true);
 
-        dialogueWindow = new DialogueWindow("dialogues.txt");
-
 
         creatures = new TreeMap<>();
 
         inventory = new Inventory();
 
         lootOptionWindow = new LootOptionWindow(inventory);
+
+        dialogueWindow = new DialogueWindow("dialogues.txt", inventory);
+
 
         lootSystem = new LootSystem(lootOptionWindow, inventory.getItemTypes());
 

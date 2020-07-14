@@ -3,6 +3,7 @@ package com.kamilkurp.dialogue;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.creatures.NPC;
+import com.kamilkurp.items.Inventory;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -27,10 +28,13 @@ public class DialogueWindow {
 
     private int currentSelected = 0;
 
+    private Inventory inventory;
+
     Timer dialogueTimer = new Timer();
 
-    public DialogueWindow(String filename) {
+    public DialogueWindow(String filename, Inventory inventory) {
         dialogueList = new ArrayList<>();
+        this.inventory = inventory;
 
         BufferedReader reader;
         try {
@@ -101,17 +105,6 @@ public class DialogueWindow {
 
     public void update(KeyInput keyInput) {
 
-        if (keyInput.isKeyPressed(KeyInput.Key.ESC)) {
-
-
-
-//            if (activated) {
-//                activated = false;
-//            }
-
-//            System.out.println("toggle activated, now activated=" + activated);
-
-        }
 
         if (keyInput.isKeyPressed(KeyInput.Key.E)) {
             System.out.println("pressed EEEE!");
@@ -140,6 +133,9 @@ public class DialogueWindow {
                     else if (dialogue.getAction() == Dialogue.Action.GOODBYE) {
                         activated = false;
                     }
+                    else if (dialogue.getAction() == Dialogue.Action.TRADE) {
+                        inventory.openTradeWindow();
+                    }
                 } else {
                     if (currentDialogue.getAction() == Dialogue.Action.GOTO) {
                         currentDialogue = findDialogueById(currentDialogue.getActionArgument());
@@ -151,7 +147,7 @@ public class DialogueWindow {
 
         }
 
-        if (currentDialogueChoices != null) {
+        if (currentDialogueChoices != null && !inventory.isTrading()) {
             if (keyInput.isKeyPressed(KeyInput.Key.W)) {
                 if (currentSelected > 0) {
                     currentSelected--;

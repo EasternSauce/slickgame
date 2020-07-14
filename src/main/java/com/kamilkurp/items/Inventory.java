@@ -36,6 +36,8 @@ public class Inventory implements Renderable {
 
     private boolean inEquipment = false;
 
+    private boolean trading = false;
+
 
     private int itemsPerRow = 5;
     private int numOfSlots = 20;
@@ -201,73 +203,85 @@ public class Inventory implements Renderable {
 
                 }
             }
-            if (keyInput.isKeyPressed(KeyInput.Key.SPACE)) {
-                if (!moving && (!inEquipment && items.get(currentSelected) != null) || (inEquipment && equipmentItems.get(currentSelected) != null)) {
-                    currentMoved = currentSelected;
-                    moving = true;
-                    movingInEquipment = inEquipment;
-                }
-                else {
-                    if (movingInEquipment) {
-                        if (inEquipment) {
-                            Item from = equipmentItems.get(currentMoved);
-                            Item to = equipmentItems.get(currentSelected);
-                            equipmentItems.put(currentMoved, to);
-                            equipmentItems.put(currentSelected, from);
-                            moving = false;
-                        }
-                        else {
-                            Item from = equipmentItems.get(currentMoved);
-                            Item to = items.get(currentSelected);
-                            equipmentItems.put(currentMoved, to);
-                            items.put(currentSelected, from);
-                            moving = false;
-                        }
-
+            if (keyInput.isKeyPressed(KeyInput.Key.E)) {
+                if (!trading) {
+                    if (!moving && (!inEquipment && items.get(currentSelected) != null) || (inEquipment && equipmentItems.get(currentSelected) != null)) {
+                        currentMoved = currentSelected;
+                        moving = true;
+                        movingInEquipment = inEquipment;
                     }
                     else {
-                        if (inEquipment) {
-                            Item from = items.get(currentMoved);
-                            Item to = equipmentItems.get(currentSelected);
-
-                            String currentEquipmentType = null;
-                            if (currentSelected == 0) {
-                                currentEquipmentType = "helmet";
-                            }
-                            if (currentSelected == 1) {
-                                currentEquipmentType = "body";
-                            }
-                            if (currentSelected == 2) {
-                                currentEquipmentType = "gloves";
-                            }
-                            if (currentSelected == 3) {
-                                currentEquipmentType = "ring";
-                            }
-                            if (currentSelected == 4) {
-                                currentEquipmentType = "boots";
-                            }
-
-                            if (from.getItemType().getEquipmentType().equals(currentEquipmentType)) {
-                                items.put(currentMoved, to);
+                        if (movingInEquipment) {
+                            if (inEquipment) {
+                                Item from = equipmentItems.get(currentMoved);
+                                Item to = equipmentItems.get(currentSelected);
+                                equipmentItems.put(currentMoved, to);
                                 equipmentItems.put(currentSelected, from);
                                 moving = false;
                             }
+                            else {
+                                Item from = equipmentItems.get(currentMoved);
+                                Item to = items.get(currentSelected);
+                                equipmentItems.put(currentMoved, to);
+                                items.put(currentSelected, from);
+                                moving = false;
+                            }
+
                         }
                         else {
-                            Item from = items.get(currentMoved);
-                            Item to = items.get(currentSelected);
-                            items.put(currentMoved, to);
-                            items.put(currentSelected, from);
-                            moving = false;
+                            if (inEquipment) {
+                                Item from = items.get(currentMoved);
+                                Item to = equipmentItems.get(currentSelected);
+
+                                String currentEquipmentType = null;
+                                if (currentSelected == 0) {
+                                    currentEquipmentType = "helmet";
+                                }
+                                if (currentSelected == 1) {
+                                    currentEquipmentType = "body";
+                                }
+                                if (currentSelected == 2) {
+                                    currentEquipmentType = "gloves";
+                                }
+                                if (currentSelected == 3) {
+                                    currentEquipmentType = "ring";
+                                }
+                                if (currentSelected == 4) {
+                                    currentEquipmentType = "boots";
+                                }
+
+                                if (from.getItemType().getEquipmentType().equals(currentEquipmentType)) {
+                                    items.put(currentMoved, to);
+                                    equipmentItems.put(currentSelected, from);
+                                    moving = false;
+                                }
+                            }
+                            else {
+                                Item from = items.get(currentMoved);
+                                Item to = items.get(currentSelected);
+                                items.put(currentMoved, to);
+                                items.put(currentSelected, from);
+                                moving = false;
+                            }
+
                         }
 
+
                     }
-
-
                 }
+                else {
+                    if (items.get(currentSelected) != null) {
+                        items.remove(currentSelected);
+
+                    }
+                }
+
             }
             if (keyInput.isKeyPressed(KeyInput.Key.ESC)) {
                 visible = false;
+                if (trading) {
+                    trading = false;
+                }
             }
         }
     }
@@ -305,5 +319,14 @@ public class Inventory implements Renderable {
         }
         return false;
 
+    }
+
+    public void openTradeWindow() {
+        visible = true;
+        trading = true;
+    }
+
+    public boolean isTrading() {
+        return trading;
     }
 }
