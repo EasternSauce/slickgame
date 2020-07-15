@@ -8,13 +8,15 @@ public class ItemType {
     private String description;
     private Image image;
     private String equipmentType;
+    private int worth;
 
-    public ItemType(String id, String name, String description, Image image, String equipmentType) {
+    public ItemType(String id, String name, String description, Image image, String equipmentType, int worth) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.image = image;
         this.equipmentType = equipmentType;
+        this.worth = worth;
     }
 
     public String getId() {
@@ -35,5 +37,9 @@ public class ItemType {
 
     public String getEquipmentType() {
         return equipmentType;
+    }
+
+    public int getWorth() {
+        return worth;
     }
 }

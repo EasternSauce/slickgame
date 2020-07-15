@@ -9,7 +9,7 @@ import org.newdawn.slick.geom.Rectangle;
 import java.util.*;
 
 // too many responsibilities
-public class Inventory implements Renderable {
+public class InventoryWindow implements Renderable {
 
     private Rectangle background = new Rectangle((int)(Globals.SCREEN_WIDTH * 0.2), (int)(Globals.SCREEN_HEIGHT * 0.2), (int)(Globals.SCREEN_WIDTH * 0.6), (int)(Globals.SCREEN_HEIGHT * 0.6));
 
@@ -46,7 +46,9 @@ public class Inventory implements Renderable {
     private int height = 40;
     private int numberOfEquipmentSlots = 5;
 
-    public Inventory() throws SlickException {
+    private int gold = 0;
+
+    public InventoryWindow() throws SlickException {
 
         slotList = new LinkedList<>();
         equipmentSlotList = new LinkedList<>();
@@ -58,9 +60,9 @@ public class Inventory implements Renderable {
 
         itemTypes = new HashMap<>();
 
-        ItemType itemType1 = new ItemType("skinTunic", "Leather Armor", "-", itemIcons.getSubImage(0,0), "body");
-        ItemType itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", itemIcons.getSubImage(1,0), "boots");
-        ItemType itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", itemIcons.getSubImage(2,0), "gloves");
+        ItemType itemType1 = new ItemType("skinTunic", "Leather Armor", "-", itemIcons.getSubImage(0,0), "body", 50);
+        ItemType itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", itemIcons.getSubImage(1,0), "boots", 30);
+        ItemType itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", itemIcons.getSubImage(2,0), "gloves", 25);
 
         itemTypes.put(itemType1.getId(), itemType1);
         itemTypes.put(itemType2.getId(), itemType2);
@@ -102,51 +104,68 @@ public class Inventory implements Renderable {
             g.setColor(Color.darkGray);
             g.fill(background);
 
-            for (int i = 0; i < numOfSlots; i++) {
+            renderInventory(g);
 
-                g.setColor(Color.black);
+            renderEquipment(g);
 
-                if (moving && currentMoved == i && !movingInEquipment) {
-                    g.setColor(Color.orange);
-                }
-                else if (!inEquipment) {
+            renderItemDescription(g);
+        }
 
-                    if (currentSelected == i){
-                        g.setColor(Color.red);
-                    }
-                }
+    }
 
-                g.draw(slotList.get(i));
-                if (items.get(i) != null) {
-                    g.drawImage(items.get(i).getItemType().getImage(), slotList.get(i).getX(), slotList.get(i).getY());
+    public void renderEquipment(Graphics g) {
+        for (int i = 0; i < numberOfEquipmentSlots; i++) {
+            g.setColor(Color.black);
+
+            if (moving && currentMoved == i && movingInEquipment) {
+                g.setColor(Color.orange);
+            }
+            else if (inEquipment) {
+                if (currentSelected == i){
+                    g.setColor(Color.red);
                 }
             }
 
-            for (int i = 0; i < numberOfEquipmentSlots; i++) {
-                g.setColor(Color.black);
-
-                if (moving && currentMoved == i && movingInEquipment) {
-                    g.setColor(Color.orange);
-                }
-                else if (inEquipment) {
-                    if (currentSelected == i){
-                        g.setColor(Color.red);
-                    }
-                }
-
-                g.draw(equipmentSlotList.get(i));
-                if (equipmentItems.get(i) != null) {
-                    g.drawImage(equipmentItems.get(i).getItemType().getImage(), equipmentSlotList.get(i).getX(), equipmentSlotList.get(i).getY());
-                }
-
-                g.setColor(Color.white);
-                g.drawString(equipmentSlotNameList.get(i), equipmentSlotList.get(i).getX() - 60, equipmentSlotList.get(i).getY());
+            g.draw(equipmentSlotList.get(i));
+            if (equipmentItems.get(i) != null) {
+                g.drawImage(equipmentItems.get(i).getItemType().getImage(), equipmentSlotList.get(i).getX(), equipmentSlotList.get(i).getY());
             }
 
             g.setColor(Color.white);
-            if (items.get(currentSelected) != null) g.drawString(items.get(currentSelected).getName(), background.getX() + space, background.getY() + (space + height) * numOfSlots/(float)itemsPerRow + space);
-            if (items.get(currentSelected) != null) g.drawString(items.get(currentSelected).getDescription(), background.getX() + space, background.getY() + (space + height) * numOfSlots/(float)itemsPerRow + space + 25);
+            g.drawString(equipmentSlotNameList.get(i), equipmentSlotList.get(i).getX() - 60, equipmentSlotList.get(i).getY());
         }
+    }
+
+    public void renderItemDescription(Graphics g) {
+        g.setColor(Color.white);
+        if (items.get(currentSelected) != null) g.drawString(items.get(currentSelected).getName(), background.getX() + space, background.getY() + (space + height) * numOfSlots/(float)itemsPerRow + space);
+        if (items.get(currentSelected) != null) g.drawString(items.get(currentSelected).getDescription(), background.getX() + space, background.getY() + (space + height) * numOfSlots/(float)itemsPerRow + space + 25);
+    }
+
+    public void renderInventory(Graphics g) {
+        for (int i = 0; i < numOfSlots; i++) {
+
+            g.setColor(Color.black);
+
+            if (moving && currentMoved == i && !movingInEquipment) {
+                g.setColor(Color.orange);
+            }
+            else if (!inEquipment) {
+
+                if (currentSelected == i){
+                    g.setColor(Color.red);
+                }
+            }
+
+            g.draw(slotList.get(i));
+            if (items.get(i) != null) {
+                g.drawImage(items.get(i).getItemType().getImage(), slotList.get(i).getX(), slotList.get(i).getY());
+            }
+        }
+
+        g.setColor(Color.yellow);
+        g.drawString("Gold: " + gold, background.getX() + 5, background.getY() + space + (space + height) * (float)numOfSlots/itemsPerRow + 90f);
+
 
     }
 
@@ -271,6 +290,7 @@ public class Inventory implements Renderable {
                 }
                 else {
                     if (items.get(currentSelected) != null) {
+                        gold += items.get(currentSelected).getItemType().getWorth() * 0.3f;
                         items.remove(currentSelected);
 
                     }

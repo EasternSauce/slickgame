@@ -3,7 +3,7 @@ package com.kamilkurp.dialogue;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.creatures.NPC;
-import com.kamilkurp.items.Inventory;
+import com.kamilkurp.items.InventoryWindow;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -28,13 +28,11 @@ public class DialogueWindow {
 
     private int currentSelected = 0;
 
-    private Inventory inventory;
+    private InventoryWindow inventoryWindow;
 
-    Timer dialogueTimer = new Timer();
-
-    public DialogueWindow(String filename, Inventory inventory) {
+    public DialogueWindow(String filename, InventoryWindow inventoryWindow) {
         dialogueList = new ArrayList<>();
-        this.inventory = inventory;
+        this.inventoryWindow = inventoryWindow;
 
         BufferedReader reader;
         try {
@@ -108,18 +106,9 @@ public class DialogueWindow {
 
         if (keyInput.isKeyPressed(KeyInput.Key.E)) {
             System.out.println("pressed EEEE!");
-            if (!activated && dialogueNPC != null) {
-                System.out.println("talking with " + dialogueNPC.getId());
+            System.out.println("dialoguenpc is " + dialogueNPC);
 
-                activated = true;
-
-                currentDialogue = findDialogueById(dialogueNPC.getDialogueStartId());
-
-
-                setDialogueChoices();
-
-            } else {
-
+            if (activated) {
                 System.out.println("E in update");
                 if (currentDialogueChoices != null) {
 
@@ -134,7 +123,7 @@ public class DialogueWindow {
                         activated = false;
                     }
                     else if (dialogue.getAction() == Dialogue.Action.TRADE) {
-                        inventory.openTradeWindow();
+                        inventoryWindow.openTradeWindow();
                     }
                 } else {
                     if (currentDialogue.getAction() == Dialogue.Action.GOTO) {
@@ -144,10 +133,25 @@ public class DialogueWindow {
                     }
                 }
             }
+            
+            if (dialogueNPC != null) {
+                if (!activated) {
+                    System.out.println("talking with " + dialogueNPC.getId());
+
+                    activated = true;
+
+                    currentDialogue = findDialogueById(dialogueNPC.getDialogueStartId());
+
+
+                    setDialogueChoices();
+                }
+            }
+
+
 
         }
 
-        if (currentDialogueChoices != null && !inventory.isTrading()) {
+        if (currentDialogueChoices != null && !inventoryWindow.isTrading()) {
             if (keyInput.isKeyPressed(KeyInput.Key.W)) {
                 if (currentSelected > 0) {
                     currentSelected--;

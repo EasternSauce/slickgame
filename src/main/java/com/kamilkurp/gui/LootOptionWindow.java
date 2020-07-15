@@ -3,7 +3,7 @@ package com.kamilkurp.gui;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
-import com.kamilkurp.items.Inventory;
+import com.kamilkurp.items.InventoryWindow;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
@@ -19,12 +19,12 @@ public class LootOptionWindow implements Renderable {
 
     private List<Item> itemList;
 
-    private Inventory inventory;
+    private InventoryWindow inventoryWindow;
 
     private int scroll = 0;
 
-    public LootOptionWindow(Inventory inventory) {
-        this.inventory = inventory;
+    public LootOptionWindow(InventoryWindow inventoryWindow) {
+        this.inventoryWindow = inventoryWindow;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class LootOptionWindow implements Renderable {
                 }
                 if (keyInput.isKeyPressed(KeyInput.Key.E)) {
                     if (itemList.size() != 0) {
-                        inventory.pickUpItem(itemList.get(currentSelected), itemList);
+                        inventoryWindow.pickUpItem(itemList.get(currentSelected), itemList);
                         if (currentSelected > 0) currentSelected--;
                         if(scroll > 0) scroll--;
                         if (itemList.size() == 0) {

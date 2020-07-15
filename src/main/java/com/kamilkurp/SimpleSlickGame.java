@@ -10,7 +10,7 @@ import com.kamilkurp.creatures.NPC;
 import com.kamilkurp.dialogue.DialogueWindow;
 import com.kamilkurp.gui.HUD;
 import com.kamilkurp.gui.LootOptionWindow;
-import com.kamilkurp.items.Inventory;
+import com.kamilkurp.items.InventoryWindow;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.terrain.Terrain;
 import com.kamilkurp.utils.Camera;
@@ -31,7 +31,7 @@ public class SimpleSlickGame extends BasicGame {
 
     private Character character;
 
-    private Inventory inventory;
+    private InventoryWindow inventoryWindow;
 
     private DialogueWindow dialogueWindow;
 
@@ -57,14 +57,14 @@ public class SimpleSlickGame extends BasicGame {
 
         creatures = new TreeMap<>();
 
-        inventory = new Inventory();
+        inventoryWindow = new InventoryWindow();
 
-        lootOptionWindow = new LootOptionWindow(inventory);
+        lootOptionWindow = new LootOptionWindow(inventoryWindow);
 
-        dialogueWindow = new DialogueWindow("dialogues.txt", inventory);
+        dialogueWindow = new DialogueWindow("dialogues.txt", inventoryWindow);
 
 
-        lootSystem = new LootSystem(lootOptionWindow, inventory.getItemTypes());
+        lootSystem = new LootSystem(lootOptionWindow, inventoryWindow.getItemTypes());
 
 
         character = new Character("protagonist", 400, 400, creatures, lootSystem);
@@ -113,7 +113,7 @@ public class SimpleSlickGame extends BasicGame {
 
         for (Creature creature : creatures.values()) {
             if (creature instanceof Character) {
-                if (!inventory.isVisible() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
+                if (!inventoryWindow.isVisible() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
                     creature.update(gc, i, terrain.getTiles(), creatures.values(), keyInput);
                 }
             }
@@ -130,7 +130,6 @@ public class SimpleSlickGame extends BasicGame {
 
         }
 
-        dialogueWindow.update(keyInput);
 
 
 //
@@ -142,7 +141,10 @@ public class SimpleSlickGame extends BasicGame {
         camera.update(gc, character.getRect());
 
 
-        inventory.update(keyInput);
+        inventoryWindow.update(keyInput);
+
+        dialogueWindow.update(keyInput);
+
 
         lootSystem.update(keyInput, character);
 
@@ -163,7 +165,7 @@ public class SimpleSlickGame extends BasicGame {
         }
 
         lootSystem.render(g, camera);
-        inventory.render(g, camera);
+        inventoryWindow.render(g, camera);
 
         HUD.render(g);
 
