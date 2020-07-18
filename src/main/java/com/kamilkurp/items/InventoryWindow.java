@@ -11,10 +11,12 @@ import java.util.*;
 // too many responsibilities
 public class InventoryWindow implements Renderable {
 
-    private Rectangle background = new Rectangle((int)(Globals.SCREEN_WIDTH * 0.2), (int)(Globals.SCREEN_HEIGHT * 0.2), (int)(Globals.SCREEN_WIDTH * 0.6), (int)(Globals.SCREEN_HEIGHT * 0.6));
+    private Rectangle background = new Rectangle((int)(Globals.SCREEN_WIDTH * 0.1), (int)(Globals.SCREEN_HEIGHT * 0.1), (int)(Globals.SCREEN_WIDTH * 0.6), (int)(Globals.SCREEN_HEIGHT * 0.6));
 
     private List<Rectangle> slotList;
     private List<Rectangle> equipmentSlotList;
+    private List<Rectangle> traderInventorySlotList;
+
 
     private boolean visible = false;
 
@@ -32,19 +34,30 @@ public class InventoryWindow implements Renderable {
 
     private Map<Integer, Item> equipmentItems;
 
+    private Map<Integer, Item> traderInventoryItems;
+
+
     private List<String> equipmentSlotNameList;
 
     private boolean inEquipment = false;
 
+    private boolean inTraderInventory = false;
+
     private boolean trading = false;
 
+    private int inventoryRows = 4;
+    private int inventoryColumns = 5;
+    private int inventorySlots = inventoryRows * inventoryColumns;
 
-    private int itemsPerRow = 5;
-    private int numOfSlots = 20;
     private int space = 10;
     private int width = 40;
     private int height = 40;
-    private int numberOfEquipmentSlots = 5;
+
+    private int equipmentSlots = 5;
+
+    private int tradeInventoryRows = 6;
+    private int tradeInventoryColumns = 2;
+    private int tradeInventorySlots = tradeInventoryRows * tradeInventoryColumns;
 
     private int gold = 0;
 
@@ -52,6 +65,7 @@ public class InventoryWindow implements Renderable {
 
         slotList = new LinkedList<>();
         equipmentSlotList = new LinkedList<>();
+        traderInventorySlotList = new LinkedList<>();
 
         equipmentSlotNameList = Arrays.asList("Helmet","Body","Gloves","Ring","Boots");
 
@@ -68,20 +82,25 @@ public class InventoryWindow implements Renderable {
         itemTypes.put(itemType2.getId(), itemType2);
         itemTypes.put(itemType3.getId(), itemType3);
 
-        for (int i = 0; i < numOfSlots; i++) {
-            int col = i % itemsPerRow;
-            int row = i / itemsPerRow;
-            Rectangle slot = new Rectangle(background.getX() + space + (space + width) * col,background.getY() + space + (space + height) * row, width, height);
+        for (int i = 0; i < inventorySlots; i++) {
+            int col = i % inventoryColumns;
+            int row = i / inventoryColumns;
+            Rectangle slot = new Rectangle(background.getX() + 50f + (space + width) * col,background.getY() + 50f + (space + height) * row, width, height);
             slotList.add(slot);
         }
 
-        for (int i = 0; i < numberOfEquipmentSlots; i++) {
-            int col = itemsPerRow + 2;
-            Rectangle slot = new Rectangle(background.getX() + space + (space + width) * col,background.getY() + space + (space + height) * i, width, height);
+        for (int i = 0; i < equipmentSlots; i++) {
+            int col = inventoryColumns + 2;
+            Rectangle slot = new Rectangle(background.getX() + 50f + (space + width) * col,background.getY() + 50f + (space + height) * i, width, height);
             equipmentSlotList.add(slot);
         }
 
-
+        for (int i = 0; i < tradeInventorySlots; i++) {
+            int col = inventoryColumns + 1 + i % (tradeInventoryColumns);
+            int row = i / (tradeInventoryColumns);
+            Rectangle slot = new Rectangle(background.getX() + 50f + (space + width) * col,background.getY() + 50f + (space + height) * row, width, height);
+            traderInventorySlotList.add(slot);
+        }
 
         items = new TreeMap<>();
 
@@ -91,6 +110,8 @@ public class InventoryWindow implements Renderable {
 //        items.put(26, new Item(itemTypes.get("item type 2")));
 
         equipmentItems = new TreeMap<>();
+
+        traderInventoryItems = new TreeMap<>();
 
 //        for (int i = 0; i < 40; i++) {
 //            items.put(i, null);
@@ -108,49 +129,73 @@ public class InventoryWindow implements Renderable {
 
             renderEquipment(g);
 
+            renderTraderInventory(g);
+
             renderItemDescription(g);
         }
 
     }
 
-    public void renderEquipment(Graphics g) {
-        for (int i = 0; i < numberOfEquipmentSlots; i++) {
-            g.setColor(Color.black);
+    private void renderTraderInventory(Graphics g) {
+        if (trading) {
+            for (int i = 0; i < tradeInventorySlots; i++) {
+                g.setColor(Color.black);
 
-            if (moving && currentMoved == i && movingInEquipment) {
-                g.setColor(Color.orange);
-            }
-            else if (inEquipment) {
-                if (currentSelected == i){
-                    g.setColor(Color.red);
+                if (inTraderInventory) {
+                    if (currentSelected == i) {
+                        g.setColor(Color.red);
+                    }
+                }
+
+                g.draw(traderInventorySlotList.get(i));
+                if (traderInventoryItems.get(i) != null) {
+                    g.drawImage(traderInventoryItems.get(i).getItemType().getImage(), traderInventorySlotList.get(i).getX(), traderInventorySlotList.get(i).getY());
                 }
             }
-
-            g.draw(equipmentSlotList.get(i));
-            if (equipmentItems.get(i) != null) {
-                g.drawImage(equipmentItems.get(i).getItemType().getImage(), equipmentSlotList.get(i).getX(), equipmentSlotList.get(i).getY());
-            }
-
             g.setColor(Color.white);
-            g.drawString(equipmentSlotNameList.get(i), equipmentSlotList.get(i).getX() - 60, equipmentSlotList.get(i).getY());
+            g.drawString("Trader:", traderInventorySlotList.get(0).getX() + 5f, background.getY() + 15f);
+        }
+    }
+
+    public void renderEquipment(Graphics g) {
+        if (!trading) {
+            for (int i = 0; i < equipmentSlots; i++) {
+                g.setColor(Color.black);
+
+                if (moving && currentMoved == i && movingInEquipment) {
+                    g.setColor(Color.orange);
+                } else if (inEquipment) {
+                    if (currentSelected == i) {
+                        g.setColor(Color.red);
+                    }
+                }
+
+                g.draw(equipmentSlotList.get(i));
+                if (equipmentItems.get(i) != null) {
+                    g.drawImage(equipmentItems.get(i).getItemType().getImage(), equipmentSlotList.get(i).getX(), equipmentSlotList.get(i).getY());
+                }
+
+                g.setColor(Color.white);
+                g.drawString(equipmentSlotNameList.get(i), equipmentSlotList.get(i).getX() - 60, equipmentSlotList.get(i).getY());
+            }
         }
     }
 
     public void renderItemDescription(Graphics g) {
         g.setColor(Color.white);
-        if (items.get(currentSelected) != null) g.drawString(items.get(currentSelected).getName(), background.getX() + space, background.getY() + (space + height) * numOfSlots/(float)itemsPerRow + space);
-        if (items.get(currentSelected) != null) g.drawString(items.get(currentSelected).getDescription(), background.getX() + space, background.getY() + (space + height) * numOfSlots/(float)itemsPerRow + space + 25);
+        if (items.get(currentSelected) != null) g.drawString(items.get(currentSelected).getName(), background.getX() + space, background.getY() + 50f + (space + height) * inventoryRows + space);
+        if (items.get(currentSelected) != null) g.drawString(items.get(currentSelected).getDescription(), background.getX() + space, background.getY() + 50f + (space + height) * inventoryRows + space + 25);
     }
 
     public void renderInventory(Graphics g) {
-        for (int i = 0; i < numOfSlots; i++) {
+        for (int i = 0; i < inventorySlots; i++) {
 
             g.setColor(Color.black);
 
             if (moving && currentMoved == i && !movingInEquipment) {
                 g.setColor(Color.orange);
             }
-            else if (!inEquipment) {
+            else if (!inEquipment && !inTraderInventory) {
 
                 if (currentSelected == i){
                     g.setColor(Color.red);
@@ -164,7 +209,7 @@ public class InventoryWindow implements Renderable {
         }
 
         g.setColor(Color.yellow);
-        g.drawString("Gold: " + gold, background.getX() + 5, background.getY() + space + (space + height) * (float)numOfSlots/itemsPerRow + 90f);
+        g.drawString("Gold: " + gold, background.getX() + 5, background.getY() + 20f + (space + height) * (float)inventorySlots/ inventoryColumns + 90f);
 
 
     }
@@ -180,47 +225,75 @@ public class InventoryWindow implements Renderable {
         }
         else if (visible) {
             if (keyInput.isKeyPressed(KeyInput.Key.W)) {
-                if (!inEquipment) {
-                    if (currentSelected >= itemsPerRow) {
-                        currentSelected = currentSelected - itemsPerRow;
-                    }
-                }
-                else {
+                if (inEquipment) {
                     if (currentSelected > 0) {
                         currentSelected--;
+                    }
+                } else if (inTraderInventory) {
+                    if (currentSelected >= tradeInventoryColumns) {
+                        currentSelected = currentSelected - tradeInventoryColumns;
+                    }
+                } else {
+                    if (currentSelected >= inventoryColumns) {
+                        currentSelected = currentSelected - inventoryColumns;
                     }
                 }
             }
             if (keyInput.isKeyPressed(KeyInput.Key.A)) {
-                if (!inEquipment) {
+                if (inEquipment) {
+                    if (currentSelected * inventoryColumns + (inventoryColumns - 1) < inventorySlots) {
+                        inEquipment = false;
+                        currentSelected = currentSelected * inventoryColumns + (inventoryColumns - 1);
+                    }
+                } else if (inTraderInventory) {
+                    if (currentSelected % tradeInventoryColumns == 0) {
+                        if (currentSelected / tradeInventoryColumns < inventoryColumns - 1) {
+                            inTraderInventory = false;
+                            currentSelected = currentSelected / tradeInventoryColumns * inventoryColumns + (inventoryColumns - 1);
+                        }
+                    }
+                    else {
+                        if (currentSelected >= 1) currentSelected--;
+                    }
+                } else {
                     if (currentSelected >= 1) currentSelected--;
                 }
-                else {
-                    if (currentSelected * itemsPerRow + (itemsPerRow - 1) < numOfSlots) {
-                        inEquipment = false;
-                        currentSelected = currentSelected * itemsPerRow + (itemsPerRow - 1);
-                    }
-                }
             }
+
             if (keyInput.isKeyPressed(KeyInput.Key.S)) {
-                if (!inEquipment) {
-                    if (currentSelected <= numOfSlots-itemsPerRow-1) currentSelected = currentSelected + itemsPerRow;
-                }
-                else {
-                    if (currentSelected < numberOfEquipmentSlots - 1) {
+                if (inEquipment) {
+                    if (currentSelected < equipmentSlots - 1) {
                         currentSelected++;
                     }
+                } else if (inTraderInventory) {
+                    if (currentSelected <= tradeInventorySlots - tradeInventoryColumns -1) currentSelected = currentSelected + tradeInventoryColumns;
+
+                } else {
+                    if (currentSelected <= inventorySlots- inventoryColumns -1) currentSelected = currentSelected + inventoryColumns;
                 }
             }
             if (keyInput.isKeyPressed(KeyInput.Key.D)) {
-                if (!inEquipment) {
-                    if ((currentSelected + 1) % itemsPerRow == 0) {
-                        inEquipment = true;
-                        currentSelected = currentSelected / itemsPerRow;
+                if (inTraderInventory) {
+                    if (currentSelected < tradeInventorySlots -1) currentSelected++;
+                }
+                else if (!inEquipment) {
+                    if ((currentSelected + 1) % inventoryColumns == 0) {
+                        if (!trading) {
+                            inEquipment = true;
+                            currentSelected = currentSelected / inventoryColumns;
+                        }
+                        else {
+                            inTraderInventory = true;
+                            currentSelected = currentSelected / inventoryColumns * tradeInventoryColumns;
+                        }
+
                     }
-                    else if (currentSelected < numOfSlots-1) currentSelected++;
+                    else {
+                        if (currentSelected < inventorySlots-1) currentSelected++;
+                    }
 
                 }
+
             }
             if (keyInput.isKeyPressed(KeyInput.Key.E)) {
                 if (!trading) {
@@ -234,18 +307,57 @@ public class InventoryWindow implements Renderable {
                             if (inEquipment) {
                                 Item from = equipmentItems.get(currentMoved);
                                 Item to = equipmentItems.get(currentSelected);
-                                equipmentItems.put(currentMoved, to);
-                                equipmentItems.put(currentSelected, from);
-                                moving = false;
+
+                                String currentEquipmentType = null;
+                                if (currentSelected == 0) {
+                                    currentEquipmentType = "helmet";
+                                }
+                                if (currentSelected == 1) {
+                                    currentEquipmentType = "body";
+                                }
+                                if (currentSelected == 2) {
+                                    currentEquipmentType = "gloves";
+                                }
+                                if (currentSelected == 3) {
+                                    currentEquipmentType = "ring";
+                                }
+                                if (currentSelected == 4) {
+                                    currentEquipmentType = "boots";
+                                }
+
+                                if (from.getItemType().getEquipmentType().equals(currentEquipmentType)) {
+                                    equipmentItems.put(currentMoved, to);
+                                    equipmentItems.put(currentSelected, from);
+                                    moving = false;
+                                }
                             }
                             else {
                                 Item from = equipmentItems.get(currentMoved);
                                 Item to = items.get(currentSelected);
-                                equipmentItems.put(currentMoved, to);
-                                items.put(currentSelected, from);
-                                moving = false;
-                            }
 
+                                String currentEquipmentType = null;
+                                if (currentMoved == 0) {
+                                    currentEquipmentType = "helmet";
+                                }
+                                if (currentMoved == 1) {
+                                    currentEquipmentType = "body";
+                                }
+                                if (currentMoved == 2) {
+                                    currentEquipmentType = "gloves";
+                                }
+                                if (currentMoved == 3) {
+                                    currentEquipmentType = "ring";
+                                }
+                                if (currentMoved == 4) {
+                                    currentEquipmentType = "boots";
+                                }
+
+                                if (to == null || to.getItemType().getEquipmentType().equals(currentEquipmentType)) {
+                                    equipmentItems.put(currentMoved, to);
+                                    items.put(currentSelected, from);
+                                    moving = false;
+                                }
+                            }
                         }
                         else {
                             if (inEquipment) {
@@ -315,10 +427,8 @@ public class InventoryWindow implements Renderable {
     }
 
     public boolean pickUpItem(Item item, List<Item> itemList) {
-        System.out.println(item == null);
 
-        System.out.println("zzz: " + items.size());
-        for (int i = 0; i < numOfSlots; i++) {
+        for (int i = 0; i < inventorySlots; i++) {
             if (items.get(i) == null) {
                 items.put(i, item);
 
@@ -329,12 +439,9 @@ public class InventoryWindow implements Renderable {
                 itemList.remove(item);
 
 
-                System.out.println("putting item " + item.getName() + " into slot " + i);
                 return true;
             }
-            else {
-                System.out.println("item " + i + " is " + items.get(i).getName());
-            }
+
 
         }
         return false;

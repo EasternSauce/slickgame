@@ -100,7 +100,6 @@ public class MapEditor extends BasicGame {
             }
 
             if (keyInput.isKeyPressed(KeyInput.Key.SPACE)) {
-                System.out.println("setting tile");
 
                 String id = null;
                 TerrainImage terrainImage = null;

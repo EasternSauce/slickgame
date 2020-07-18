@@ -99,7 +99,6 @@ public class Enemy extends Creature {
             int[] t2 = {1,0,-1,0};
 
             for(int i = 0; i < 4; i++) {
-                //System.out.println(i + " " + j);
                 Rectangle rect = new Rectangle(aggroed.rect.getCenterX() + t1[i] * walkUpDistance, aggroed.rect.getCenterY() + t2[i] * walkUpDistance, 1, 1);
 
                 float dist = Globals.distance(this.rect, rect);
@@ -112,27 +111,12 @@ public class Enemy extends Creature {
                 }
             }
 
-
-
-            //System.out.println(shortestI + " " + shortestJ);
-
-
-
-
             goTo(closestRect.getCenterX(), closestRect.getCenterY());
-
-
-
 
         }
 
-        //System.out.println(actionTimer.getTime());
-
         if (actionTimer.getTime() > 1500  ) {
 
-            //System.out.println("curr dir is" + currentDirection);
-
-//            System.out.println(currentDirection);
             if (aggroed != null && Globals.distance(aggroed.rect, rect) < 100f) {
                 if (shortestI == 0 && shortestJ == 1) {
                     moveUp();

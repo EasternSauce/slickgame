@@ -39,7 +39,6 @@ public class DialogueWindow {
             reader = new BufferedReader(new FileReader(filename));
             String line = reader.readLine();
             while (line != null) {
-                System.out.println(line);
 
                 String[] split = line.split(";");
 
@@ -105,16 +104,12 @@ public class DialogueWindow {
 
 
         if (keyInput.isKeyPressed(KeyInput.Key.E)) {
-            System.out.println("pressed EEEE!");
-            System.out.println("dialoguenpc is " + dialogueNPC);
 
             if (activated) {
-                System.out.println("E in update");
                 if (currentDialogueChoices != null) {
 
                     Dialogue dialogue = currentDialogueChoices.get(currentSelected);
                     if (dialogue.getAction() == Dialogue.Action.GOTO) {
-                        System.out.println("setting curr dialogue");
                         currentDialogue = findDialogueById(dialogue.getActionArgument());
 
                         setDialogueChoices();
@@ -136,7 +131,6 @@ public class DialogueWindow {
             
             if (dialogueNPC != null) {
                 if (!activated) {
-                    System.out.println("talking with " + dialogueNPC.getId());
 
                     activated = true;
 
@@ -185,7 +179,6 @@ public class DialogueWindow {
         currentSelected = 0;
 
         if (currentDialogue.getAction() == Dialogue.Action.CHOICE) {
-            System.out.println("setting choices");
             currentDialogueChoices = new LinkedList<>();
 
             int dialogueIndex = dialogueList.indexOf(currentDialogue);
@@ -193,11 +186,9 @@ public class DialogueWindow {
             for (int i = dialogueIndex + 1; i < dialogueIndex + 1 + Integer.parseInt(currentDialogue.getActionArgument()); i++) {
                 currentDialogueChoices.add(dialogueList.get(i));
             }
-            System.out.println("setting " + currentDialogueChoices.size() + " dialogue choices");
         }
         else {
             currentDialogueChoices = null;
-            System.out.println("choices is null");
         }
     }
 

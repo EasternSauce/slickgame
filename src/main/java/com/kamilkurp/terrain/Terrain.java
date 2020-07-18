@@ -171,16 +171,12 @@ public class Terrain implements Renderable {
         FileWriter fileWriter = new FileWriter(fileName);
         PrintWriter printWriter = new PrintWriter(fileWriter);
 
-        System.out.println("saving terrain");
-
         printWriter.printf("%d %d\n", width, height);
 
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 printWriter.print(layout[i][j] + (j != width - 1 ? " ": ""));
-                //System.out.print(layout[i][j] + (j != width - 1 ? " ": ""));
             }
-            //System.out.println();
 
             printWriter.println();
         }

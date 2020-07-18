@@ -142,7 +142,6 @@ public abstract class Creature implements Renderable {
         if (attacking) {
             for (Creature creature : creatures) {
                 if (creature == this) continue;
-//                System.out.println(attackRect.getCenterX() + " " + attackRect.getCenterY() + " " + creature.rect.getCenterX() + " " + creature.rect.getCenterY());
                 if (attackRect.intersects(creature.rect)) {
                     if (!(this instanceof Enemy && creature instanceof Enemy)) {
                         creature.takeDamage();
@@ -155,7 +154,6 @@ public abstract class Creature implements Renderable {
 
     public void takeDamage() {
         if (!immune) {
-//            System.out.println("took damage");
 
             float beforeHP = healthPoints;
 

@@ -121,22 +121,7 @@ public class SimpleSlickGame extends BasicGame {
                 creature.update(gc, i, terrain.getTiles(), creatures.values(), keyInput);
             }
 
-
-//
-//            if (creature instanceof Enemy && creature.getHealthPoints() > 0f) {
-//                enemyAlive++;
-//            }
-
-
         }
-
-
-
-//
-//        if (enemyAlive < 1) {
-//            System.out.println("spawning new enemy");
-//            Enemy enemy = new Enemy("skellie"+Math.abs(Globals.random.nextInt()), 400, 1200, creatures, lootSystem);
-//        }
 
         camera.update(gc, character.getRect());
 
@@ -208,9 +193,7 @@ public class SimpleSlickGame extends BasicGame {
             }
 
             writer.close();
-            System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
-            System.out.println("An error occurred.");
             e.printStackTrace();
         }
 
@@ -224,7 +207,6 @@ public class SimpleSlickGame extends BasicGame {
             reader = new BufferedReader(new FileReader("savegame.sav"));
             String line = reader.readLine();
             while (line != null) {
-                System.out.println(line);
                 String[] s = line.split(" ");
                 if(s[0].equals("creature")) {
                     creature = creatures.get(s[1]);

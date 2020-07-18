@@ -102,11 +102,8 @@ public class Character extends Creature {
     private void interact(Collection<Creature> creatures) {
         for (Creature creature : creatures) {
             if (creature == this) continue;
-//                System.out.println(attackRect.getCenterX() + " " + attackRect.getCenterY() + " " + creature.rect.getCenterX() + " " + creature.rect.getCenterY());
-            if (attackRect.intersects(creature.rect) && creature instanceof NPC) {
-                System.out.println("nearby npc");
+            if (attackRect.intersects(creature.rect) && creature instanceof NPC && creature.healthPoints > 0) {
                 ((NPC)creature).triggerDialogue();
-                //creature.takeDamage();
             }
         }
     }
@@ -131,8 +128,6 @@ public class Character extends Creature {
     @Override
     public void takeDamage() {
         if (!immune) {
-//            System.out.println("took damage");
-
             float damage = 0f;
             if (healthPoints - damage > 0) healthPoints -= damage;
             else healthPoints = 0f;
