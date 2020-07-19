@@ -18,9 +18,8 @@ public class InventoryWindow implements Renderable {
     private List<Rectangle> traderInventorySlotList;
 
 
-    private boolean visible = false;
+    private boolean inventoryOpen = false;
 
-    private SpriteSheet itemIcons;
 
     private int currentSelected = 0;
 
@@ -28,9 +27,7 @@ public class InventoryWindow implements Renderable {
     private int currentMoved = 0;
     private boolean movingInEquipment = false;
 
-    private Map<String, ItemType> itemTypes;
-
-    private Map<Integer, Item> items;
+    private Map<Integer, Item> inventoryItems;
 
     private Map<Integer, Item> equipmentItems;
 
@@ -50,8 +47,9 @@ public class InventoryWindow implements Renderable {
     private int inventorySlots = inventoryRows * inventoryColumns;
 
     private int space = 10;
-    private int width = 40;
-    private int height = 40;
+    private int margin = 50;
+    private int slotWidth = 40;
+    private int slotHeight = 40;
 
     private int equipmentSlots = 5;
 
@@ -70,39 +68,32 @@ public class InventoryWindow implements Renderable {
         equipmentSlotNameList = Arrays.asList("Helmet","Body","Gloves","Ring","Boots");
 
         Image image = new Image("item_icons.png");
-        itemIcons = new SpriteSheet(image, width, height);
 
-        itemTypes = new HashMap<>();
+        ItemType.loadIcons(image, slotWidth, slotHeight);
 
-        ItemType itemType1 = new ItemType("skinTunic", "Leather Armor", "-", itemIcons.getSubImage(0,0), "body", 50);
-        ItemType itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", itemIcons.getSubImage(1,0), "boots", 30);
-        ItemType itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", itemIcons.getSubImage(2,0), "gloves", 25);
-
-        itemTypes.put(itemType1.getId(), itemType1);
-        itemTypes.put(itemType2.getId(), itemType2);
-        itemTypes.put(itemType3.getId(), itemType3);
+        ItemType.loadItemTypes();
 
         for (int i = 0; i < inventorySlots; i++) {
             int col = i % inventoryColumns;
             int row = i / inventoryColumns;
-            Rectangle slot = new Rectangle(background.getX() + 50f + (space + width) * col,background.getY() + 50f + (space + height) * row, width, height);
+            Rectangle slot = new Rectangle(background.getX() + margin + (space + slotWidth) * col,background.getY() + margin + (space + slotHeight) * row, slotWidth, slotHeight);
             slotList.add(slot);
         }
 
         for (int i = 0; i < equipmentSlots; i++) {
             int col = inventoryColumns + 2;
-            Rectangle slot = new Rectangle(background.getX() + 50f + (space + width) * col,background.getY() + 50f + (space + height) * i, width, height);
+            Rectangle slot = new Rectangle(background.getX() + margin + (space + slotWidth) * col,background.getY() + margin + (space + slotHeight) * i, slotWidth, slotHeight);
             equipmentSlotList.add(slot);
         }
 
         for (int i = 0; i < tradeInventorySlots; i++) {
             int col = inventoryColumns + 1 + i % (tradeInventoryColumns);
             int row = i / (tradeInventoryColumns);
-            Rectangle slot = new Rectangle(background.getX() + 50f + (space + width) * col,background.getY() + 50f + (space + height) * row, width, height);
+            Rectangle slot = new Rectangle(background.getX() + margin + (space + slotWidth) * col,background.getY() + margin + (space + slotHeight) * row, slotWidth, slotHeight);
             traderInventorySlotList.add(slot);
         }
 
-        items = new TreeMap<>();
+        inventoryItems = new TreeMap<>();
 
 //        items.put(0, new Item(itemTypes.get("item type 1")));
 //        items.put(5, new Item(itemTypes.get("item type 1")));
@@ -121,7 +112,7 @@ public class InventoryWindow implements Renderable {
     @Override
     public void render(Graphics g, Camera camera) {
 
-        if (visible) {
+        if (inventoryOpen) {
             g.setColor(Color.darkGray);
             g.fill(background);
 
@@ -183,9 +174,20 @@ public class InventoryWindow implements Renderable {
 
     public void renderItemDescription(Graphics g) {
         g.setColor(Color.white);
-        if (items.get(currentSelected) != null) g.drawString(items.get(currentSelected).getName(), background.getX() + space, background.getY() + 50f + (space + height) * inventoryRows + space);
-        if (items.get(currentSelected) != null) g.drawString(items.get(currentSelected).getDescription(), background.getX() + space, background.getY() + 50f + (space + height) * inventoryRows + space + 25);
-    }
+        if (inEquipment) {
+            if (equipmentItems.get(currentSelected) != null) g.drawString(equipmentItems.get(currentSelected).getName(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space);
+            if (equipmentItems.get(currentSelected) != null) g.drawString(equipmentItems.get(currentSelected).getDescription() + ", Worth " + (int)(equipmentItems.get(currentSelected).getItemType().getWorth() * 0.3) + " Gold", background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
+
+        } else if (inTraderInventory) {
+            if (traderInventoryItems.get(currentSelected) != null) g.drawString(traderInventoryItems.get(currentSelected).getName(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space);
+            if (traderInventoryItems.get(currentSelected) != null) g.drawString(traderInventoryItems.get(currentSelected).getDescription() + ", Price is " + traderInventoryItems.get(currentSelected).getItemType().getWorth() + " Gold", background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
+
+        } else {
+            if (inventoryItems.get(currentSelected) != null) g.drawString(inventoryItems.get(currentSelected).getName(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space);
+            if (inventoryItems.get(currentSelected) != null) g.drawString(inventoryItems.get(currentSelected).getDescription() + ", Worth " + (int)(inventoryItems.get(currentSelected).getItemType().getWorth() * 0.3) + " Gold", background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
+
+        }
+}
 
     public void renderInventory(Graphics g) {
         for (int i = 0; i < inventorySlots; i++) {
@@ -203,27 +205,23 @@ public class InventoryWindow implements Renderable {
             }
 
             g.draw(slotList.get(i));
-            if (items.get(i) != null) {
-                g.drawImage(items.get(i).getItemType().getImage(), slotList.get(i).getX(), slotList.get(i).getY());
+            if (inventoryItems.get(i) != null) {
+                g.drawImage(inventoryItems.get(i).getItemType().getImage(), slotList.get(i).getX(), slotList.get(i).getY());
             }
         }
 
         g.setColor(Color.yellow);
-        g.drawString("Gold: " + gold, background.getX() + 5, background.getY() + 20f + (space + height) * (float)inventorySlots/ inventoryColumns + 90f);
+        g.drawString("Gold: " + gold, background.getX() + 5, background.getY() + 20f + (space + slotHeight) * (float)inventorySlots/ inventoryColumns + 90f);
 
 
     }
 
-    private void toggleVisible() {
-        if (visible) visible = false;
-        else visible = true;
-    }
 
     public void update(KeyInput keyInput) {
         if (keyInput.isKeyPressed(KeyInput.Key.I)) {
-            toggleVisible();
+            openInventory();
         }
-        else if (visible) {
+        else if (inventoryOpen) {
             if (keyInput.isKeyPressed(KeyInput.Key.W)) {
                 if (inEquipment) {
                     if (currentSelected > 0) {
@@ -297,14 +295,25 @@ public class InventoryWindow implements Renderable {
             }
             if (keyInput.isKeyPressed(KeyInput.Key.E)) {
                 if (!trading) {
-                    if (!moving && (!inEquipment && items.get(currentSelected) != null) || (inEquipment && equipmentItems.get(currentSelected) != null)) {
-                        currentMoved = currentSelected;
-                        moving = true;
-                        movingInEquipment = inEquipment;
+                    if (!moving) {
+                        boolean itemToMoveExists;
+
+                        if (inEquipment) {
+                            itemToMoveExists = equipmentItems.get(currentSelected) != null;
+                        } else {
+                            itemToMoveExists = inventoryItems.get(currentSelected) != null;
+                        }
+
+                        if (itemToMoveExists) {
+                            currentMoved = currentSelected;
+                            moving = true;
+                            movingInEquipment = inEquipment;
+                        }
                     }
                     else {
                         if (movingInEquipment) {
                             if (inEquipment) {
+                                System.out.println("moving from eq to eq");
                                 Item from = equipmentItems.get(currentMoved);
                                 Item to = equipmentItems.get(currentSelected);
 
@@ -325,7 +334,8 @@ public class InventoryWindow implements Renderable {
                                     currentEquipmentType = "boots";
                                 }
 
-                                if (from.getItemType().getEquipmentType().equals(currentEquipmentType)) {
+                                if (from == null || from.getItemType().getEquipmentType().equals(currentEquipmentType)) {
+                                    System.out.println("swapping");
                                     equipmentItems.put(currentMoved, to);
                                     equipmentItems.put(currentSelected, from);
                                     moving = false;
@@ -333,7 +343,7 @@ public class InventoryWindow implements Renderable {
                             }
                             else {
                                 Item from = equipmentItems.get(currentMoved);
-                                Item to = items.get(currentSelected);
+                                Item to = inventoryItems.get(currentSelected);
 
                                 String currentEquipmentType = null;
                                 if (currentMoved == 0) {
@@ -354,14 +364,14 @@ public class InventoryWindow implements Renderable {
 
                                 if (to == null || to.getItemType().getEquipmentType().equals(currentEquipmentType)) {
                                     equipmentItems.put(currentMoved, to);
-                                    items.put(currentSelected, from);
+                                    inventoryItems.put(currentSelected, from);
                                     moving = false;
                                 }
                             }
                         }
                         else {
                             if (inEquipment) {
-                                Item from = items.get(currentMoved);
+                                Item from = inventoryItems.get(currentMoved);
                                 Item to = equipmentItems.get(currentSelected);
 
                                 String currentEquipmentType = null;
@@ -381,17 +391,17 @@ public class InventoryWindow implements Renderable {
                                     currentEquipmentType = "boots";
                                 }
 
-                                if (from.getItemType().getEquipmentType().equals(currentEquipmentType)) {
-                                    items.put(currentMoved, to);
+                                if (from == null || from.getItemType().getEquipmentType().equals(currentEquipmentType)) {
+                                    inventoryItems.put(currentMoved, to);
                                     equipmentItems.put(currentSelected, from);
                                     moving = false;
                                 }
                             }
                             else {
-                                Item from = items.get(currentMoved);
-                                Item to = items.get(currentSelected);
-                                items.put(currentMoved, to);
-                                items.put(currentSelected, from);
+                                Item from = inventoryItems.get(currentMoved);
+                                Item to = inventoryItems.get(currentSelected);
+                                inventoryItems.put(currentMoved, to);
+                                inventoryItems.put(currentSelected, from);
                                 moving = false;
                             }
 
@@ -401,36 +411,60 @@ public class InventoryWindow implements Renderable {
                     }
                 }
                 else {
-                    if (items.get(currentSelected) != null) {
-                        gold += items.get(currentSelected).getItemType().getWorth() * 0.3f;
-                        items.remove(currentSelected);
+                    if (!inTraderInventory) {
+                        if (inventoryItems.get(currentSelected) != null) {
+                            sellSelectedItem();
 
+                        }
+                    } else {
+                        if (traderInventoryItems.get(currentSelected) != null) {
+                            for (int i = 0; i < inventorySlots; i++) {
+                                if (inventoryItems.get(i) == null) {
+                                    if (gold - traderInventoryItems.get(currentSelected).getItemType().getWorth() >= 0) {
+                                        gold -= traderInventoryItems.get(currentSelected).getItemType().getWorth();
+                                        inventoryItems.put(i, traderInventoryItems.get(currentSelected));
+                                        traderInventoryItems.remove(currentSelected);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
+
                 }
 
             }
             if (keyInput.isKeyPressed(KeyInput.Key.ESC)) {
-                visible = false;
-                if (trading) {
-                    trading = false;
-                }
+                closeInventory();
             }
         }
     }
 
-    public boolean isVisible() {
-        return visible;
+    public void openInventory() {
+        inventoryOpen = true;
     }
 
-    public Map<String, ItemType> getItemTypes() {
-        return itemTypes;
+    public void closeInventory() {
+        inventoryOpen = false;
+        currentSelected = 0;
+        moving = false;
+        trading = false;
+    }
+
+    public void sellSelectedItem() {
+        gold += inventoryItems.get(currentSelected).getItemType().getWorth() * 0.3f;
+        inventoryItems.remove(currentSelected);
+    }
+
+    public boolean isInventoryOpen() {
+        return inventoryOpen;
     }
 
     public boolean pickUpItem(Item item, List<Item> itemList) {
 
         for (int i = 0; i < inventorySlots; i++) {
-            if (items.get(i) == null) {
-                items.put(i, item);
+            if (inventoryItems.get(i) == null) {
+                inventoryItems.put(i, item);
 
                 if (item.getLootPileBackref().itemList.size() == 1) {
                     item.getLootPileBackref().setVisible(false);
@@ -449,11 +483,20 @@ public class InventoryWindow implements Renderable {
     }
 
     public void openTradeWindow() {
-        visible = true;
+        inventoryOpen = true;
         trading = true;
     }
 
     public boolean isTrading() {
         return trading;
+    }
+
+    public void setTraderInventory(List<Item> traderInventory) {
+        traderInventoryItems = new TreeMap<>();
+        int i = 0;
+        for (Item traderItem : traderInventory) {
+            traderInventoryItems.put(i, traderItem);
+            i++;
+        }
     }
 }

@@ -64,12 +64,12 @@ public class SimpleSlickGame extends BasicGame {
         dialogueWindow = new DialogueWindow("dialogues.txt", inventoryWindow);
 
 
-        lootSystem = new LootSystem(lootOptionWindow, inventoryWindow.getItemTypes());
+        lootSystem = new LootSystem(lootOptionWindow);
 
 
         character = new Character("protagonist", 400, 400, creatures, lootSystem);
         //Enemy enemy = new Enemy("skellie", 400, 1200, creatures, lootSystem);
-        NPC npc = new NPC("johnny", 600, 600, creatures, lootSystem, dialogueWindow, "a1");
+        NPC npc = new NPC("johnny", 600, 600, creatures, lootSystem, dialogueWindow, "a1", true);
 
 
 
@@ -113,7 +113,7 @@ public class SimpleSlickGame extends BasicGame {
 
         for (Creature creature : creatures.values()) {
             if (creature instanceof Character) {
-                if (!inventoryWindow.isVisible() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
+                if (!inventoryWindow.isInventoryOpen() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
                     creature.update(gc, i, terrain.getTiles(), creatures.values(), keyInput);
                 }
             }

@@ -15,11 +15,9 @@ import java.util.Map;
 public class LootSystem implements Renderable {
     private List<LootPile> lootPileList;
     private LootOptionWindow lootOptionWindow;
-    private Map<String, ItemType> itemTypes;
 
-    public LootSystem(LootOptionWindow lootOptionWindow, Map<String, ItemType> itemTypes) {
+    public LootSystem(LootOptionWindow lootOptionWindow) {
         this.lootOptionWindow = lootOptionWindow;
-        this.itemTypes = itemTypes;
 
         lootPileList = new LinkedList<>();
 
@@ -56,12 +54,12 @@ public class LootSystem implements Renderable {
 
     }
 
-    public void spawn(float x, float y, Map<String, Float> dropTable) {
+    public void spawnLootPile(float x, float y, Map<String, Float> dropTable) {
         LootPile newLootPile = new LootPile(x, y);
 
         for (Map.Entry<String, Float> entry : dropTable.entrySet()) {
             if (Globals.random.nextFloat() < entry.getValue()) {
-                Item item = new Item(itemTypes.get(entry.getKey()), newLootPile);
+                Item item = new Item(ItemType.getItemType(entry.getKey()), newLootPile);
                 newLootPile.addItem(item);
             }
 

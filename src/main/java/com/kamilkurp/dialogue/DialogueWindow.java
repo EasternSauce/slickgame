@@ -4,6 +4,7 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.creatures.NPC;
 import com.kamilkurp.items.InventoryWindow;
+import com.kamilkurp.items.Item;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -200,4 +201,7 @@ public class DialogueWindow {
         return activated;
     }
 
+    public void setTraderInventory(List<Item> traderInventory) {
+        inventoryWindow.setTraderInventory(traderInventory);
+    }
 }

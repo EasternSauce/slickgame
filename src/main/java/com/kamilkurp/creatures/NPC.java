@@ -1,17 +1,17 @@
 package com.kamilkurp.creatures;
 
+import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.dialogue.DialogueWindow;
+import com.kamilkurp.items.Item;
+import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.utils.Timer;
 import com.kamilkurp.terrain.TerrainTile;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class NPC extends Creature {
     private Timer actionTimer;
@@ -21,13 +21,41 @@ public class NPC extends Creature {
     private DialogueWindow dialogueWindow;
     private String dialogueStartId = null;
 
-    public NPC(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem, DialogueWindow dialogueWindow, String dialogueStartId) throws SlickException {
+    private List<Item> traderInventory;
+
+    private boolean trader = false;
+
+    private Map<String, Float> dropTable;
+
+
+    public NPC(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem, DialogueWindow dialogueWindow, String dialogueStartId, boolean trader) throws SlickException {
         super(id, posX, posY, creatures, lootSystem);
 
         this.dialogueWindow = dialogueWindow;
         this.dialogueStartId = dialogueStartId;
 
         actionTimer = new Timer();
+
+        this.trader = trader;
+
+        traderInventory = new LinkedList<>();
+
+        dropTable = new HashMap<>();
+        dropTable.put("ringmailGreaves", 0.9f);
+        dropTable.put("skinTunic", 0.2f);
+        dropTable.put("hideGloves", 0.1f);
+
+        if (trader) {
+            for (Map.Entry<String, Float> entry : dropTable.entrySet()) {
+                for (int i = 0; i < 6; i++) {
+                    if (Globals.random.nextFloat() < entry.getValue()) {
+                        Item item = new Item(ItemType.getItemType(entry.getKey()), null);
+                        traderInventory.add(item);
+                    }
+                }
+
+            }
+        }
     }
 
     @Override
@@ -70,6 +98,7 @@ public class NPC extends Creature {
     public void triggerDialogue() {
         if (!dialogueWindow.isActivated()) {
             dialogueWindow.setDialogueNPC(this);
+            dialogueWindow.setTraderInventory(traderInventory);
         }
 
 

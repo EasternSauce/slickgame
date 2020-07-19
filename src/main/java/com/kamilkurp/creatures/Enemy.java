@@ -53,7 +53,7 @@ public class Enemy extends Creature {
 
     @Override
     protected void onDeath() {
-        lootSystem.spawn(rect.getCenterX(), rect.getCenterY(), dropTable);
+        lootSystem.spawnLootPile(rect.getCenterX(), rect.getCenterY(), dropTable);
     }
 
     @Override
