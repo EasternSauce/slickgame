@@ -167,9 +167,6 @@ public class MapEditor extends BasicGame {
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        //g.drawString("Howdy!", 100, 100);
-
-
         if (!selectMode) {
             terrain.render(g, camera);
 

@@ -36,9 +36,11 @@ public abstract class Creature implements Renderable {
 
     protected int attackingDirection = 0;
 
+    private Sound attackSound = new Sound("swoosh.wav");
 
     protected Timer runningTimer;
     protected Timer attackingTimer;
+    protected Timer attackCooldownTimer;
 
     protected boolean moving;
 
@@ -71,6 +73,7 @@ public abstract class Creature implements Renderable {
         runningTimer = new Timer();
         attackingTimer = new Timer();
         immunityTimer = new Timer();
+        attackCooldownTimer = new Timer();
 
         attackRect = new Rectangle(-999, -999, 1, 1);
 
@@ -123,7 +126,6 @@ public abstract class Creature implements Renderable {
 
         if (attacking) {
             g.drawAnimation(attackingAnimation[attackingDirection], rect.getCenterX() + shiftX - camera.getPosX(), rect.getCenterY() + shiftY - camera.getPosY());
-            //g.fill(transformed);
         }
 
     }
@@ -257,7 +259,6 @@ public abstract class Creature implements Renderable {
         attackingAnimation[3] = new Animation();
         for (int j = 0; j < 6; j++) {
             Image image = attackSheet.getSprite(j,0).copy();
-            //image.rotate(180f);
             attackingAnimation[3].addFrame(image, 30);
         }
 
@@ -303,15 +304,20 @@ public abstract class Creature implements Renderable {
     }
 
     public void attack() {
-        if (!attacking) {
-            attackingAnimation[0].restart();
-            attackingAnimation[1].restart();
-            attackingAnimation[2].restart();
-            attackingAnimation[3].restart();
+        if (attackCooldownTimer.getTime() > 800f) {
+            attackSound.play(1.0f, 0.1f);
 
-            attacking = true;
-            attackingTimer.reset();
-            attackingDirection = direction;
+            if (!attacking) {
+                attackingAnimation[0].restart();
+                attackingAnimation[1].restart();
+                attackingAnimation[2].restart();
+                attackingAnimation[3].restart();
+
+                attacking = true;
+                attackingTimer.reset();
+                attackingDirection = direction;
+            }
+            attackCooldownTimer.reset();
         }
 
     }

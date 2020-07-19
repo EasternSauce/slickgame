@@ -68,7 +68,6 @@ public class SimpleSlickGame extends BasicGame {
 
 
         character = new Character("protagonist", 400, 400, creatures, lootSystem);
-        //Enemy enemy = new Enemy("skellie", 400, 1200, creatures, lootSystem);
         NPC npc = new NPC("johnny", 600, 600, creatures, lootSystem, dialogueWindow, "a1", true);
 
 
@@ -98,7 +97,6 @@ public class SimpleSlickGame extends BasicGame {
 
         townMusic = new Music("town_song.wav");
 
-//        townMusic.play();
         townMusic.loop(1.0f, 0.5f);
     }
 
@@ -138,8 +136,6 @@ public class SimpleSlickGame extends BasicGame {
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        //g.drawString("Howdy!", 100, 100);
-
         terrain.render(g, camera);
 
         spawnPoint1.render(g, camera);

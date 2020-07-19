@@ -35,6 +35,13 @@ public class DialogueWindow {
         dialogueList = new ArrayList<>();
         this.inventoryWindow = inventoryWindow;
 
+        loadDialogueFromFile(filename);
+
+        activated = false;
+
+    }
+
+    public void loadDialogueFromFile(String filename) {
         BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader(filename));
@@ -80,9 +87,6 @@ public class DialogueWindow {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        activated = false;
-
     }
 
     public void render(Graphics g) {
@@ -158,11 +162,6 @@ public class DialogueWindow {
                 }
             }
         }
-
-
-//        if (dialogueTimer.getTime() > 2000) {
-//            currentDialogue = -1;
-//        }
 
         dialogueNPC = null;
     }

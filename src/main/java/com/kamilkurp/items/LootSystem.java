@@ -21,9 +21,6 @@ public class LootSystem implements Renderable {
 
         lootPileList = new LinkedList<>();
 
-//        Loot loot1 = new Loot(500, 1000);
-
-//        lootList.add(loot1);
     }
 
     @Override

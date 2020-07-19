@@ -23,6 +23,10 @@ public class Enemy extends Creature {
 
     private Map<String, Float> dropTable;
 
+    private Timer findNewDestinationTimer;
+    private Rectangle closestRect;
+
+
     public Enemy(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem) throws SlickException {
         super(id, posX, posY, creatures, lootSystem);
 
@@ -32,6 +36,8 @@ public class Enemy extends Creature {
         dropTable.put("ringmailGreaves", 0.9f);
         dropTable.put("skinTunic", 0.2f);
         dropTable.put("hideGloves", 0.1f);
+
+        findNewDestinationTimer = new Timer();
     }
 
     @Override
@@ -59,17 +65,21 @@ public class Enemy extends Creature {
     @Override
     public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput) {
 
+        int aggroDistance = 200;
         Creature aggroed = null;
         for (Creature creature : creatures) {
             if (creature instanceof Enemy) continue;
-            if (Globals.distance(creature.rect, rect) < 130 && creature.healthPoints > 0) {
+            if (Globals.distance(creature.rect, rect) < aggroDistance && creature.healthPoints > 0) {
                 aggroed = creature;
                 break;
             }
         }
 
-        int shortestI = 0;
-        int shortestJ = 0;
+        if (actionTimer.getTime() > 1500) {
+            currentDirection = Math.abs(random.nextInt())%4;
+            stayInPlace = Math.abs(random.nextInt()) % 10 < 8;
+            actionTimer.reset();
+        }
 
         if (aggroed == null) {
             if (!stayInPlace) {
@@ -88,73 +98,102 @@ public class Enemy extends Creature {
             }
         }
         else {
-
             float walkUpDistance = 70f;
 
             float shortestDist = Float.MAX_VALUE;
-            Rectangle closestRect = null;
 
 
             int[] t1 = {0,1,0,-1};
             int[] t2 = {1,0,-1,0};
 
-            for(int i = 0; i < 4; i++) {
-                Rectangle rect = new Rectangle(aggroed.rect.getCenterX() + t1[i] * walkUpDistance, aggroed.rect.getCenterY() + t2[i] * walkUpDistance, 1, 1);
+            if (findNewDestinationTimer.getTime() > 300f) {
+                for (int i = 0; i < 4; i++) {
+                    Rectangle rect = new Rectangle(aggroed.rect.getCenterX() + t1[i] * walkUpDistance, aggroed.rect.getCenterY() + t2[i] * walkUpDistance, 1, 1);
 
-                float dist = Globals.distance(this.rect, rect);
+                    float dist = Globals.distance(this.rect, rect);
 
-                if (dist < shortestDist) {
-                    shortestDist = dist;
-                    closestRect = rect;
-                    shortestI = t1[i];
-                    shortestJ = t2[i];
+                    if (dist < shortestDist) {
+                        shortestDist = dist;
+                        closestRect = rect;
+                    }
                 }
+                findNewDestinationTimer.reset();
             }
 
-            goTo(closestRect.getCenterX(), closestRect.getCenterY());
+            if (closestRect != null) {
+                goTo(closestRect.getCenterX(), closestRect.getCenterY());
+            }
 
-        }
 
-        if (actionTimer.getTime() > 1500  ) {
+            float attackDistance = 100f;
+            if (Globals.distance(aggroed.rect, rect) < attackDistance) {
+                float maxDist = 0.0f;
+                int dir = 0;
+                if (rect.getCenterX() < aggroed.rect.getCenterX()) {
+                    float dist = Math.abs(rect.getCenterX() - aggroed.rect.getCenterX());
+                    if (dist > maxDist) {
+                        maxDist = dist;
+                        dir = 3;
+                    }
+                }
+                if (rect.getCenterX() > aggroed.rect.getCenterX()) {
+                    float dist = Math.abs(rect.getCenterX() - aggroed.rect.getCenterX());
+                    if (dist > maxDist) {
+                        maxDist = dist;
+                        dir = 1;
+                    }
+                }
 
-            if (aggroed != null && Globals.distance(aggroed.rect, rect) < 100f) {
-                if (shortestI == 0 && shortestJ == 1) {
-                    moveUp();
+                if (rect.getCenterY() < aggroed.rect.getCenterY()) {
+                    float dist = Math.abs(rect.getCenterY() - aggroed.rect.getCenterY());
+                    if (dist > maxDist) {
+                        maxDist = dist;
+                        dir = 2;
+                    }
                 }
-                if (shortestI == 1 && shortestJ == 0) {
-                    moveLeft();
+                if (rect.getCenterY() > aggroed.rect.getCenterY()) {
+                    float dist = Math.abs(rect.getCenterY() - aggroed.rect.getCenterY());
+                    if (dist > maxDist) {
+                        maxDist = dist;
+                        dir = 0;
+
+                    }
                 }
-                if (shortestI == 0 && shortestJ == -1) {
-                    moveDown();
-                }
-                if (shortestI == -1 && shortestJ == 0) {
-                    moveRight();
-                }
+                direction = dir;
                 attack();
             }
-            else {
-                currentDirection = Math.abs(random.nextInt())%4;
-                stayInPlace = Math.abs(random.nextInt()) % 10 < 8;
-            }
-            actionTimer.reset();
+
         }
+
+
+
+
     }
 
     void goTo(float gotoPosX, float gotoPosY) {
-        if (Globals.distanceX(gotoPosX, rect.getCenterX()) > Globals.distanceY(gotoPosY, rect.getCenterY())) {
-            if (rect.getCenterX() < gotoPosX - 5f) {
-                moveRight();
-            }
-            else if (rect.getCenterX() > gotoPosX + 5f) {
-                moveLeft();
-            }
+        if (rect.getCenterX() < gotoPosX - 5f) {
+            moveRight();
         }
-        else {
-            if (rect.getCenterY() < gotoPosY - 5f) {
-                moveDown();
+        else if (rect.getCenterX() > gotoPosX + 5f) {
+            moveLeft();
+        }
+
+        if (rect.getCenterY() < gotoPosY - 5f) {
+            moveDown();
+        }
+        else if (rect.getCenterY() > gotoPosY + 5f) {
+            moveUp();
+        }
+
+
+        float distX = Math.abs(rect.getCenterX() - gotoPosX);
+        float distY = Math.abs(rect.getCenterY() - gotoPosY);
+        if (distX - distY < 20f) {
+            if (rect.getCenterX() < gotoPosX) {
+                direction = 3;
             }
-            else if (rect.getCenterY() > gotoPosY + 5f) {
-                moveUp();
+            else {
+                direction = 1;
             }
         }
     }

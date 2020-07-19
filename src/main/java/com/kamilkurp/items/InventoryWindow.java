@@ -95,18 +95,11 @@ public class InventoryWindow implements Renderable {
 
         inventoryItems = new TreeMap<>();
 
-//        items.put(0, new Item(itemTypes.get("item type 1")));
-//        items.put(5, new Item(itemTypes.get("item type 1")));
-//        items.put(17, new Item(itemTypes.get("item type 3")));
-//        items.put(26, new Item(itemTypes.get("item type 2")));
-
         equipmentItems = new TreeMap<>();
 
         traderInventoryItems = new TreeMap<>();
 
-//        for (int i = 0; i < 40; i++) {
-//            items.put(i, null);
-//        }
+
     }
 
     @Override
@@ -313,29 +306,12 @@ public class InventoryWindow implements Renderable {
                     else {
                         if (movingInEquipment) {
                             if (inEquipment) {
-                                System.out.println("moving from eq to eq");
                                 Item from = equipmentItems.get(currentMoved);
                                 Item to = equipmentItems.get(currentSelected);
 
-                                String currentEquipmentType = null;
-                                if (currentSelected == 0) {
-                                    currentEquipmentType = "helmet";
-                                }
-                                if (currentSelected == 1) {
-                                    currentEquipmentType = "body";
-                                }
-                                if (currentSelected == 2) {
-                                    currentEquipmentType = "gloves";
-                                }
-                                if (currentSelected == 3) {
-                                    currentEquipmentType = "ring";
-                                }
-                                if (currentSelected == 4) {
-                                    currentEquipmentType = "boots";
-                                }
+                                String currentEquipmentType = getEquipmentSlotName(currentSelected);
 
                                 if (from == null || from.getItemType().getEquipmentType().equals(currentEquipmentType)) {
-                                    System.out.println("swapping");
                                     equipmentItems.put(currentMoved, to);
                                     equipmentItems.put(currentSelected, from);
                                     moving = false;
@@ -345,22 +321,7 @@ public class InventoryWindow implements Renderable {
                                 Item from = equipmentItems.get(currentMoved);
                                 Item to = inventoryItems.get(currentSelected);
 
-                                String currentEquipmentType = null;
-                                if (currentMoved == 0) {
-                                    currentEquipmentType = "helmet";
-                                }
-                                if (currentMoved == 1) {
-                                    currentEquipmentType = "body";
-                                }
-                                if (currentMoved == 2) {
-                                    currentEquipmentType = "gloves";
-                                }
-                                if (currentMoved == 3) {
-                                    currentEquipmentType = "ring";
-                                }
-                                if (currentMoved == 4) {
-                                    currentEquipmentType = "boots";
-                                }
+                                String currentEquipmentType = getEquipmentSlotName(currentMoved);
 
                                 if (to == null || to.getItemType().getEquipmentType().equals(currentEquipmentType)) {
                                     equipmentItems.put(currentMoved, to);
@@ -374,22 +335,7 @@ public class InventoryWindow implements Renderable {
                                 Item from = inventoryItems.get(currentMoved);
                                 Item to = equipmentItems.get(currentSelected);
 
-                                String currentEquipmentType = null;
-                                if (currentSelected == 0) {
-                                    currentEquipmentType = "helmet";
-                                }
-                                if (currentSelected == 1) {
-                                    currentEquipmentType = "body";
-                                }
-                                if (currentSelected == 2) {
-                                    currentEquipmentType = "gloves";
-                                }
-                                if (currentSelected == 3) {
-                                    currentEquipmentType = "ring";
-                                }
-                                if (currentSelected == 4) {
-                                    currentEquipmentType = "boots";
-                                }
+                                String currentEquipmentType = getEquipmentSlotName(currentSelected);
 
                                 if (from == null || from.getItemType().getEquipmentType().equals(currentEquipmentType)) {
                                     inventoryItems.put(currentMoved, to);
@@ -438,6 +384,26 @@ public class InventoryWindow implements Renderable {
                 closeInventory();
             }
         }
+    }
+
+    public String getEquipmentSlotName(int currentSelected) {
+        String currentEquipmentType = null;
+        if (currentSelected == 0) {
+            currentEquipmentType = "helmet";
+        }
+        if (currentSelected == 1) {
+            currentEquipmentType = "body";
+        }
+        if (currentSelected == 2) {
+            currentEquipmentType = "gloves";
+        }
+        if (currentSelected == 3) {
+            currentEquipmentType = "ring";
+        }
+        if (currentSelected == 4) {
+            currentEquipmentType = "boots";
+        }
+        return currentEquipmentType;
     }
 
     public void openInventory() {

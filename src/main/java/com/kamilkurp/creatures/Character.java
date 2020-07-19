@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class Character extends Creature {
 
-    private Sound attackSound = new Sound("swoosh.wav");
     private Sound stepSound = new Sound("running.wav");
     private Sound gruntSound = new Sound("grunt.wav");
 
@@ -68,7 +67,6 @@ public class Character extends Creature {
 
         if (keyInput.isKeyPressed(KeyInput.Key.SPACE)) {
             attack();
-            attackSound.play(1.0f, 0.1f);
         }
         //rewrite
         if (keyInput.isKeyPressed(KeyInput.Key.E)) {

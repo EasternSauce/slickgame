@@ -53,18 +53,6 @@ public class Terrain implements Renderable {
         Image image = new Image(path);
         spriteSheet = new SpriteSheet(image, spriteWidth, spriteHeight);
 
-//        addTerrainImage("a1", 0, 0, false);
-//        addTerrainImage("t1", 1, 0, false);
-//        addTerrainImage("a2", 5, 0, false);
-//        addTerrainImage("w1", 0, 1, false);
-//        addTerrainImage("o1", 2, 2, true);
-//        addTerrainImage("w2", 5, 1, false);
-//        addTerrainImage("c1", 0, 4, false);
-//        addTerrainImage("t2", 1, 4, false);
-//        addTerrainImage("c2", 5, 4, false);
-//        addTerrainImage("x1", 0, 5, false);
-//        addTerrainImage("x2", 3, 5, false);
-
         for (int i = 0; i < spritesheetHeight; i++) {
             for (int j = 0; j < spritesheetWidth; j++) {
                 String code = String.format ("%03d%03d", i, j);
