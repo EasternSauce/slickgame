@@ -12,19 +12,22 @@ import java.util.List;
 import java.util.Map;
 
 public class Terrain implements Renderable {
-    private int spriteWidth = 16;
-    private int spriteHeight = 16;
+    private int tileWidth;
+    private int tileHeight;
 
-    private int spritesheetWidth = 10;
-    private int spritesheetHeight = 10;
+    private int tilesetRows;
+    private int tilesetColumns;
 
-    private int width;
-    private int height;
+    private int terrainColumns;
+    private int terrainRows;
 
-    private int scale = 4;
+    private int scale;
 
     private SpriteSheet spriteSheet;
     private String[][] passable;
+
+    private int passableColumns;
+    private int passableRows;
 
     private String[][] layout;
 
@@ -33,7 +36,13 @@ public class Terrain implements Renderable {
     private Map<String, TerrainImage> terrainImages;
 
 
-    public Terrain() {
+    public Terrain(int tileWidth, int tileHeight, int tilesetColumns, int tilesetRows, int scale) {
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
+        this.tilesetRows = tilesetRows;
+        this.tilesetColumns = tilesetColumns;
+        this.scale = scale;
+
         terrainImages = new HashMap<>();
 
         tiles = new LinkedList<>();
@@ -51,12 +60,18 @@ public class Terrain implements Renderable {
 
     public void loadSpriteSheet(String path) throws SlickException {
         Image image = new Image(path);
-        spriteSheet = new SpriteSheet(image, spriteWidth, spriteHeight);
+        spriteSheet = new SpriteSheet(image, tileWidth, tileHeight);
 
-        for (int i = 0; i < spritesheetHeight; i++) {
-            for (int j = 0; j < spritesheetWidth; j++) {
+        for (int i = 0; i < tilesetRows; i++) {
+            for (int j = 0; j < tilesetColumns; j++) {
                 String code = String.format ("%03d%03d", i, j);
-                addTerrainImage(code, j, i, passable[i][j].equals("0"));
+                System.out.println("adding terrain image: " + j + " " + i);
+                if (i < passableRows && j < passableColumns) {
+                    addTerrainImage(code, j, i, passable[i][j].equals("0"));
+                }
+                else {
+                    addTerrainImage(code, j, i, true);
+                }
             }
         }
 
@@ -112,8 +127,8 @@ public class Terrain implements Renderable {
 
                 }
             }
-            width = columns;
-            height = rows;
+            terrainColumns = columns;
+            terrainRows = rows;
 
             reader.close();
         } catch (IOException e) {
@@ -131,9 +146,9 @@ public class Terrain implements Renderable {
             reader = new BufferedReader(new FileReader(fileName));
             String line = reader.readLine();
             String[] s = line.split(" ");
-            int columns = Integer.parseInt(s[0]);
-            int rows = Integer.parseInt(s[1]);
-            myArray = new String[rows][columns];
+            passableColumns = Integer.parseInt(s[0]);
+            passableRows = Integer.parseInt(s[1]);
+            myArray = new String[passableRows][passableColumns];
             line = reader.readLine();
             while (line != null) {
                 for (int i=0; i<myArray.length; i++) {
@@ -159,11 +174,11 @@ public class Terrain implements Renderable {
         FileWriter fileWriter = new FileWriter(fileName);
         PrintWriter printWriter = new PrintWriter(fileWriter);
 
-        printWriter.printf("%d %d\n", width, height);
+        printWriter.printf("%d %d\n", terrainColumns, terrainRows);
 
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                printWriter.print(layout[i][j] + (j != width - 1 ? " ": ""));
+        for (int i = 0; i < terrainRows; i++) {
+            for (int j = 0; j < terrainColumns; j++) {
+                printWriter.print(layout[i][j] + (j != terrainColumns - 1 ? " ": ""));
             }
 
             printWriter.println();
@@ -171,32 +186,32 @@ public class Terrain implements Renderable {
         printWriter.close();
     }
 
-    public int getWidth() {
-        return width;
+    public int getTerrainColumns() {
+        return terrainColumns;
     }
 
-    public int getHeight() {
-        return height;
+    public int getTerrainRows() {
+        return terrainRows;
     }
 
     public SpriteSheet getSpriteSheet() {
         return spriteSheet;
     }
 
-    public int getSpriteWidth() {
-        return spriteWidth;
+    public int getTileWidth() {
+        return tileWidth;
     }
 
-    public int getSpriteHeight() {
-        return spriteHeight;
+    public int getTileHeight() {
+        return tileHeight;
     }
 
-    public int getSpritesheetWidth() {
-        return spritesheetWidth;
+    public int getTilesetRows() {
+        return tilesetRows;
     }
 
-    public int getSpritesheetHeight() {
-        return spritesheetHeight;
+    public int getTilesetColumns() {
+        return tilesetColumns;
     }
 
     public void setTile(int x, int y, String id) {

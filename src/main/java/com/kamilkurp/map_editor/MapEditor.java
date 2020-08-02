@@ -33,6 +33,7 @@ public class MapEditor extends BasicGame {
     private int currentSpreadsheetPosY;
 
     private boolean selectMode = false;
+    String terrainFile;
 
 
     public MapEditor(String gamename) {
@@ -43,11 +44,12 @@ public class MapEditor extends BasicGame {
     public void init(GameContainer gc) throws SlickException {
         gc.getGraphics().setAntiAlias(true);
 
+        terrainFile = "grassyTerrain.txt";
 
-        terrain = new Terrain();
-        terrain.loadTerrain("terrain.txt");
-        terrain.loadPassable("tileset_passable.txt");
-        terrain.loadSpriteSheet("tileset.png");
+        terrain = new Terrain(16,16,10,11,4);
+        terrain.loadTerrain(terrainFile);
+        terrain.loadPassable("grassyTileset_passable.txt");
+        terrain.loadSpriteSheet("Tilemapnew.png");
         terrain.loadLayout();
 
         camera = new Camera();
@@ -75,28 +77,28 @@ public class MapEditor extends BasicGame {
                 if (currentPosY > 0) currentPosY--;
             }
             if (keyInput.isKeyPressed(KeyInput.Key.S)) {
-                if (currentPosY < terrain.getHeight() - 1) currentPosY++;
+                if (currentPosY < terrain.getTerrainRows() - 1) currentPosY++;
 
             }
             if (keyInput.isKeyPressed(KeyInput.Key.A)) {
                 if (currentPosX > 0) currentPosX--;
             }
             if (keyInput.isKeyPressed(KeyInput.Key.D)) {
-                if (currentPosX < terrain.getWidth() - 1) currentPosX++;
+                if (currentPosX < terrain.getTerrainColumns() - 1) currentPosX++;
             }
 
             if (gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isKeyDown(Input.KEY_W)) {
                 if (currentPosY > 0) currentPosY--;
             }
             if (gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isKeyDown(Input.KEY_S)) {
-                if (currentPosY < terrain.getHeight() - 1) currentPosY++;
+                if (currentPosY < terrain.getTerrainRows() - 1) currentPosY++;
 
             }
             if (gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isKeyDown(Input.KEY_A)) {
                 if (currentPosX > 0) currentPosX--;
             }
             if (gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isKeyDown(Input.KEY_D)) {
-                if (currentPosX < terrain.getWidth() - 1) currentPosX++;
+                if (currentPosX < terrain.getTerrainColumns() - 1) currentPosX++;
             }
 
             if (keyInput.isKeyPressed(KeyInput.Key.SPACE)) {
@@ -116,7 +118,7 @@ public class MapEditor extends BasicGame {
                 else {
                     terrain.setTile(currentPosX, currentPosY, id);
 
-                    terrain.getTiles().get(currentPosY * terrain.getWidth() + currentPosX).setImage(terrainImage);
+                    terrain.getTiles().get(currentPosY * terrain.getTerrainColumns() + currentPosX).setImage(terrainImage);
                 }
 
 
@@ -129,14 +131,14 @@ public class MapEditor extends BasicGame {
                 if (currentSpreadsheetPosY > 0) currentSpreadsheetPosY--;
             }
             if (keyInput.isKeyPressed(KeyInput.Key.S)) {
-                if (currentSpreadsheetPosY < terrain.getHeight() - 1) currentSpreadsheetPosY++;
+                if (currentSpreadsheetPosY < terrain.getTerrainRows() - 1) currentSpreadsheetPosY++;
 
             }
             if (keyInput.isKeyPressed(KeyInput.Key.A)) {
                 if (currentSpreadsheetPosX > 0) currentSpreadsheetPosX--;
             }
             if (keyInput.isKeyPressed(KeyInput.Key.D)) {
-                if (currentSpreadsheetPosX < terrain.getWidth() - 1) currentSpreadsheetPosX++;
+                if (currentSpreadsheetPosX < terrain.getTerrainColumns() - 1) currentSpreadsheetPosX++;
             }
         }
 
@@ -146,21 +148,21 @@ public class MapEditor extends BasicGame {
 
         if (keyInput.isKeyPressed(KeyInput.Key.F5)) {
             try {
-                terrain.saveTerrain("terrain.txt");
+                terrain.saveTerrain(terrainFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         if (!selectMode) {
-            int currentTileRectId = currentPosY * terrain.getWidth() + currentPosX;
+            int currentTileRectId = currentPosY * terrain.getTerrainColumns() + currentPosX;
 
             camera.update(gc, terrain.getTiles().get(currentTileRectId).getRect());
 
         }
         else {
             int scale = 4;
-            Rectangle currentTileRect = new Rectangle(currentSpreadsheetPosX * terrain.getSpriteWidth() * scale, currentSpreadsheetPosY * terrain.getSpriteHeight() * scale, terrain.getSpriteWidth(), terrain.getSpriteHeight());
+            Rectangle currentTileRect = new Rectangle(currentSpreadsheetPosX * terrain.getTileWidth() * scale, currentSpreadsheetPosY * terrain.getTileHeight() * scale, terrain.getTileWidth(), terrain.getTileHeight());
 
             camera.update(gc, currentTileRect);
         }
@@ -173,7 +175,7 @@ public class MapEditor extends BasicGame {
 
             g.setColor(Color.red);
 
-            int currentTileRectId = currentPosY * terrain.getWidth() + currentPosX;
+            int currentTileRectId = currentPosY * terrain.getTerrainColumns() + currentPosX;
 
             Rectangle currentTileRect = terrain.getTiles().get(currentTileRectId).getRect();
 
@@ -186,21 +188,21 @@ public class MapEditor extends BasicGame {
 
             int scale = 4;
             SpriteSheet spriteSheet = terrain.getSpriteSheet();
-            for (int i = 0; i < terrain.getSpritesheetHeight(); i++) {
-                for (int j = 0; j < terrain.getSpritesheetWidth(); j++) {
+            for (int i = 0; i < terrain.getTilesetColumns(); i++) {
+                for (int j = 0; j < terrain.getTilesetRows(); j++) {
 
                     Image image = spriteSheet.getSubImage(i,j);
-                    float x = i * terrain.getSpriteWidth() * scale - camera.getPosX();
-                    float y = j * terrain.getSpriteHeight() * scale - camera.getPosY();
+                    float x = i * terrain.getTileWidth() * scale - camera.getPosX();
+                    float y = j * terrain.getTileHeight() * scale - camera.getPosY();
 
                     g.setColor(Color.white);
-                    g.texture(new Rectangle(x, y, terrain.getSpriteWidth() * scale, terrain.getSpriteHeight() * scale), image, true);
+                    g.texture(new Rectangle(x, y, terrain.getTileWidth() * scale, terrain.getTileHeight() * scale), image, true);
 
                 }
             }
 
             g.setColor(Color.red);
-            g.drawRect(currentSpreadsheetPosX * terrain.getSpriteWidth() * scale - camera.getPosX(), currentSpreadsheetPosY * terrain.getSpriteHeight() * scale - camera.getPosY(), terrain.getSpriteWidth() * scale, terrain.getSpriteHeight() * scale);
+            g.drawRect(currentSpreadsheetPosX * terrain.getTileWidth() * scale - camera.getPosX(), currentSpreadsheetPosY * terrain.getTileHeight() * scale - camera.getPosY(), terrain.getTileWidth() * scale, terrain.getTileHeight() * scale);
 
         }
 

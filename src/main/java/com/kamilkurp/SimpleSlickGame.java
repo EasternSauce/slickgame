@@ -19,7 +19,12 @@ import org.newdawn.slick.*;
 
 public class SimpleSlickGame extends BasicGame {
 
-    private Terrain terrain;
+    private Terrain dungeonTerrain;
+
+    private Terrain grassyTerrain;
+
+
+    private Terrain currentTerrain;
 
     private Camera camera;
 
@@ -72,11 +77,21 @@ public class SimpleSlickGame extends BasicGame {
 
 
 
-        terrain = new Terrain();
-        terrain.loadTerrain("terrain.txt");
-        terrain.loadPassable("tileset_passable.txt");
-        terrain.loadSpriteSheet("tileset.png");
-        terrain.loadLayout();
+        dungeonTerrain = new Terrain(16,16,10,10,4);
+        dungeonTerrain.loadTerrain("terrain.txt");
+        dungeonTerrain.loadPassable("tileset_passable.txt");
+        dungeonTerrain.loadSpriteSheet("tileset.png");
+        dungeonTerrain.loadLayout();
+
+
+        grassyTerrain = new Terrain(16, 16, 10, 11, 4);
+        grassyTerrain.loadTerrain("grassyTerrain.txt");
+        grassyTerrain.loadPassable("grassyTileset_passable.txt");
+        grassyTerrain.loadSpriteSheet("Tilemapnew.png");
+        grassyTerrain.loadLayout();
+
+        currentTerrain = grassyTerrain;
+
 
         timer = new Timer();
 
@@ -112,11 +127,11 @@ public class SimpleSlickGame extends BasicGame {
         for (Creature creature : creatures.values()) {
             if (creature instanceof Character) {
                 if (!inventoryWindow.isInventoryOpen() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
-                    creature.update(gc, i, terrain.getTiles(), creatures.values(), keyInput);
+                    creature.update(gc, i, currentTerrain.getTiles(), creatures.values(), keyInput);
                 }
             }
             else {
-                creature.update(gc, i, terrain.getTiles(), creatures.values(), keyInput);
+                creature.update(gc, i, currentTerrain.getTiles(), creatures.values(), keyInput);
             }
 
         }
@@ -136,7 +151,7 @@ public class SimpleSlickGame extends BasicGame {
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        terrain.render(g, camera);
+        currentTerrain.render(g, camera);
 
         spawnPoint1.render(g, camera);
         spawnPoint2.render(g, camera);
