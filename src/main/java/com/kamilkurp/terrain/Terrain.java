@@ -65,7 +65,6 @@ public class Terrain implements Renderable {
         for (int i = 0; i < tilesetRows; i++) {
             for (int j = 0; j < tilesetColumns; j++) {
                 String code = String.format ("%03d%03d", i, j);
-                System.out.println("adding terrain image: " + j + " " + i);
                 if (i < passableRows && j < passableColumns) {
                     addTerrainImage(code, j, i, passable[i][j].equals("0"));
                 }

@@ -84,7 +84,7 @@ public class SimpleSlickGame extends BasicGame {
         dungeonTerrain.loadLayout();
 
 
-        grassyTerrain = new Terrain(16, 16, 10, 11, 4);
+        grassyTerrain = new Terrain(16,16,12,16,4);
         grassyTerrain.loadTerrain("grassyTerrain.txt");
         grassyTerrain.loadPassable("grassyTileset_passable.txt");
         grassyTerrain.loadSpriteSheet("Tilemapnew.png");

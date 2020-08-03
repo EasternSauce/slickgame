@@ -46,7 +46,7 @@ public class MapEditor extends BasicGame {
 
         terrainFile = "grassyTerrain.txt";
 
-        terrain = new Terrain(16,16,10,11,4);
+        terrain = new Terrain(16,16,12,16,4);
         terrain.loadTerrain(terrainFile);
         terrain.loadPassable("grassyTileset_passable.txt");
         terrain.loadSpriteSheet("Tilemapnew.png");
