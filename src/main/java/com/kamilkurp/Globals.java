@@ -13,6 +13,7 @@ public class Globals {
     public static int SCREEN_HEIGHT = 600;
 
     public static Random random = new Random();
+    private static String assetsLocation = "assets/";
 
     public static float distance(Rectangle rect1, Rectangle rect2) {
         float x1 = rect1.getCenterX();
@@ -49,5 +50,9 @@ public class Globals {
         int randomNum = random.nextInt((max - min) + 1) + min;
 
         return randomNum;
+    }
+
+    public static String getAssetsLocation() {
+        return assetsLocation;
     }
 }

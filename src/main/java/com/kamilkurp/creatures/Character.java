@@ -1,5 +1,6 @@
 package com.kamilkurp.creatures;
 
+import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.terrain.TerrainTile;
@@ -14,8 +15,8 @@ import java.util.Map;
 
 public class Character extends Creature {
 
-    private Sound stepSound = new Sound("running.wav");
-    private Sound gruntSound = new Sound("grunt.wav");
+    private Sound stepSound = new Sound(Globals.getAssetsLocation() + "sounds/running.wav");
+    private Sound gruntSound = new Sound(Globals.getAssetsLocation() + "sounds/grunt.wav");
 
     private boolean walking = false;
     private boolean sprint = false;

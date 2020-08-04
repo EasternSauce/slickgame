@@ -72,7 +72,7 @@ public class SimpleSlickGame extends BasicGame {
 
         lootOptionWindow = new LootOptionWindow(inventoryWindow);
 
-        dialogueWindow = new DialogueWindow("dialogues.txt", inventoryWindow);
+        dialogueWindow = new DialogueWindow(Globals.getAssetsLocation() + "dialogues/dialogues.txt", inventoryWindow);
 
 
         lootSystem = new LootSystem(lootOptionWindow);
@@ -82,9 +82,9 @@ public class SimpleSlickGame extends BasicGame {
         NPC npc = new NPC("johnny", 600, 600, creatures, lootSystem, dialogueWindow, "a1", true);
 
 
-        area1 = new Area(Assets.grassyTileset, Assets.grassyLayout);
+        area1 = new Area(Assets.grassyTileset, Assets.area1Layout);
 
-        area2 = new Area(Assets.dungeonTileset, Assets.dungeonLayout);
+        area2 = new Area(Assets.dungeonTileset, Assets.area2Layout);
 
 
         currentArea = area1;
@@ -107,7 +107,7 @@ public class SimpleSlickGame extends BasicGame {
 
         loadGame();
 
-        townMusic = new Music("town_song.wav");
+        townMusic = new Music(Globals.getAssetsLocation() + "music/town_song.wav");
 
         townMusic.loop(1.0f, 0.5f);
     }

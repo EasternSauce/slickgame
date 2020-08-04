@@ -71,7 +71,7 @@ public class InventoryWindow implements Renderable {
 
         equipmentSlotNameList = Arrays.asList("Helmet","Body","Gloves","Ring","Boots");
 
-        Image image = new Image("item_icons.png");
+        Image image = new Image(Globals.getAssetsLocation() + "items/item_icons.png");
 
         ItemType.loadIcons(image, slotWidth, slotHeight);
 

@@ -1,5 +1,6 @@
 package com.kamilkurp.creatures;
 
+import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.items.LootSystem;
@@ -35,7 +36,7 @@ public abstract class Creature implements Renderable {
 
     protected int attackingDirection = 0;
 
-    private Sound attackSound = new Sound("swoosh.wav");
+    private Sound attackSound = new Sound(Globals.getAssetsLocation() + "sounds/swoosh.wav");
 
     protected Timer runningTimer;
     protected Timer attackingTimer;
@@ -175,10 +176,10 @@ public abstract class Creature implements Renderable {
     protected abstract void onDeath();
 
     public void loadSpriteSheets() throws SlickException {
-        Image image = new Image("spritesheet.png");
+        Image image = new Image(Globals.getAssetsLocation() + "creature_animations/skeleton.png");
         spriteSheet = new SpriteSheet(image, (int)rect.getWidth(), (int)rect.getHeight());
 
-        image = new Image("slash.png");
+        image = new Image(Globals.getAssetsLocation() + "attack_animations/slash.png");
         attackSheet = new SpriteSheet(image, 40, 40);
     }
 

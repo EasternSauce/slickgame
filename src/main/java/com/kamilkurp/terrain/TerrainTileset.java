@@ -48,7 +48,6 @@ public class TerrainTileset {
         Image image = new Image(path);
         spriteSheet = new SpriteSheet(image, tileWidth, tileHeight);
 
-        System.out.println("passable col " + passableRows + " " + passableColumns);
         for (int i = 0; i < tilesetRows; i++) {
             for (int j = 0; j < tilesetColumns; j++) {
                 String code = String.format ("%03d%03d", i, j);

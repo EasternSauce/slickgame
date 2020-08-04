@@ -47,7 +47,7 @@ public class MapEditor extends BasicGame {
 
         Assets.loadAssets();
 
-        area = new Area(Assets.grassyTileset, Assets.grassyLayout);
+        area = new Area(Assets.grassyTileset, Assets.area1Layout);
 
         camera = new Camera();
 
