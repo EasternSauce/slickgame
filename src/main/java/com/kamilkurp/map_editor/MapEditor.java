@@ -7,10 +7,10 @@ import java.util.logging.Logger;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 
+import com.kamilkurp.assets.Assets;
 import com.kamilkurp.gui.HUD;
 import com.kamilkurp.terrain.Terrain;
 import com.kamilkurp.terrain.TerrainImage;
-import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.terrain.TerrainTileset;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.*;
@@ -46,10 +46,9 @@ public class MapEditor extends BasicGame {
     public void init(GameContainer gc) throws SlickException {
         gc.getGraphics().setAntiAlias(true);
 
-        terrainFile = "grassyTerrain.txt";
+        Assets.loadAssets();
 
-        terrain = new Terrain(16,16,12,16,4, "Tilemapnew.png","grassyTileset_passable.txt");
-        terrain.loadTerrainLayout(terrainFile);
+        terrain = new Terrain(Assets.grassyTileset, "grassyTerrain.txt");
 
         camera = new Camera();
 

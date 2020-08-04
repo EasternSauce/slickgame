@@ -26,13 +26,13 @@ public class Terrain implements Renderable {
     private int terrainColumns;
     private int terrainRows;
 
-    public Terrain(int tileWidth, int tileHeight, int tilesetColumns, int tilesetRows, int scale, String spritesheetFileName, String passableFileName) throws SlickException {
+    public Terrain(TerrainTileset terrainTileset, String layoutFileName) {
 
         tiles = new LinkedList<>();
 
-        terrainTileset = new TerrainTileset(tileWidth, tileHeight, tilesetColumns, tilesetRows, scale);
-        terrainTileset.loadPassable(passableFileName);
-        terrainTileset.loadSpriteSheet(spritesheetFileName);
+        this.terrainTileset = terrainTileset;
+
+        loadLayout(layoutFileName);
 
     }
 
@@ -51,22 +51,21 @@ public class Terrain implements Renderable {
         return tiles;
     }
 
-    public void loadTerrainLayout(String fileName) {
+    public void loadLayout(String fileName) {
         BufferedReader reader;
-        String [][] myArray = null;
         try {
             reader = new BufferedReader(new FileReader(fileName));
             String line = reader.readLine();
             String[] s = line.split(" ");
             int columns = Integer.parseInt(s[0]);
             int rows = Integer.parseInt(s[1]);
-            myArray = new String[rows][columns];
+            layout = new String[rows][columns];
             line = reader.readLine();
             while (line != null) {
-                for (int i=0; i<myArray.length; i++) {
+                for (int i=0; i<layout.length; i++) {
                     String[] s1 = line.split(" ");
                     for (int j = 0; j < s1.length; j++) {
-                        myArray[i][j] = s1[j];
+                        layout[i][j] = s1[j];
                     }
                     line = reader.readLine();
 
@@ -79,7 +78,6 @@ public class Terrain implements Renderable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        layout = myArray;
 
         int layoutWidth = layout[0].length;
         int layoutHeight = layout.length;

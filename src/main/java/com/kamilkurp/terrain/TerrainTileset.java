@@ -28,7 +28,7 @@ public class TerrainTileset {
     private Map<String, TerrainImage> terrainImages;
 
 
-    public TerrainTileset(int tileWidth, int tileHeight, int tilesetColumns, int tilesetRows, int scale) {
+    public TerrainTileset(int tileWidth, int tileHeight, int tilesetColumns, int tilesetRows, int scale, String spritesheetFileName, String passableFileName) throws SlickException {
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.tilesetColumns = tilesetColumns;
@@ -37,6 +37,10 @@ public class TerrainTileset {
 
 
         terrainImages = new HashMap<>();
+
+        loadSpriteSheet(spritesheetFileName);
+        loadPassable(passableFileName);
+
 
     }
 

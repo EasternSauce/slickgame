@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Character;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.NPC;
@@ -59,6 +60,7 @@ public class SimpleSlickGame extends BasicGame {
     public void init(GameContainer gc) throws SlickException {
         gc.getGraphics().setAntiAlias(true);
 
+        Assets.loadAssets();
 
         creatures = new TreeMap<>();
 
@@ -77,12 +79,9 @@ public class SimpleSlickGame extends BasicGame {
 
 
 
-        dungeonTerrain = new Terrain(16,16,10,10,4, "tileset.png", "tileset_passable.txt");
-        dungeonTerrain.loadTerrainLayout("terrain.txt");
+        dungeonTerrain = new Terrain(Assets.dungeonTileset, "terrain.txt");
 
-
-        grassyTerrain = new Terrain(16,16,12,16,4, "Tilemapnew.png", "grassyTileset_passable.txt");
-        grassyTerrain.loadTerrainLayout("grassyTerrain.txt");
+        grassyTerrain = new Terrain(Assets.grassyTileset, "grassyTerrain.txt");
 
         currentTerrain = grassyTerrain;
 
