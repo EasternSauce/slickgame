@@ -77,18 +77,12 @@ public class SimpleSlickGame extends BasicGame {
 
 
 
-        dungeonTerrain = new Terrain(16,16,10,10,4);
-        dungeonTerrain.loadTerrain("terrain.txt");
-        dungeonTerrain.loadPassable("tileset_passable.txt");
-        dungeonTerrain.loadSpriteSheet("tileset.png");
-        dungeonTerrain.loadLayout();
+        dungeonTerrain = new Terrain(16,16,10,10,4, "tileset.png", "tileset_passable.txt");
+        dungeonTerrain.loadTerrainLayout("terrain.txt");
 
 
-        grassyTerrain = new Terrain(16,16,12,16,4);
-        grassyTerrain.loadTerrain("grassyTerrain.txt");
-        grassyTerrain.loadPassable("grassyTileset_passable.txt");
-        grassyTerrain.loadSpriteSheet("Tilemapnew.png");
-        grassyTerrain.loadLayout();
+        grassyTerrain = new Terrain(16,16,12,16,4, "Tilemapnew.png", "grassyTileset_passable.txt");
+        grassyTerrain.loadTerrainLayout("grassyTerrain.txt");
 
         currentTerrain = grassyTerrain;
 

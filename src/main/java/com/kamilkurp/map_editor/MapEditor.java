@@ -10,6 +10,8 @@ import com.kamilkurp.KeyInput;
 import com.kamilkurp.gui.HUD;
 import com.kamilkurp.terrain.Terrain;
 import com.kamilkurp.terrain.TerrainImage;
+import com.kamilkurp.terrain.TerrainTile;
+import com.kamilkurp.terrain.TerrainTileset;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.*;
 import org.newdawn.slick.Graphics;
@@ -46,11 +48,8 @@ public class MapEditor extends BasicGame {
 
         terrainFile = "grassyTerrain.txt";
 
-        terrain = new Terrain(16,16,12,16,4);
-        terrain.loadTerrain(terrainFile);
-        terrain.loadPassable("grassyTileset_passable.txt");
-        terrain.loadSpriteSheet("Tilemapnew.png");
-        terrain.loadLayout();
+        terrain = new Terrain(16,16,12,16,4, "Tilemapnew.png","grassyTileset_passable.txt");
+        terrain.loadTerrainLayout(terrainFile);
 
         camera = new Camera();
 
@@ -105,7 +104,7 @@ public class MapEditor extends BasicGame {
 
                 String id = null;
                 TerrainImage terrainImage = null;
-                for (Map.Entry<String, TerrainImage> entry : terrain.getTerrainImages().entrySet()) {
+                for (Map.Entry<String, TerrainImage> entry : terrain.getTerrainTileset().getTerrainImages().entrySet()) {
                     if (entry.getValue().getX() == currentSpreadsheetPosX && entry.getValue().getY() == currentSpreadsheetPosY) {
                         id = entry.getKey();
                         terrainImage = entry.getValue();
@@ -162,7 +161,7 @@ public class MapEditor extends BasicGame {
         }
         else {
             int scale = 4;
-            Rectangle currentTileRect = new Rectangle(currentSpreadsheetPosX * terrain.getTileWidth() * scale, currentSpreadsheetPosY * terrain.getTileHeight() * scale, terrain.getTileWidth(), terrain.getTileHeight());
+            Rectangle currentTileRect = new Rectangle(currentSpreadsheetPosX * terrain.getTerrainTileset().getTileWidth() * scale, currentSpreadsheetPosY * terrain.getTerrainTileset().getTileHeight() * scale, terrain.getTerrainTileset().getTileWidth(), terrain.getTerrainTileset().getTileHeight());
 
             camera.update(gc, currentTileRect);
         }
@@ -187,22 +186,25 @@ public class MapEditor extends BasicGame {
 
 
             int scale = 4;
-            SpriteSheet spriteSheet = terrain.getSpriteSheet();
-            for (int i = 0; i < terrain.getTilesetColumns(); i++) {
-                for (int j = 0; j < terrain.getTilesetRows(); j++) {
+
+            TerrainTileset terrainTileset = terrain.getTerrainTileset();
+
+            SpriteSheet spriteSheet = terrainTileset.getSpriteSheet();
+            for (int i = 0; i < terrainTileset.getTilesetColumns(); i++) {
+                for (int j = 0; j < terrainTileset.getTilesetRows(); j++) {
 
                     Image image = spriteSheet.getSubImage(i,j);
-                    float x = i * terrain.getTileWidth() * scale - camera.getPosX();
-                    float y = j * terrain.getTileHeight() * scale - camera.getPosY();
+                    float x = i * terrainTileset.getTileWidth() * scale - camera.getPosX();
+                    float y = j * terrainTileset.getTileHeight() * scale - camera.getPosY();
 
                     g.setColor(Color.white);
-                    g.texture(new Rectangle(x, y, terrain.getTileWidth() * scale, terrain.getTileHeight() * scale), image, true);
+                    g.texture(new Rectangle(x, y, terrainTileset.getTileWidth() * scale, terrainTileset.getTileHeight() * scale), image, true);
 
                 }
             }
 
             g.setColor(Color.red);
-            g.drawRect(currentSpreadsheetPosX * terrain.getTileWidth() * scale - camera.getPosX(), currentSpreadsheetPosY * terrain.getTileHeight() * scale - camera.getPosY(), terrain.getTileWidth() * scale, terrain.getTileHeight() * scale);
+            g.drawRect(currentSpreadsheetPosX * terrainTileset.getTileWidth() * scale - camera.getPosX(), currentSpreadsheetPosY * terrainTileset.getTileHeight() * scale - camera.getPosY(), terrainTileset.getTileWidth() * scale, terrainTileset.getTileHeight() * scale);
 
         }
 

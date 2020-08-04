@@ -12,40 +12,27 @@ import java.util.List;
 import java.util.Map;
 
 public class Terrain implements Renderable {
-    private int tileWidth;
-    private int tileHeight;
 
-    private int tilesetRows;
-    private int tilesetColumns;
 
-    private int terrainColumns;
-    private int terrainRows;
 
-    private int scale;
-
-    private SpriteSheet spriteSheet;
-    private String[][] passable;
-
-    private int passableColumns;
-    private int passableRows;
 
     private String[][] layout;
 
     private List<TerrainTile> tiles;
 
-    private Map<String, TerrainImage> terrainImages;
 
+    private TerrainTileset terrainTileset;
 
-    public Terrain(int tileWidth, int tileHeight, int tilesetColumns, int tilesetRows, int scale) {
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
-        this.tilesetRows = tilesetRows;
-        this.tilesetColumns = tilesetColumns;
-        this.scale = scale;
+    private int terrainColumns;
+    private int terrainRows;
 
-        terrainImages = new HashMap<>();
+    public Terrain(int tileWidth, int tileHeight, int tilesetColumns, int tilesetRows, int scale, String spritesheetFileName, String passableFileName) throws SlickException {
 
         tiles = new LinkedList<>();
+
+        terrainTileset = new TerrainTileset(tileWidth, tileHeight, tilesetColumns, tilesetRows, scale);
+        terrainTileset.loadPassable(passableFileName);
+        terrainTileset.loadSpriteSheet(spritesheetFileName);
 
     }
 
@@ -58,54 +45,13 @@ public class Terrain implements Renderable {
         }
     }
 
-    public void loadSpriteSheet(String path) throws SlickException {
-        Image image = new Image(path);
-        spriteSheet = new SpriteSheet(image, tileWidth, tileHeight);
 
-        for (int i = 0; i < tilesetRows; i++) {
-            for (int j = 0; j < tilesetColumns; j++) {
-                String code = String.format ("%03d%03d", i, j);
-                if (i < passableRows && j < passableColumns) {
-                    addTerrainImage(code, j, i, passable[i][j].equals("0"));
-                }
-                else {
-                    addTerrainImage(code, j, i, true);
-                }
-            }
-        }
-
-
-    }
-
-    public void loadLayout() {
-        int layoutWidth = layout[0].length;
-        int layoutHeight = layout.length;
-
-        for(int i=0; i < layoutHeight; i++) {
-            for(int j=0; j < layoutWidth; j++) {
-                Rectangle rect = new Rectangle(300 + j * 64,300 + i*64,64, 64);
-
-                TerrainImage tileImage = terrainImages.get(layout[i][j]);
-                tiles.add(new TerrainTile(rect, tileImage));
-            }
-
-        }
-    }
-
-
-    private void addTerrainImage(String id, int posX, int posY, boolean passable) {
-        Image image = spriteSheet.getSprite(posX,posY);
-        image.setFilter(Image.FILTER_NEAREST);
-        TerrainImage terrainImage = new TerrainImage(image, posX, posY, passable);
-        terrainImages.put(id, terrainImage);
-
-    }
 
     public List<TerrainTile> getTiles() {
         return tiles;
     }
 
-    public void loadTerrain(String fileName) {
+    public void loadTerrainLayout(String fileName) {
         BufferedReader reader;
         String [][] myArray = null;
         try {
@@ -135,39 +81,22 @@ public class Terrain implements Renderable {
         }
         layout = myArray;
 
+        int layoutWidth = layout[0].length;
+        int layoutHeight = layout.length;
 
-    }
+        for(int i=0; i < layoutHeight; i++) {
+            for(int j=0; j < layoutWidth; j++) {
+                Rectangle rect = new Rectangle(300 + j * 64,300 + i*64,64, 64);
 
-    public void loadPassable(String fileName) {
-        BufferedReader reader;
-        String [][] myArray = null;
-        try {
-            reader = new BufferedReader(new FileReader(fileName));
-            String line = reader.readLine();
-            String[] s = line.split(" ");
-            passableColumns = Integer.parseInt(s[0]);
-            passableRows = Integer.parseInt(s[1]);
-            myArray = new String[passableRows][passableColumns];
-            line = reader.readLine();
-            while (line != null) {
-                for (int i=0; i<myArray.length; i++) {
-                    String[] s1 = line.split(" ");
-                    for (int j = 0; j < s1.length; j++) {
-                        myArray[i][j] = s1[j];
-                    }
-                    line = reader.readLine();
-
-                }
+                TerrainImage tileImage = terrainTileset.getTerrainImages().get(layout[i][j]);
+                tiles.add(new TerrainTile(rect, tileImage));
             }
 
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        passable = myArray;
 
 
     }
+
 
     public void saveTerrain(String fileName) throws IOException {
         FileWriter fileWriter = new FileWriter(fileName);
@@ -193,33 +122,15 @@ public class Terrain implements Renderable {
         return terrainRows;
     }
 
-    public SpriteSheet getSpriteSheet() {
-        return spriteSheet;
-    }
 
-    public int getTileWidth() {
-        return tileWidth;
-    }
-
-    public int getTileHeight() {
-        return tileHeight;
-    }
-
-    public int getTilesetRows() {
-        return tilesetRows;
-    }
-
-    public int getTilesetColumns() {
-        return tilesetColumns;
-    }
 
     public void setTile(int x, int y, String id) {
 
         layout[y][x] = id;
     }
 
-    public Map<String, TerrainImage> getTerrainImages() {
-        return terrainImages;
+    public TerrainTileset getTerrainTileset() {
+        return terrainTileset;
     }
 }
 
