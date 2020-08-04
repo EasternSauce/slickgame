@@ -1,9 +1,13 @@
 package com.kamilkurp.items;
 
-import com.kamilkurp.*;
+import com.kamilkurp.Globals;
+import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.utils.Camera;
-import org.newdawn.slick.*;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.*;

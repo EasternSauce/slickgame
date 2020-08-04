@@ -1,10 +1,10 @@
 package com.kamilkurp.items;
 
+import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
+import com.kamilkurp.Renderable;
 import com.kamilkurp.gui.LootOptionWindow;
 import com.kamilkurp.utils.Camera;
-import com.kamilkurp.Globals;
-import com.kamilkurp.Renderable;
 import org.newdawn.slick.Graphics;
 
 import java.util.ArrayList;

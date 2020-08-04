@@ -1,7 +1,7 @@
 package com.kamilkurp.terrain;
 
-import com.kamilkurp.utils.Camera;
 import com.kamilkurp.Renderable;
+import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 

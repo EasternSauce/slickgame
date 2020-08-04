@@ -4,7 +4,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 public class ItemType {

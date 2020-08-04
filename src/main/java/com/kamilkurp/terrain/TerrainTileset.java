@@ -35,19 +35,20 @@ public class TerrainTileset {
         this.tilesetRows = tilesetRows;
         this.scale = scale;
 
-
         terrainImages = new HashMap<>();
 
-        loadSpriteSheet(spritesheetFileName);
-        loadPassable(passableFileName);
-
+        loadSpriteSheet(spritesheetFileName, passableFileName);
 
     }
 
-    public void loadSpriteSheet(String path) throws SlickException {
+    public void loadSpriteSheet(String path, String passableFileName) throws SlickException {
+        loadPassable(passableFileName);
+
+
         Image image = new Image(path);
         spriteSheet = new SpriteSheet(image, tileWidth, tileHeight);
 
+        System.out.println("passable col " + passableRows + " " + passableColumns);
         for (int i = 0; i < tilesetRows; i++) {
             for (int j = 0; j < tilesetColumns; j++) {
                 String code = String.format ("%03d%03d", i, j);
@@ -59,27 +60,23 @@ public class TerrainTileset {
                 }
             }
         }
-
-
     }
-
 
     public void loadPassable(String fileName) {
         BufferedReader reader;
-        String [][] myArray = null;
         try {
             reader = new BufferedReader(new FileReader(fileName));
             String line = reader.readLine();
             String[] s = line.split(" ");
             passableColumns = Integer.parseInt(s[0]);
             passableRows = Integer.parseInt(s[1]);
-            myArray = new String[passableRows][passableColumns];
+            passable = new String[passableRows][passableColumns];
             line = reader.readLine();
             while (line != null) {
-                for (int i=0; i<myArray.length; i++) {
+                for (int i=0; i<passable.length; i++) {
                     String[] s1 = line.split(" ");
                     for (int j = 0; j < s1.length; j++) {
-                        myArray[i][j] = s1[j];
+                        passable[i][j] = s1[j];
                     }
                     line = reader.readLine();
 
@@ -90,8 +87,6 @@ public class TerrainTileset {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        passable = myArray;
-
 
     }
 

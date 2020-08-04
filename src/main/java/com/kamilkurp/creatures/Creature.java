@@ -1,9 +1,10 @@
 package com.kamilkurp.creatures;
 
 import com.kamilkurp.KeyInput;
+import com.kamilkurp.Renderable;
 import com.kamilkurp.items.LootSystem;
-import com.kamilkurp.utils.Camera;
 import com.kamilkurp.terrain.TerrainTile;
+import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
@@ -11,8 +12,6 @@ import org.newdawn.slick.geom.Rectangle;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import com.kamilkurp.Renderable;
 
 public abstract class Creature implements Renderable {
     protected SpriteSheet spriteSheet;

@@ -1,25 +1,24 @@
 package com.kamilkurp.map_editor;
+
+import com.kamilkurp.Globals;
+import com.kamilkurp.KeyInput;
+import com.kamilkurp.assets.Assets;
+import com.kamilkurp.gui.HUD;
+import com.kamilkurp.terrain.Area;
+import com.kamilkurp.terrain.TerrainImage;
+import com.kamilkurp.terrain.TerrainTileset;
+import com.kamilkurp.utils.Camera;
+import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Rectangle;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.kamilkurp.Globals;
-import com.kamilkurp.KeyInput;
-
-import com.kamilkurp.assets.Assets;
-import com.kamilkurp.gui.HUD;
-import com.kamilkurp.terrain.Terrain;
-import com.kamilkurp.terrain.TerrainImage;
-import com.kamilkurp.terrain.TerrainTileset;
-import com.kamilkurp.utils.Camera;
-import org.newdawn.slick.*;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Rectangle;
-
 public class MapEditor extends BasicGame {
 
-    private Terrain terrain;
+    private Area area;
 
     private Camera camera;
 
@@ -48,7 +47,7 @@ public class MapEditor extends BasicGame {
 
         Assets.loadAssets();
 
-        terrain = new Terrain(Assets.grassyTileset, "grassyTerrain.txt");
+        area = new Area(Assets.grassyTileset, Assets.grassyLayout);
 
         camera = new Camera();
 
@@ -75,35 +74,35 @@ public class MapEditor extends BasicGame {
                 if (currentPosY > 0) currentPosY--;
             }
             if (keyInput.isKeyPressed(KeyInput.Key.S)) {
-                if (currentPosY < terrain.getTerrainRows() - 1) currentPosY++;
+                if (currentPosY < area.getTerrainRows() - 1) currentPosY++;
 
             }
             if (keyInput.isKeyPressed(KeyInput.Key.A)) {
                 if (currentPosX > 0) currentPosX--;
             }
             if (keyInput.isKeyPressed(KeyInput.Key.D)) {
-                if (currentPosX < terrain.getTerrainColumns() - 1) currentPosX++;
+                if (currentPosX < area.getTerrainColumns() - 1) currentPosX++;
             }
 
             if (gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isKeyDown(Input.KEY_W)) {
                 if (currentPosY > 0) currentPosY--;
             }
             if (gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isKeyDown(Input.KEY_S)) {
-                if (currentPosY < terrain.getTerrainRows() - 1) currentPosY++;
+                if (currentPosY < area.getTerrainRows() - 1) currentPosY++;
 
             }
             if (gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isKeyDown(Input.KEY_A)) {
                 if (currentPosX > 0) currentPosX--;
             }
             if (gc.getInput().isKeyDown(Input.KEY_LSHIFT) && gc.getInput().isKeyDown(Input.KEY_D)) {
-                if (currentPosX < terrain.getTerrainColumns() - 1) currentPosX++;
+                if (currentPosX < area.getTerrainColumns() - 1) currentPosX++;
             }
 
             if (keyInput.isKeyPressed(KeyInput.Key.SPACE)) {
 
                 String id = null;
                 TerrainImage terrainImage = null;
-                for (Map.Entry<String, TerrainImage> entry : terrain.getTerrainTileset().getTerrainImages().entrySet()) {
+                for (Map.Entry<String, TerrainImage> entry : area.getTerrainTileset().getTerrainImages().entrySet()) {
                     if (entry.getValue().getX() == currentSpreadsheetPosX && entry.getValue().getY() == currentSpreadsheetPosY) {
                         id = entry.getKey();
                         terrainImage = entry.getValue();
@@ -114,9 +113,9 @@ public class MapEditor extends BasicGame {
                     System.err.println("spritesheet tile not mapped");
                 }
                 else {
-                    terrain.setTile(currentPosX, currentPosY, id);
+                    area.setTile(currentPosX, currentPosY, id);
 
-                    terrain.getTiles().get(currentPosY * terrain.getTerrainColumns() + currentPosX).setImage(terrainImage);
+                    area.getTiles().get(currentPosY * area.getTerrainColumns() + currentPosX).setImage(terrainImage);
                 }
 
 
@@ -129,14 +128,14 @@ public class MapEditor extends BasicGame {
                 if (currentSpreadsheetPosY > 0) currentSpreadsheetPosY--;
             }
             if (keyInput.isKeyPressed(KeyInput.Key.S)) {
-                if (currentSpreadsheetPosY < terrain.getTerrainRows() - 1) currentSpreadsheetPosY++;
+                if (currentSpreadsheetPosY < area.getTerrainRows() - 1) currentSpreadsheetPosY++;
 
             }
             if (keyInput.isKeyPressed(KeyInput.Key.A)) {
                 if (currentSpreadsheetPosX > 0) currentSpreadsheetPosX--;
             }
             if (keyInput.isKeyPressed(KeyInput.Key.D)) {
-                if (currentSpreadsheetPosX < terrain.getTerrainColumns() - 1) currentSpreadsheetPosX++;
+                if (currentSpreadsheetPosX < area.getTerrainColumns() - 1) currentSpreadsheetPosX++;
             }
         }
 
@@ -146,21 +145,21 @@ public class MapEditor extends BasicGame {
 
         if (keyInput.isKeyPressed(KeyInput.Key.F5)) {
             try {
-                terrain.saveTerrain(terrainFile);
+                area.saveTerrainLayoutToFile(terrainFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         if (!selectMode) {
-            int currentTileRectId = currentPosY * terrain.getTerrainColumns() + currentPosX;
+            int currentTileRectId = currentPosY * area.getTerrainColumns() + currentPosX;
 
-            camera.update(gc, terrain.getTiles().get(currentTileRectId).getRect());
+            camera.update(gc, area.getTiles().get(currentTileRectId).getRect());
 
         }
         else {
             int scale = 4;
-            Rectangle currentTileRect = new Rectangle(currentSpreadsheetPosX * terrain.getTerrainTileset().getTileWidth() * scale, currentSpreadsheetPosY * terrain.getTerrainTileset().getTileHeight() * scale, terrain.getTerrainTileset().getTileWidth(), terrain.getTerrainTileset().getTileHeight());
+            Rectangle currentTileRect = new Rectangle(currentSpreadsheetPosX * area.getTerrainTileset().getTileWidth() * scale, currentSpreadsheetPosY * area.getTerrainTileset().getTileHeight() * scale, area.getTerrainTileset().getTileWidth(), area.getTerrainTileset().getTileHeight());
 
             camera.update(gc, currentTileRect);
         }
@@ -168,14 +167,14 @@ public class MapEditor extends BasicGame {
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
         if (!selectMode) {
-            terrain.render(g, camera);
+            area.render(g, camera);
 
 
             g.setColor(Color.red);
 
-            int currentTileRectId = currentPosY * terrain.getTerrainColumns() + currentPosX;
+            int currentTileRectId = currentPosY * area.getTerrainColumns() + currentPosX;
 
-            Rectangle currentTileRect = terrain.getTiles().get(currentTileRectId).getRect();
+            Rectangle currentTileRect = area.getTiles().get(currentTileRectId).getRect();
 
             g.drawRect(currentTileRect.getX() - camera.getPosX(), currentTileRect.getY() - camera.getPosY(), currentTileRect.getWidth(), currentTileRect.getHeight());
 
@@ -186,7 +185,7 @@ public class MapEditor extends BasicGame {
 
             int scale = 4;
 
-            TerrainTileset terrainTileset = terrain.getTerrainTileset();
+            TerrainTileset terrainTileset = area.getTerrainTileset();
 
             SpriteSheet spriteSheet = terrainTileset.getSpriteSheet();
             for (int i = 0; i < terrainTileset.getTilesetColumns(); i++) {

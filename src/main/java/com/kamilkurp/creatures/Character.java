@@ -3,7 +3,10 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.terrain.TerrainTile;
-import org.newdawn.slick.*;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 
 import java.util.Collection;
 import java.util.List;

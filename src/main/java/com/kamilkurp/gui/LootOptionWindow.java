@@ -8,7 +8,8 @@ import com.kamilkurp.items.Item;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LootOptionWindow implements Renderable {
     private boolean visible = false;

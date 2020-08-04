@@ -1,8 +1,4 @@
 package com.kamilkurp;
-import java.io.*;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Character;
@@ -13,19 +9,27 @@ import com.kamilkurp.gui.HUD;
 import com.kamilkurp.gui.LootOptionWindow;
 import com.kamilkurp.items.InventoryWindow;
 import com.kamilkurp.items.LootSystem;
-import com.kamilkurp.terrain.Terrain;
+import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class SimpleSlickGame extends BasicGame {
 
-    private Terrain dungeonTerrain;
+    private Area area2;
 
-    private Terrain grassyTerrain;
+    private Area area1;
 
-
-    private Terrain currentTerrain;
+    private Area currentArea;
 
     private Camera camera;
 
@@ -78,12 +82,12 @@ public class SimpleSlickGame extends BasicGame {
         NPC npc = new NPC("johnny", 600, 600, creatures, lootSystem, dialogueWindow, "a1", true);
 
 
+        area1 = new Area(Assets.grassyTileset, Assets.grassyLayout);
 
-        dungeonTerrain = new Terrain(Assets.dungeonTileset, "terrain.txt");
+        area2 = new Area(Assets.dungeonTileset, Assets.dungeonLayout);
 
-        grassyTerrain = new Terrain(Assets.grassyTileset, "grassyTerrain.txt");
 
-        currentTerrain = grassyTerrain;
+        currentArea = area1;
 
 
         timer = new Timer();
@@ -120,11 +124,11 @@ public class SimpleSlickGame extends BasicGame {
         for (Creature creature : creatures.values()) {
             if (creature instanceof Character) {
                 if (!inventoryWindow.isInventoryOpen() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
-                    creature.update(gc, i, currentTerrain.getTiles(), creatures.values(), keyInput);
+                    creature.update(gc, i, currentArea.getTiles(), creatures.values(), keyInput);
                 }
             }
             else {
-                creature.update(gc, i, currentTerrain.getTiles(), creatures.values(), keyInput);
+                creature.update(gc, i, currentArea.getTiles(), creatures.values(), keyInput);
             }
 
         }
@@ -144,7 +148,7 @@ public class SimpleSlickGame extends BasicGame {
     }
 
     public void render(GameContainer gc, Graphics g) throws SlickException {
-        currentTerrain.render(g, camera);
+        currentArea.render(g, camera);
 
         spawnPoint1.render(g, camera);
         spawnPoint2.render(g, camera);

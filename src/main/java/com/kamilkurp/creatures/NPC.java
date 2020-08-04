@@ -6,8 +6,8 @@ import com.kamilkurp.dialogue.DialogueWindow;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
-import com.kamilkurp.utils.Timer;
 import com.kamilkurp.terrain.TerrainTile;
+import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 
