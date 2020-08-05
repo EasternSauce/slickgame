@@ -3,7 +3,9 @@ package com.kamilkurp.assets;
 import com.kamilkurp.Globals;
 import com.kamilkurp.terrain.TerrainLayout;
 import com.kamilkurp.terrain.TerrainTileset;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.SpriteSheet;
 
 public class Assets {
@@ -13,7 +15,11 @@ public class Assets {
     public static TerrainLayout area2Layout;
     public static SpriteSheet skeletonSpriteSheet;
     public static SpriteSheet slashSpriteSheet;
-
+    public static Sound stepSound;
+    public static Sound gruntSound;
+    public static Sound attackSound;
+    public static Music townMusic;
+    public static SpriteSheet itemIcons;
 
     public static void loadAssets() throws SlickException {
         String assetsLocation = Globals.getAssetsLocation();
@@ -23,5 +29,11 @@ public class Assets {
         area2Layout = new TerrainLayout(assetsLocation + "area_layouts/area2_layout.txt");
         skeletonSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/skeleton.png", 64, 64);
         slashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash.png", 40, 40);
+        stepSound = new Sound(Globals.getAssetsLocation() + "sounds/running.wav");
+        gruntSound = new Sound(Globals.getAssetsLocation() + "sounds/grunt.wav");
+        attackSound = new Sound(Globals.getAssetsLocation() + "sounds/swoosh.wav");
+        townMusic = new Music(Globals.getAssetsLocation() + "music/town_song.wav");
+        itemIcons = new SpriteSheet(Globals.getAssetsLocation() + "items/item_icons.png", 40, 40);
+
     }
 }

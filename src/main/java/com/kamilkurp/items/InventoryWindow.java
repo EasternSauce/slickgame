@@ -3,6 +3,7 @@ package com.kamilkurp.items;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
+import com.kamilkurp.assets.Assets;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -70,10 +71,6 @@ public class InventoryWindow implements Renderable {
         traderInventorySlotList = new LinkedList<>();
 
         equipmentSlotNameList = Arrays.asList("Helmet","Body","Gloves","Ring","Boots");
-
-        Image image = new Image(Globals.getAssetsLocation() + "items/item_icons.png");
-
-        ItemType.loadIcons(image, slotWidth, slotHeight);
 
         ItemType.loadItemTypes();
 

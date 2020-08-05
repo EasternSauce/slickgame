@@ -35,7 +35,7 @@ public abstract class Creature implements Renderable {
 
     protected int attackingDirection = 0;
 
-    private Sound attackSound = new Sound(Globals.getAssetsLocation() + "sounds/swoosh.wav");
+    private Sound attackSound = Assets.attackSound;
 
     protected Timer runningTimer;
     protected Timer attackingTimer;

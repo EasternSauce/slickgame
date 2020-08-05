@@ -1,5 +1,6 @@
 package com.kamilkurp.items;
 
+import com.kamilkurp.assets.Assets;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
@@ -59,6 +60,8 @@ public class ItemType {
     }
 
     public static void loadItemTypes() {
+        SpriteSheet itemIcons = Assets.itemIcons;
+
         itemTypes = new HashMap<>();
 
         ItemType itemType1 = new ItemType("skinTunic", "Leather Armor", "-", itemIcons.getSubImage(0,0), "body", 50);

@@ -5,13 +5,13 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
-public class HUD {
+public class Hud {
     Rectangle bottomRect;
     Rectangle rightRect;
 
     Color color;
 
-    public HUD() {
+    public Hud() {
         int w = Globals.SCREEN_WIDTH;
         int h = Globals.SCREEN_HEIGHT;
         float proportion = Globals.SCREEN_PROPORTION;

@@ -3,7 +3,7 @@ package com.kamilkurp.map_editor;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.gui.HUD;
+import com.kamilkurp.gui.Hud;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainImage;
 import com.kamilkurp.terrain.TerrainTileset;
@@ -22,7 +22,7 @@ public class MapEditor extends BasicGame {
 
     private Camera camera;
 
-    private com.kamilkurp.gui.HUD HUD;
+    private Hud HUD;
 
 
     private KeyInput keyInput;
@@ -51,7 +51,7 @@ public class MapEditor extends BasicGame {
 
         camera = new Camera();
 
-        HUD = new HUD();
+        HUD = new Hud();
 
         keyInput = new KeyInput();
 

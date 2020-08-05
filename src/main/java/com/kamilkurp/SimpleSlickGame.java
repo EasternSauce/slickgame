@@ -5,13 +5,12 @@ import com.kamilkurp.creatures.Character;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.NPC;
 import com.kamilkurp.dialogue.DialogueWindow;
-import com.kamilkurp.gui.HUD;
+import com.kamilkurp.gui.Hud;
 import com.kamilkurp.gui.LootOptionWindow;
 import com.kamilkurp.items.InventoryWindow;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
-import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.*;
 
 import java.io.BufferedReader;
@@ -25,17 +24,14 @@ import java.util.logging.Logger;
 
 public class SimpleSlickGame extends BasicGame {
 
-    private Area area2;
-
     private Area area1;
+    private Area area2;
 
     private Area currentArea;
 
     private Camera camera;
 
-    private com.kamilkurp.utils.Timer timer;
-
-    private com.kamilkurp.gui.HUD HUD;
+    private Hud hud;
 
     private Map<String, Creature> creatures;
 
@@ -90,13 +86,11 @@ public class SimpleSlickGame extends BasicGame {
         currentArea = area1;
 
 
-        timer = new Timer();
-
         camera = new Camera();
 
 
 
-        HUD = new HUD();
+        hud = new Hud();
 
 
         spawnPoint1 = new SpawnPoint(1000, 1400, 3, creatures, lootSystem);
@@ -107,7 +101,7 @@ public class SimpleSlickGame extends BasicGame {
 
         loadGame();
 
-        townMusic = new Music(Globals.getAssetsLocation() + "music/town_song.wav");
+        townMusic = Assets.townMusic;
 
         townMusic.loop(1.0f, 0.5f);
     }
@@ -160,7 +154,7 @@ public class SimpleSlickGame extends BasicGame {
         lootSystem.render(g, camera);
         inventoryWindow.render(g, camera);
 
-        HUD.render(g);
+        hud.render(g);
 
         dialogueWindow.render(g);
 
