@@ -193,7 +193,7 @@ public class SimpleSlickGame extends BasicGame {
 
     private void saveGame() {
         try {
-            FileWriter writer = new FileWriter("savegame.sav");
+            FileWriter writer = new FileWriter("saves/savegame.sav");
 
             for (Creature creature : creatures.values()) {
                 writer.write("creature " + creature.getId() + "\n");
@@ -212,7 +212,7 @@ public class SimpleSlickGame extends BasicGame {
         Creature creature = null;
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new FileReader("savegame.sav"));
+            reader = new BufferedReader(new FileReader("saves/savegame.sav"));
             String line = reader.readLine();
             while (line != null) {
                 String[] s = line.split(" ");

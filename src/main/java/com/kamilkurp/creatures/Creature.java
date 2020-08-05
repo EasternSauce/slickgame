@@ -3,6 +3,9 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
+import com.kamilkurp.animations.AttackAnimation;
+import com.kamilkurp.animations.WalkAnimation;
+import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
@@ -15,10 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Creature implements Renderable {
-    protected SpriteSheet spriteSheet;
-    protected SpriteSheet attackSheet;
-    protected Animation[] walkingAnimation;
-    protected Animation[] attackingAnimation;
 
     protected Rectangle rect;
 
@@ -61,6 +60,9 @@ public abstract class Creature implements Renderable {
 
     protected LootSystem lootSystem;
 
+    WalkAnimation walkAnimation;
+    AttackAnimation attackAnimation;
+
 
     public Creature(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem) throws SlickException {
         this.id = id;
@@ -69,6 +71,7 @@ public abstract class Creature implements Renderable {
         rect = new Rectangle(posX, posY, 64, 64);
         hitbox = new Rectangle(2, 2, 60, 60);
 
+        walkAnimation = new WalkAnimation(Assets.skeletonSpriteSheet, 9, 100);
 
         runningTimer = new Timer();
         attackingTimer = new Timer();
@@ -77,9 +80,7 @@ public abstract class Creature implements Renderable {
 
         attackRect = new Rectangle(-999, -999, 1, 1);
 
-
-        loadSpriteSheets();
-        loadAnimations();
+        attackAnimation = new AttackAnimation(Assets.slashSpriteSheet, 6, 50);
 
         creatures.put(this.getId(), this);
 
@@ -87,7 +88,7 @@ public abstract class Creature implements Renderable {
 
     @Override
     public void render(Graphics g, Camera camera) {
-        Image sprite = spriteSheet.getSprite(0, direction);
+        Image sprite = walkAnimation.getRestPosition(direction);
 
         if (!running) {
             if (healthPoints == 0f) {
@@ -96,7 +97,7 @@ public abstract class Creature implements Renderable {
             g.drawImage(sprite, (int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY());
         }
         else {
-            g.drawAnimation(walkingAnimation[direction], (int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY());
+            g.drawAnimation(walkAnimation.getAnimation(direction), (int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY());
         }
 
         int attackWidth = 40;
@@ -125,7 +126,7 @@ public abstract class Creature implements Renderable {
         attackRect = new Rectangle(rect.getCenterX() + shiftX, rect.getCenterY() + shiftY, attackWidth, attackHeight);
 
         if (attacking) {
-            g.drawAnimation(attackingAnimation[attackingDirection], rect.getCenterX() + shiftX - camera.getPosX(), rect.getCenterY() + shiftY - camera.getPosY());
+            g.drawAnimation(attackAnimation.getAnimation(attackingDirection), rect.getCenterX() + shiftX - camera.getPosX(), rect.getCenterY() + shiftY - camera.getPosY());
         }
 
     }
@@ -175,13 +176,6 @@ public abstract class Creature implements Renderable {
 
     protected abstract void onDeath();
 
-    public void loadSpriteSheets() throws SlickException {
-        Image image = new Image(Globals.getAssetsLocation() + "creature_animations/skeleton.png");
-        spriteSheet = new SpriteSheet(image, (int)rect.getWidth(), (int)rect.getHeight());
-
-        image = new Image(Globals.getAssetsLocation() + "attack_animations/slash.png");
-        attackSheet = new SpriteSheet(image, 40, 40);
-    }
 
     public void move(float dx, float dy) {
         rect.setX(rect.getX() + dx);
@@ -220,49 +214,7 @@ public abstract class Creature implements Renderable {
         return false;
     }
 
-    public void loadAnimations() {
-        walkingAnimation = new Animation[4];
 
-        for (int i = 0; i < 4; i++) {
-            walkingAnimation[i] = new Animation();
-            for (int j = 0; j < 9; j++) {
-                walkingAnimation[i].addFrame(spriteSheet.getSprite(j,i), 100);
-
-            }
-        }
-
-        attackingAnimation = new Animation[4];
-
-        // fix this :<
-
-        attackingAnimation[0] = new Animation();
-        for (int j = 0; j < 6; j++) {
-            Image image = attackSheet.getSprite(j,0).copy();
-            image.rotate(270f);
-            attackingAnimation[0].addFrame(image, 30);
-        }
-
-        attackingAnimation[1] = new Animation();
-        for (int j = 0; j < 6; j++) {
-            Image image = attackSheet.getSprite(j,0).copy();
-            image.rotate(180);
-            attackingAnimation[1].addFrame(image, 30);
-        }
-
-        attackingAnimation[2] = new Animation();
-        for (int j = 0; j < 6; j++) {
-            Image image = attackSheet.getSprite(j,0).copy();
-            image.rotate(90f);
-            attackingAnimation[2].addFrame(image, 30);
-        }
-
-        attackingAnimation[3] = new Animation();
-        for (int j = 0; j < 6; j++) {
-            Image image = attackSheet.getSprite(j,0).copy();
-            attackingAnimation[3].addFrame(image, 30);
-        }
-
-    }
 
     public void beforeMovement(int i) {
         moving = false;
@@ -308,10 +260,7 @@ public abstract class Creature implements Renderable {
             attackSound.play(1.0f, 0.1f);
 
             if (!attacking) {
-                attackingAnimation[0].restart();
-                attackingAnimation[1].restart();
-                attackingAnimation[2].restart();
-                attackingAnimation[3].restart();
+                attackAnimation.restart();
 
                 attacking = true;
                 attackingTimer.reset();
