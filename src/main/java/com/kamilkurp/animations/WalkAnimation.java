@@ -9,11 +9,15 @@ public class WalkAnimation {
     private Animation[] walkAnimation;
     private int framesPerDirection;
     private int frameDuration;
+    private int[] directions;
+    private int restPosition;
 
-    public WalkAnimation(SpriteSheet spriteSheet, int framesPerDirection, int frameDuration) {
+    public WalkAnimation(SpriteSheet spriteSheet, int framesPerDirection, int frameDuration, int[] directions, int restPosition) {
         this.spriteSheet = spriteSheet;
         this.framesPerDirection = framesPerDirection;
         this.frameDuration = frameDuration;
+        this.directions = directions;
+        this.restPosition = restPosition;
 
         loadAnimations();
     }
@@ -24,7 +28,7 @@ public class WalkAnimation {
         for (int i = 0; i < 4; i++) { // four directions
             walkAnimation[i] = new Animation();
             for (int j = 0; j < framesPerDirection; j++) {
-                walkAnimation[i].addFrame(spriteSheet.getSprite(j,i), frameDuration);
+                walkAnimation[i].addFrame(spriteSheet.getSprite(j,directions[i]), frameDuration);
 
             }
         }
@@ -33,7 +37,7 @@ public class WalkAnimation {
     }
 
     public Image getRestPosition(int direction) {
-        return spriteSheet.getSprite(0, direction);
+        return spriteSheet.getSprite(restPosition, directions[direction]);
     }
 
     public Animation getAnimation(int direction) {

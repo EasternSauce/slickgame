@@ -71,7 +71,8 @@ public abstract class Creature implements Renderable {
         rect = new Rectangle(posX, posY, 64, 64);
         hitbox = new Rectangle(2, 2, 60, 60);
 
-        walkAnimation = new WalkAnimation(Assets.skeletonSpriteSheet, 9, 100);
+        //walkAnimation = new WalkAnimation(Assets.skeletonSpriteSheet, 9, 100, new int [] {0,1,2,3}, 0);
+        walkAnimation = new WalkAnimation(Assets.male1SpriteSheet, 3, 100, new int [] {3,1,0,2}, 1);
 
         runningTimer = new Timer();
         attackingTimer = new Timer();
@@ -94,10 +95,10 @@ public abstract class Creature implements Renderable {
             if (healthPoints == 0f) {
                 sprite.rotate(90f);
             }
-            g.drawImage(sprite, (int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY());
+            sprite.draw((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY(), rect.getWidth(), rect.getHeight());
         }
         else {
-            g.drawAnimation(walkAnimation.getAnimation(direction), (int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY());
+            walkAnimation.getAnimation(direction).draw((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY(), rect.getWidth(), rect.getHeight());
         }
 
         int attackWidth = 40;
