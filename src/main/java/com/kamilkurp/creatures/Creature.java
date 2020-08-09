@@ -12,6 +12,7 @@ import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.util.Collection;
 import java.util.List;
@@ -60,6 +61,8 @@ public abstract class Creature implements Renderable {
 
     protected LootSystem lootSystem;
 
+
+
     WalkAnimation walkAnimation;
     AttackAnimation attackAnimation;
 
@@ -82,6 +85,8 @@ public abstract class Creature implements Renderable {
         attackRect = new Rectangle(-999, -999, 1, 1);
 
         attackAnimation = new AttackAnimation(Assets.slashSpriteSheet, 6, 50);
+
+
 
         creatures.put(this.getId(), this);
 
@@ -124,15 +129,30 @@ public abstract class Creature implements Renderable {
             shiftY = -attackHeight/2;
         }
 
-        attackRect = new Rectangle(rect.getCenterX() + shiftX, rect.getCenterY() + shiftY, attackWidth, attackHeight);
 
-        if (attacking) {
-            g.drawAnimation(attackAnimation.getAnimation(attackingDirection), rect.getCenterX() + shiftX - camera.getPosX(), rect.getCenterY() + shiftY - camera.getPosY());
-        }
+        //if (attacking) {
+           // g.drawAnimation(attackAnimation.getAnimation(attackingDirection), rect.getCenterX() + shiftX - camera.getPosX(), rect.getCenterY() + shiftY - camera.getPosY());
+        //}
+
+        //attackAnimation.getAnimation(3
+        System.out.println("is stopped: " + attackAnimation.getAnimation(3).isStopped() + " curr frame: " + attackAnimation.getAnimation(3).getCurrentFrame());
+
+
+
 
     }
 
     public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput) {
+
+
+
+
+//        System.out.println(direction);
+
+
+        //attackRect = new Rectangle(rect.getCenterX() + shiftX, rect.getCenterY() + shiftY, attackWidth, attackHeight);
+
+
         beforeMovement(i);
 
         if (healthPoints > 0f) performActions(gc, creatures, keyInput);

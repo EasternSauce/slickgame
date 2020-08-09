@@ -103,7 +103,7 @@ public class SimpleSlickGame extends BasicGame {
 
         townMusic = Assets.townMusic;
 
-        townMusic.loop(1.0f, 0.5f);
+//        townMusic.loop(1.0f, 0.5f);
     }
 
     @Override
