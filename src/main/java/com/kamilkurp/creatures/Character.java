@@ -21,16 +21,14 @@ public class Character extends Creature {
     private boolean walking = false;
     private boolean sprint = false;
 
-    private Vector2f directionVector;
-    private double facingDirAngle;
+
 
     public Character(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem) throws SlickException {
         super(id, posX, posY, creatures, lootSystem);
 
-        facingDirAngle = 0.0f;
-        directionVector = new Vector2f(0f, 0f);
 
-        attackAnimation.getAnimation(3).setLooping(false);
+
+        attackAnimation.getAnimation().setLooping(false);
     }
 
     @Override
@@ -89,14 +87,7 @@ public class Character extends Creature {
     public void render(Graphics g, Camera camera) {
         super.render(g, camera);
 
-        if (attacking) {
-            Image image = attackAnimation.getAnimation(3).getCurrentFrame();
-            image.setRotation((float) facingDirAngle);
 
-            g.drawImage(image, attackRect.getX() - camera.getPosX(), attackRect.getY() - camera.getPosY());
-            //g.drawRect(attackShiftX + rect.getCenterX() - camera.getPosX() - attackWidth / 2f, attackShiftY + rect.getCenterY() - camera.getPosY() - attackHeight / 2f, attackWidth, attackHeight);
-
-        }
 }
 
     @Override
@@ -111,7 +102,7 @@ public class Character extends Creature {
             running = false;
         }
 
-        if (attackingTimer.getTime() > 200) {
+        if (attackingTimer.getTime() > 300) {
             attacking = false;
         }
 
@@ -119,36 +110,21 @@ public class Character extends Creature {
             immune = false;
         }
 
+
+
+    }
+
+    @Override
+    protected void setFacingDirection(GameContainer gc) {
         int mouseX = gc.getInput().getMouseX();
         int mouseY = gc.getInput().getMouseY();
-
-//        System.out.println(mouseX + " " + mouseY);
 
         float centerX = Globals.SCREEN_WIDTH * Globals.SCREEN_PROPORTION / 2;
         float centerY = Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION / 2;
 
-        directionVector = new Vector2f(mouseX - centerX, mouseY - centerY);
+        facingVector = new Vector2f(mouseX - centerX, mouseY - centerY);
 
-        System.out.println("theta: " + directionVector.getTheta());
-
-        facingDirAngle = directionVector.getTheta();
-
-        float range = 60f;
-
-        float attackShiftX = directionVector.getNormal().getX() * range;
-        float attackShiftY = directionVector.getNormal().getY() * range;
-
-        int attackWidth = 40;
-        int attackHeight = 40;
-
-        float attackRectX = attackShiftX + rect.getCenterX() - attackWidth / 2f;
-        float attackRectY = attackShiftY + rect.getCenterY() - attackHeight / 2f;
-
-        attackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
-
-
-        attackAnimation.getAnimation(3).update(i);
-
+        facingAngle = facingVector.getTheta();
     }
 
 

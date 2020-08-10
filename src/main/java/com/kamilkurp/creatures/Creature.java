@@ -61,6 +61,11 @@ public abstract class Creature implements Renderable {
 
     protected LootSystem lootSystem;
 
+    protected Vector2f facingVector;
+    protected double facingAngle;
+    protected Vector2f attackingVector;
+    protected double attackingAngle;
+
 
 
     WalkAnimation walkAnimation;
@@ -84,9 +89,10 @@ public abstract class Creature implements Renderable {
 
         attackRect = new Rectangle(-999, -999, 1, 1);
 
-        attackAnimation = new AttackAnimation(Assets.slashSpriteSheet, 6, 50);
+        attackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
 
-
+        facingAngle = 0.0f;
+        facingVector = new Vector2f(0f, 0f);
 
         creatures.put(this.getId(), this);
 
@@ -106,27 +112,38 @@ public abstract class Creature implements Renderable {
             walkAnimation.getAnimation(direction).draw((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY(), rect.getWidth(), rect.getHeight());
         }
 
-        int attackWidth = 40;
-        int attackHeight = 40;
+//        int attackWidth = 40;
+//        int attackHeight = 40;
+//
+//        g.setColor(Color.red);
+//        int shiftX = 0;
+//        int shiftY = 0;
+//        if (attackingDirection == 0) {
+//            shiftX = -attackWidth/2;
+//            shiftY = -60;
+//        }
+//        if (attackingDirection == 1) {
+//            shiftX = -60;
+//            shiftY = -attackHeight/2;
+//        }
+//        if (attackingDirection == 2) {
+//            shiftX = -attackWidth/2;
+//            shiftY = 60-attackHeight/2;
+//        }
+//        if (attackingDirection == 3) {
+//            shiftX = 60-attackWidth;
+//            shiftY = -attackHeight/2;
+//        }
 
-        g.setColor(Color.red);
-        int shiftX = 0;
-        int shiftY = 0;
-        if (attackingDirection == 0) {
-            shiftX = -attackWidth/2;
-            shiftY = -60;
-        }
-        if (attackingDirection == 1) {
-            shiftX = -60;
-            shiftY = -attackHeight/2;
-        }
-        if (attackingDirection == 2) {
-            shiftX = -attackWidth/2;
-            shiftY = 60-attackHeight/2;
-        }
-        if (attackingDirection == 3) {
-            shiftX = 60-attackWidth;
-            shiftY = -attackHeight/2;
+        if (attacking) {
+            Image image = attackAnimation.getAnimation().getCurrentFrame();
+            image.setRotation((float) attackingAngle);
+
+            g.drawImage(image, attackRect.getX() - camera.getPosX(), attackRect.getY() - camera.getPosY());
+            //g.drawRect(attackShiftX + rect.getCenterX() - camera.getPosX() - attackWidth / 2f, attackShiftY + rect.getCenterY() - camera.getPosY() - attackHeight / 2f, attackWidth, attackHeight);
+
+
+
         }
 
 
@@ -135,7 +152,6 @@ public abstract class Creature implements Renderable {
         //}
 
         //attackAnimation.getAnimation(3
-        System.out.println("is stopped: " + attackAnimation.getAnimation(3).isStopped() + " curr frame: " + attackAnimation.getAnimation(3).getCurrentFrame());
 
 
 
@@ -159,10 +175,14 @@ public abstract class Creature implements Renderable {
 
         afterMovement(tiles);
 
-        attackLogic(creatures);
+        setFacingDirection(gc);
+
+        attackLogic(i, creatures);
     }
 
-    private void attackLogic(Collection<Creature> creatures) {
+    protected abstract void setFacingDirection(GameContainer gc);
+
+    private void attackLogic(int i, Collection<Creature> creatures) {
         if (attacking) {
             for (Creature creature : creatures) {
                 if (creature == this) continue;
@@ -172,6 +192,22 @@ public abstract class Creature implements Renderable {
                     }
                 }
             }
+
+            float attackRange = 60f;
+
+            float attackShiftX = attackingVector.getNormal().getX() * attackRange;
+            float attackShiftY = attackingVector.getNormal().getY() * attackRange;
+
+            int attackWidth = 40;
+            int attackHeight = 40;
+
+            float attackRectX = attackShiftX + rect.getCenterX() - attackWidth / 2f;
+            float attackRectY = attackShiftY + rect.getCenterY() - attackHeight / 2f;
+
+            attackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
+
+
+            attackAnimation.getAnimation().update(i);
         }
 
     }
@@ -280,12 +316,13 @@ public abstract class Creature implements Renderable {
         if (attackCooldownTimer.getTime() > 800f) {
             attackSound.play(1.0f, 0.1f);
 
-            if (!attacking) {
+            if (!attacking) { // on start attack
                 attackAnimation.restart();
 
                 attacking = true;
                 attackingTimer.reset();
-                attackingDirection = direction;
+                attackingAngle = facingAngle;
+                attackingVector = facingVector;
             }
             attackCooldownTimer.reset();
         }

@@ -6,13 +6,13 @@ import org.newdawn.slick.SpriteSheet;
 
 public class AttackAnimation {
     private SpriteSheet spriteSheet;
-    private Animation[] attackAnimation;
-    private int framesPerDirection;
+    private Animation attackAnimation;
+    private int frames;
     private int frameDuration;
 
-    public AttackAnimation(SpriteSheet spriteSheet, int framesPerDirection, int frameDuration) {
+    public AttackAnimation(SpriteSheet spriteSheet, int numberOfFrames, int frameDuration) {
         this.spriteSheet = spriteSheet;
-        this.framesPerDirection = framesPerDirection;
+        this.frames = numberOfFrames;
         this.frameDuration = frameDuration;
 
         loadAnimations();
@@ -20,29 +20,24 @@ public class AttackAnimation {
 
     private void loadAnimations() {
 
-        attackAnimation = new Animation[4];
 
-        float[] rotationAngles = {270f, 180f, 90f, 0f};
+//        float[] rotationAngles = {270f, 180f, 90f, 0f};
 
-        for (int i = 0; i < 4; i++) {
-            attackAnimation[i] = new Animation();
-            for (int j = 0; j < framesPerDirection; j++) {
-                Image image = spriteSheet.getSprite(j,0);
-                image.rotate(rotationAngles[i]);
-                attackAnimation[i].addFrame(image, frameDuration);
-            }
+        attackAnimation = new Animation();
+        for (int j = 0; j < frames; j++) {
+            Image image = spriteSheet.getSprite(j,0);
+            //image.rotate(rotationAngles[i]);
+            attackAnimation.addFrame(image, frameDuration);
         }
+
 
     }
 
-    public Animation getAnimation(int direction) {
-        return attackAnimation[direction];
+    public Animation getAnimation() {
+        return attackAnimation;
     }
 
     public void restart() {
-        attackAnimation[0].restart();
-        attackAnimation[1].restart();
-        attackAnimation[2].restart();
-        attackAnimation[3].restart();
+        attackAnimation.restart();
     }
 }

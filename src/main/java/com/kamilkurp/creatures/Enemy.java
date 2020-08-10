@@ -8,6 +8,7 @@ import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.util.*;
 
@@ -25,6 +26,8 @@ public class Enemy extends Creature {
 
     private Timer findNewDestinationTimer;
     private Rectangle closestRect;
+
+    private Creature aggroed;
 
 
     public Enemy(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem) throws SlickException {
@@ -48,12 +51,20 @@ public class Enemy extends Creature {
             running = false;
         }
 
-        if (attackingTimer.getTime() > 200) {
+        if (attackingTimer.getTime() > 300) {
             attacking = false;
         }
 
         if (immunityTimer.getTime() > 500) {
             immune = false;
+        }
+    }
+
+    @Override
+    protected void setFacingDirection(GameContainer gc) {
+        if (aggroed != null) {
+            facingVector = new Vector2f(aggroed.getRect().getCenterX() - rect.getCenterX(), aggroed.getRect().getCenterY() - rect.getCenterY());
+            facingAngle = facingVector.getTheta();
         }
     }
 
@@ -66,7 +77,7 @@ public class Enemy extends Creature {
     public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput) {
 
         int aggroDistance = 200;
-        Creature aggroed = null;
+        aggroed = null;
         for (Creature creature : creatures) {
             if (creature instanceof Enemy) continue;
             if (Globals.distance(creature.rect, rect) < aggroDistance && creature.healthPoints > 0) {

@@ -79,7 +79,7 @@ public class NPC extends Creature {
             running = false;
         }
 
-        if (attackingTimer.getTime() > 200) {
+        if (attackingTimer.getTime() > 300) {
             attacking = false;
         }
 
@@ -87,6 +87,11 @@ public class NPC extends Creature {
             immune = false;
         }
 
+
+    }
+
+    @Override
+    protected void setFacingDirection(GameContainer gc) {
 
     }
 

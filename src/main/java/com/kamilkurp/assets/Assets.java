@@ -15,6 +15,7 @@ public class Assets {
     public static TerrainLayout area2Layout;
     public static SpriteSheet skeletonSpriteSheet;
     public static SpriteSheet slashSpriteSheet;
+    public static SpriteSheet betterSlashSpriteSheet;
     public static Sound stepSound;
     public static Sound gruntSound;
     public static Sound attackSound;
@@ -30,6 +31,7 @@ public class Assets {
         area2Layout = new TerrainLayout(assetsLocation + "area_layouts/area2_layout.txt");
         skeletonSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/skeleton.png", 64, 64);
         slashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash.png", 40, 40);
+        betterSlashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash_hd.png", 40, 40);
         stepSound = new Sound(Globals.getAssetsLocation() + "sounds/running.wav");
         gruntSound = new Sound(Globals.getAssetsLocation() + "sounds/grunt.wav");
         attackSound = new Sound(Globals.getAssetsLocation() + "sounds/swoosh.wav");
