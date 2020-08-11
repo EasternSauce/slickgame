@@ -14,9 +14,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class Creature implements Renderable {
 
@@ -68,6 +66,7 @@ public abstract class Creature implements Renderable {
 
 
 
+
     WalkAnimation walkAnimation;
     AttackAnimation attackAnimation;
 
@@ -111,62 +110,19 @@ public abstract class Creature implements Renderable {
         else {
             walkAnimation.getAnimation(direction).draw((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY(), rect.getWidth(), rect.getHeight());
         }
+    }
 
-//        int attackWidth = 40;
-//        int attackHeight = 40;
-//
-//        g.setColor(Color.red);
-//        int shiftX = 0;
-//        int shiftY = 0;
-//        if (attackingDirection == 0) {
-//            shiftX = -attackWidth/2;
-//            shiftY = -60;
-//        }
-//        if (attackingDirection == 1) {
-//            shiftX = -60;
-//            shiftY = -attackHeight/2;
-//        }
-//        if (attackingDirection == 2) {
-//            shiftX = -attackWidth/2;
-//            shiftY = 60-attackHeight/2;
-//        }
-//        if (attackingDirection == 3) {
-//            shiftX = 60-attackWidth;
-//            shiftY = -attackHeight/2;
-//        }
-
+    public void renderAttackAnimation(Graphics g, Camera camera) {
         if (attacking) {
             Image image = attackAnimation.getAnimation().getCurrentFrame();
             image.setRotation((float) attackingAngle);
 
             g.drawImage(image, attackRect.getX() - camera.getPosX(), attackRect.getY() - camera.getPosY());
-            //g.drawRect(attackShiftX + rect.getCenterX() - camera.getPosX() - attackWidth / 2f, attackShiftY + rect.getCenterY() - camera.getPosY() - attackHeight / 2f, attackWidth, attackHeight);
-
-
 
         }
-
-
-        //if (attacking) {
-           // g.drawAnimation(attackAnimation.getAnimation(attackingDirection), rect.getCenterX() + shiftX - camera.getPosX(), rect.getCenterY() + shiftY - camera.getPosY());
-        //}
-
-        //attackAnimation.getAnimation(3
-
-
-
-
     }
 
     public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput) {
-
-
-
-
-//        System.out.println(direction);
-
-
-        //attackRect = new Rectangle(rect.getCenterX() + shiftX, rect.getCenterY() + shiftY, attackWidth, attackHeight);
 
 
         beforeMovement(i);
@@ -337,11 +293,11 @@ public abstract class Creature implements Renderable {
         float newPosX = rect.getX() + speed * dirX;
         float newPosY = rect.getY() + speed * dirY;
 
-        if (!isCollidingX(tiles, newPosX, newPosY)) {
+        if (!isCollidingX(tiles, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
             move(speed * dirX, 0);
         }
 
-        if (!isCollidingY(tiles, newPosX, newPosY)) {
+        if (!isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
             move(0, speed * dirY);
         }
 

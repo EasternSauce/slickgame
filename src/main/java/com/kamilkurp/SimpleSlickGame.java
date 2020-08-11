@@ -17,8 +17,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,6 +50,9 @@ public class SimpleSlickGame extends BasicGame {
     private SpawnPoint spawnPoint2;
 
     private Music townMusic;
+
+    private Queue<Creature> renderPriorityQueue;
+
 
     public SimpleSlickGame(String gamename) {
         super(gamename);
@@ -112,9 +114,6 @@ public class SimpleSlickGame extends BasicGame {
 
         keyInput.readKeyPresses(gc.getInput());
 
-        int enemyAlive = 0;
-
-
         for (Creature creature : creatures.values()) {
             if (creature instanceof Character) {
                 if (!inventoryWindow.isInventoryOpen() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
@@ -139,17 +138,42 @@ public class SimpleSlickGame extends BasicGame {
 
         spawnPoint1.update();
         spawnPoint2.update();
+
+        renderPriorityQueue = new PriorityQueue<>((o1, o2) -> {
+            if (o1.getHealthPoints() <= 0.0f) return -1;
+            if (o2.getHealthPoints() <= 0.0f) return 1;
+            if (o1.getRect().getY() == o2.getRect().getY()) return 0;
+            return (o1.getRect().getY() - o2.getRect().getY() > 0.0f) ? 1 : -1;
+        });
+
+        renderPriorityQueue.addAll(creatures.values());
+
     }
 
-    public void render(GameContainer gc, Graphics g) throws SlickException {
+    public void render(GameContainer gc, Graphics g) {
         currentArea.render(g, camera);
 
         spawnPoint1.render(g, camera);
         spawnPoint2.render(g, camera);
 
-        for (Creature creature : creatures.values()) {
-            creature.render(g, camera);
+
+        System.out.println("NEW RENDER CYCLE-----------");
+        if (renderPriorityQueue != null) {
+            while(!renderPriorityQueue.isEmpty()) {
+                Creature creature = renderPriorityQueue.poll();
+
+                System.out.println(creature.getId() + " is being rendered, hp = " + creature.getHealthPoints());
+
+                creature.render(g, camera);
+            }
+
         }
+
+
+        for (Creature creature : creatures.values()) {
+            creature.renderAttackAnimation(g, camera);
+        }
+
 
         lootSystem.render(g, camera);
         inventoryWindow.render(g, camera);

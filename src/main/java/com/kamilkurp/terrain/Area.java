@@ -87,7 +87,7 @@ public class Area implements Renderable {
     public void loadLayoutTiles() {
         for(int i=0; i < terrainLayout.getLayoutRows(); i++) {
             for(int j=0; j < terrainLayout.getLayoutColumns(); j++) {
-                Rectangle rect = new Rectangle(300 + j * 64,300 + i*64,64, 64);
+                Rectangle rect = new Rectangle(j * 64,i*64,64, 64);
 
                 TerrainImage tileImage = terrainTileset.getTerrainImages().get(terrainLayout.getLayoutTile(j, i));
                 tiles.add(new TerrainTile(rect, tileImage));
