@@ -9,6 +9,7 @@ import com.kamilkurp.gui.Hud;
 import com.kamilkurp.gui.LootOptionWindow;
 import com.kamilkurp.items.InventoryWindow;
 import com.kamilkurp.items.LootSystem;
+import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.*;
@@ -52,6 +53,8 @@ public class SimpleSlickGame extends BasicGame {
     private Music townMusic;
 
     private Queue<Creature> renderPriorityQueue;
+
+    private List<Arrow> arrowList;
 
 
     public SimpleSlickGame(String gamename) {
@@ -105,6 +108,8 @@ public class SimpleSlickGame extends BasicGame {
 
         townMusic = Assets.townMusic;
 
+        arrowList = new LinkedList<>();
+
 //        townMusic.loop(1.0f, 0.5f);
     }
 
@@ -148,6 +153,11 @@ public class SimpleSlickGame extends BasicGame {
 
         renderPriorityQueue.addAll(creatures.values());
 
+        if (keyInput.isKeyPressed(KeyInput.Key.SPACE)) {
+            Arrow arrow = new Arrow(character.getRect().getX(), character.getRect().getY());
+            arrowList.add(arrow);
+        }
+
     }
 
     public void render(GameContainer gc, Graphics g) {
@@ -157,12 +167,9 @@ public class SimpleSlickGame extends BasicGame {
         spawnPoint2.render(g, camera);
 
 
-        System.out.println("NEW RENDER CYCLE-----------");
         if (renderPriorityQueue != null) {
             while(!renderPriorityQueue.isEmpty()) {
                 Creature creature = renderPriorityQueue.poll();
-
-                System.out.println(creature.getId() + " is being rendered, hp = " + creature.getHealthPoints());
 
                 creature.render(g, camera);
             }
@@ -172,6 +179,10 @@ public class SimpleSlickGame extends BasicGame {
 
         for (Creature creature : creatures.values()) {
             creature.renderAttackAnimation(g, camera);
+        }
+
+        for (Arrow arrow : arrowList) {
+            arrow.render(g, camera);
         }
 
 

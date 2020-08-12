@@ -3,10 +3,7 @@ package com.kamilkurp.assets;
 import com.kamilkurp.Globals;
 import com.kamilkurp.terrain.TerrainLayout;
 import com.kamilkurp.terrain.TerrainTileset;
-import org.newdawn.slick.Music;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.Sound;
-import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.*;
 
 public class Assets {
     public static TerrainTileset grassyTileset;
@@ -22,6 +19,7 @@ public class Assets {
     public static Music townMusic;
     public static SpriteSheet itemIcons;
     public static SpriteSheet male1SpriteSheet;
+    public static SpriteSheet projectileSpriteSheet;
 
     public static void loadAssets() throws SlickException {
         String assetsLocation = Globals.getAssetsLocation();
@@ -39,6 +37,8 @@ public class Assets {
         itemIcons = new SpriteSheet(Globals.getAssetsLocation() + "items/item_icons.png", 40, 40);
 
         male1SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male1.png", 32, 32);
+
+        projectileSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "projectiles/arrow.png", 40, 40);
 
     }
 }
