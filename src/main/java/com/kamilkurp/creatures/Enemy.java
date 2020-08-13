@@ -3,6 +3,7 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.items.LootSystem;
+import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
@@ -44,8 +45,8 @@ public class Enemy extends Creature {
     }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput) {
-        super.update(gc, i ,tiles, creatures, keyInput);
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
+        super.update(gc, i ,tiles, creatures, keyInput, arrowList);
 
         if (runningTimer.getTime() > 200) {
             running = false;
@@ -74,7 +75,7 @@ public class Enemy extends Creature {
     }
 
     @Override
-    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput) {
+    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
 
         int aggroDistance = 200;
         aggroed = null;

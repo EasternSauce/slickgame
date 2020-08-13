@@ -1,12 +1,12 @@
 package com.kamilkurp.creatures;
 
-import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.LootSystem;
+import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
@@ -122,12 +122,12 @@ public abstract class Creature implements Renderable {
         }
     }
 
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput) {
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
 
 
         beforeMovement(i);
 
-        if (healthPoints > 0f) performActions(gc, creatures, keyInput);
+        if (healthPoints > 0f) performActions(gc, creatures, keyInput, arrowList);
 
         afterMovement(tiles);
 
@@ -307,7 +307,7 @@ public abstract class Creature implements Renderable {
         }
     }
 
-    public abstract void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput);
+    public abstract void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList);
 
 
     public String getId() {

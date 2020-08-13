@@ -6,6 +6,7 @@ import com.kamilkurp.dialogue.DialogueWindow;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
+import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
@@ -59,7 +60,7 @@ public class NPC extends Creature {
     }
 
     @Override
-    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput) {
+    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
 
         if (actionTimer.getTime() > 4000) {
             direction = Math.abs(random.nextInt()%4);
@@ -70,8 +71,8 @@ public class NPC extends Creature {
     }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput) {
-        super.update(gc, i, tiles, creatures, keyInput);
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
+        super.update(gc, i, tiles, creatures, keyInput, arrowList);
 
         // CHANGE THESE to only update once...
 

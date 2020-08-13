@@ -4,10 +4,10 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.LootSystem;
+import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.*;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.Collection;
@@ -32,7 +32,7 @@ public class Character extends Creature {
     }
 
     @Override
-    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput) {
+    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
         Input input = gc.getInput();
 
         boolean movement = false;
@@ -76,6 +76,10 @@ public class Character extends Creature {
 
         if (keyInput.isKeyPressed(KeyInput.Key.SPACE)) {
             attack();
+
+            Arrow arrow = new Arrow(rect.getX(), rect.getY(), facingVector);
+
+            arrowList.add(arrow);
         }
         //rewrite
         if (keyInput.isKeyPressed(KeyInput.Key.E)) {
@@ -91,8 +95,8 @@ public class Character extends Creature {
 }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput) {
-        super.update(gc, i ,tiles, creatures, keyInput);
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
+        super.update(gc, i ,tiles, creatures, keyInput, arrowList);
 
         if (healthPoints <= 0f) {
             stepSound.stop();
@@ -108,6 +112,10 @@ public class Character extends Creature {
 
         if (immunityTimer.getTime() > 500) {
             immune = false;
+        }
+
+        for (Arrow arrow : arrowList) {
+            arrow.update(i);
         }
 
 

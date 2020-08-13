@@ -122,11 +122,11 @@ public class SimpleSlickGame extends BasicGame {
         for (Creature creature : creatures.values()) {
             if (creature instanceof Character) {
                 if (!inventoryWindow.isInventoryOpen() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
-                    creature.update(gc, i, currentArea.getTiles(), creatures.values(), keyInput);
+                    creature.update(gc, i, currentArea.getTiles(), creatures.values(), keyInput, arrowList);
                 }
             }
             else {
-                creature.update(gc, i, currentArea.getTiles(), creatures.values(), keyInput);
+                creature.update(gc, i, currentArea.getTiles(), creatures.values(), keyInput, arrowList);
             }
 
         }
@@ -153,10 +153,6 @@ public class SimpleSlickGame extends BasicGame {
 
         renderPriorityQueue.addAll(creatures.values());
 
-        if (keyInput.isKeyPressed(KeyInput.Key.SPACE)) {
-            Arrow arrow = new Arrow(character.getRect().getX(), character.getRect().getY());
-            arrowList.add(arrow);
-        }
 
     }
 
