@@ -127,7 +127,7 @@ public abstract class Creature implements Renderable {
 
         beforeMovement(i);
 
-        if (healthPoints > 0f) performActions(gc, creatures, keyInput, arrowList);
+        if (healthPoints > 0f) performActions(gc, creatures, keyInput, arrowList, tiles);
 
         afterMovement(tiles);
 
@@ -307,7 +307,7 @@ public abstract class Creature implements Renderable {
         }
     }
 
-    public abstract void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList);
+    public abstract void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles);
 
 
     public String getId() {

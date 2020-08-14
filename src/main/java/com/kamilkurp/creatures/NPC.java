@@ -60,7 +60,7 @@ public class NPC extends Creature {
     }
 
     @Override
-    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
+    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
 
         if (actionTimer.getTime() > 4000) {
             direction = Math.abs(random.nextInt()%4);

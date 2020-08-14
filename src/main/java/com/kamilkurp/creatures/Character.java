@@ -11,6 +11,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class Character extends Creature {
     }
 
     @Override
-    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
+    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
         Input input = gc.getInput();
 
         boolean movement = false;
@@ -77,7 +78,7 @@ public class Character extends Creature {
         if (keyInput.isKeyPressed(KeyInput.Key.SPACE)) {
             attack();
 
-            Arrow arrow = new Arrow(rect.getX(), rect.getY(), facingVector);
+            Arrow arrow = new Arrow(rect.getX() + 20, rect.getY() + 20, facingVector, arrowList, tiles);
 
             arrowList.add(arrow);
         }
@@ -114,9 +115,17 @@ public class Character extends Creature {
             immune = false;
         }
 
+        List<Arrow> toBeDeleted = new LinkedList<>();
         for (Arrow arrow : arrowList) {
             arrow.update(i);
+            if (arrow.isMarkedForDeletion()) {
+                toBeDeleted.add(arrow);
+            }
         }
+
+        arrowList.removeAll(toBeDeleted);
+
+
 
 
 
