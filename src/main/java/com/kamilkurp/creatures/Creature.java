@@ -34,11 +34,13 @@ public abstract class Creature implements Renderable {
 
     protected int attackingDirection = 0;
 
-    private Sound attackSound = Assets.attackSound;
+    private Sound swordAttackSound = Assets.attackSound;
+    private Sound bowAttackSound = Assets.arrowWhizzSound;
 
     protected Timer runningTimer;
     protected Timer attackingTimer;
-    protected Timer attackCooldownTimer;
+    protected Timer swordAttackCooldownTimer;
+    protected Timer bowAttackCooldownTimer;
 
     protected boolean moving;
 
@@ -51,7 +53,7 @@ public abstract class Creature implements Renderable {
 
     protected float healthPoints = 100f;
 
-    protected Rectangle attackRect;
+    protected Rectangle swordAttackRect;
 
     protected Timer immunityTimer;
 
@@ -67,33 +69,40 @@ public abstract class Creature implements Renderable {
 
 
 
-    WalkAnimation walkAnimation;
-    AttackAnimation attackAnimation;
+    protected WalkAnimation walkAnimation;
+    protected AttackAnimation swordAttackAnmation;
 
 
-    public Creature(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem) throws SlickException {
+    protected AttackType currentAttackType;
+
+
+
+    public Creature(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem) throws SlickException {
         this.id = id;
         this.lootSystem = lootSystem;
 
         rect = new Rectangle(posX, posY, 64, 64);
         hitbox = new Rectangle(2, 2, 60, 60);
 
-        //walkAnimation = new WalkAnimation(Assets.skeletonSpriteSheet, 9, 100, new int [] {0,1,2,3}, 0);
         walkAnimation = new WalkAnimation(Assets.male1SpriteSheet, 3, 100, new int [] {3,1,0,2}, 1);
 
         runningTimer = new Timer();
         attackingTimer = new Timer();
         immunityTimer = new Timer();
-        attackCooldownTimer = new Timer();
+        swordAttackCooldownTimer = new Timer();
+        bowAttackCooldownTimer = new Timer();
 
-        attackRect = new Rectangle(-999, -999, 1, 1);
+        swordAttackRect = new Rectangle(-999, -999, 1, 1);
 
-        attackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
+        swordAttackAnmation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
 
         facingAngle = 0.0f;
         facingVector = new Vector2f(0f, 0f);
 
         creatures.put(this.getId(), this);
+        creaturesList.add(this);
+
+        currentAttackType = AttackType.BOW;
 
     }
 
@@ -114,15 +123,20 @@ public abstract class Creature implements Renderable {
 
     public void renderAttackAnimation(Graphics g, Camera camera) {
         if (attacking) {
-            Image image = attackAnimation.getAnimation().getCurrentFrame();
-            image.setRotation((float) attackingAngle);
+            if (currentAttackType == AttackType.SWORD) {
+                Image image = swordAttackAnmation.getAnimation().getCurrentFrame();
+                image.setRotation((float) attackingAngle);
 
-            g.drawImage(image, attackRect.getX() - camera.getPosX(), attackRect.getY() - camera.getPosY());
+                g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());
+            } else if (currentAttackType == AttackType.BOW) {
+                // shooting bow animation?
+            }
+
 
         }
     }
 
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
 
 
         beforeMovement(i);
@@ -140,30 +154,34 @@ public abstract class Creature implements Renderable {
 
     private void attackLogic(int i, Collection<Creature> creatures) {
         if (attacking) {
-            for (Creature creature : creatures) {
-                if (creature == this) continue;
-                if (attackRect.intersects(creature.rect)) {
-                    if (!(this instanceof Enemy && creature instanceof Enemy)) {
-                        creature.takeDamage();
+            if (currentAttackType == AttackType.SWORD) {
+                for (Creature creature : creatures) {
+                    if (creature == this) continue;
+                    if (swordAttackRect.intersects(creature.rect)) {
+                        if (!(this instanceof Enemy && creature instanceof Enemy)) {
+                            creature.takeDamage();
+                        }
                     }
                 }
+
+                float attackRange = 60f;
+
+                float attackShiftX = attackingVector.getNormal().getX() * attackRange;
+                float attackShiftY = attackingVector.getNormal().getY() * attackRange;
+
+                int attackWidth = 40;
+                int attackHeight = 40;
+
+                float attackRectX = attackShiftX + rect.getCenterX() - attackWidth / 2f;
+                float attackRectY = attackShiftY + rect.getCenterY() - attackHeight / 2f;
+
+                swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
+
+
+                swordAttackAnmation.getAnimation().update(i);
             }
 
-            float attackRange = 60f;
 
-            float attackShiftX = attackingVector.getNormal().getX() * attackRange;
-            float attackShiftY = attackingVector.getNormal().getY() * attackRange;
-
-            int attackWidth = 40;
-            int attackHeight = 40;
-
-            float attackRectX = attackShiftX + rect.getCenterX() - attackWidth / 2f;
-            float attackRectY = attackShiftY + rect.getCenterY() - attackHeight / 2f;
-
-            attackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
-
-
-            attackAnimation.getAnimation().update(i);
         }
 
     }
@@ -268,20 +286,44 @@ public abstract class Creature implements Renderable {
         totalDirections++;
     }
 
-    public void attack() {
-        if (attackCooldownTimer.getTime() > 800f) {
-            attackSound.play(1.0f, 0.1f);
+    public void attack(List<Arrow> arrowList, List<TerrainTile> tiles, List<Creature> creatures) {
+        if (currentAttackType == AttackType.SWORD) {
+            if (swordAttackCooldownTimer.getTime() > 800f) {
+                swordAttackSound.play(1.0f, 0.1f);
 
-            if (!attacking) { // on start attack
-                attackAnimation.restart();
+                if (!attacking) { // on start attack
+                    swordAttackAnmation.restart();
 
-                attacking = true;
-                attackingTimer.reset();
-                attackingAngle = facingAngle;
-                attackingVector = facingVector;
+                    attacking = true;
+                    attackingTimer.reset();
+                    attackingAngle = facingAngle;
+                    attackingVector = facingVector;
+                }
+                swordAttackCooldownTimer.reset();
             }
-            attackCooldownTimer.reset();
+        } else if (currentAttackType == AttackType.BOW) {
+
+            if (bowAttackCooldownTimer.getTime() > 1200f) {
+                if (!attacking) { // on start attack
+                    bowAttackSound.play(1.0f, 0.1f);
+
+                    attacking = true;
+                    attackingTimer.reset();
+                    attackingAngle = facingAngle;
+                    attackingVector = facingVector;
+
+                    if (!facingVector.equals(new Vector2f(0.f, 0f))) {
+                        Arrow arrow = new Arrow(rect.getX(), rect.getY(), facingVector, arrowList, tiles, creatures, this);
+                        arrowList.add(arrow);
+                    }
+
+
+                }
+                bowAttackCooldownTimer.reset();
+
+            }
         }
+
 
     }
 
@@ -307,7 +349,7 @@ public abstract class Creature implements Renderable {
         }
     }
 
-    public abstract void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles);
+    public abstract void performActions(GameContainer gc, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles);
 
 
     public String getId() {
@@ -321,4 +363,7 @@ public abstract class Creature implements Renderable {
     public float getHealthPoints() {
         return healthPoints;
     }
+
+
+    public enum AttackType {SWORD, BOW};
 }

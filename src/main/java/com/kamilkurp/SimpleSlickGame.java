@@ -34,6 +34,7 @@ public class SimpleSlickGame extends BasicGame {
     private Hud hud;
 
     private Map<String, Creature> creatures;
+    private List<Creature> creaturesList;
 
     private Character character;
 
@@ -69,6 +70,8 @@ public class SimpleSlickGame extends BasicGame {
 
         creatures = new TreeMap<>();
 
+        creaturesList = new LinkedList<>();
+
         inventoryWindow = new InventoryWindow();
 
         lootOptionWindow = new LootOptionWindow(inventoryWindow);
@@ -79,8 +82,8 @@ public class SimpleSlickGame extends BasicGame {
         lootSystem = new LootSystem(lootOptionWindow);
 
 
-        character = new Character("protagonist", 400, 400, creatures, lootSystem);
-        NPC npc = new NPC("johnny", 600, 600, creatures, lootSystem, dialogueWindow, "a1", true);
+        character = new Character("protagonist", 400, 400, creatures, creaturesList, lootSystem);
+        NPC npc = new NPC("johnny", 600, 600, creatures, creaturesList, lootSystem, dialogueWindow, "a1", true);
 
 
         area1 = new Area(Assets.grassyTileset, Assets.area1Layout);
@@ -98,8 +101,8 @@ public class SimpleSlickGame extends BasicGame {
         hud = new Hud();
 
 
-        spawnPoint1 = new SpawnPoint(1000, 1400, 3, creatures, lootSystem);
-        spawnPoint2 = new SpawnPoint(1900, 1900, 1, creatures, lootSystem);
+        spawnPoint1 = new SpawnPoint(1000, 1400, 1, creatures, creaturesList, lootSystem);
+        //spawnPoint2 = new SpawnPoint(1900, 1900, 1, creatures, lootSystem);
 
 
         keyInput = new KeyInput();
@@ -122,11 +125,11 @@ public class SimpleSlickGame extends BasicGame {
         for (Creature creature : creatures.values()) {
             if (creature instanceof Character) {
                 if (!inventoryWindow.isInventoryOpen() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
-                    creature.update(gc, i, currentArea.getTiles(), creatures.values(), keyInput, arrowList);
+                    creature.update(gc, i, currentArea.getTiles(), creaturesList, keyInput, arrowList);
                 }
             }
             else {
-                creature.update(gc, i, currentArea.getTiles(), creatures.values(), keyInput, arrowList);
+                creature.update(gc, i, currentArea.getTiles(), creaturesList, keyInput, arrowList);
             }
 
         }
@@ -142,7 +145,7 @@ public class SimpleSlickGame extends BasicGame {
         lootSystem.update(keyInput, character);
 
         spawnPoint1.update();
-        spawnPoint2.update();
+        //spawnPoint2.update();
 
         renderPriorityQueue = new PriorityQueue<>((o1, o2) -> {
             if (o1.getHealthPoints() <= 0.0f) return -1;
@@ -160,7 +163,7 @@ public class SimpleSlickGame extends BasicGame {
         currentArea.render(g, camera);
 
         spawnPoint1.render(g, camera);
-        spawnPoint2.render(g, camera);
+        //spawnPoint2.render(g, camera);
 
 
         if (renderPriorityQueue != null) {

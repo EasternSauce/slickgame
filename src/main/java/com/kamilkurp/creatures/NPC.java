@@ -29,8 +29,8 @@ public class NPC extends Creature {
     private Map<String, Float> dropTable;
 
 
-    public NPC(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem, DialogueWindow dialogueWindow, String dialogueStartId, boolean trader) throws SlickException {
-        super(id, posX, posY, creatures, lootSystem);
+    public NPC(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem, DialogueWindow dialogueWindow, String dialogueStartId, boolean trader) throws SlickException {
+        super(id, posX, posY, creatures, creaturesList, lootSystem);
 
         this.dialogueWindow = dialogueWindow;
         this.dialogueStartId = dialogueStartId;
@@ -60,7 +60,7 @@ public class NPC extends Creature {
     }
 
     @Override
-    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
+    public void performActions(GameContainer gc, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
 
         if (actionTimer.getTime() > 4000) {
             direction = Math.abs(random.nextInt()%4);
@@ -71,7 +71,7 @@ public class NPC extends Creature {
     }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
         super.update(gc, i, tiles, creatures, keyInput, arrowList);
 
         // CHANGE THESE to only update once...

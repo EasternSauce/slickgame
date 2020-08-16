@@ -2,6 +2,8 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
+import com.kamilkurp.animations.WalkAnimation;
+import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
@@ -26,13 +28,17 @@ public class Enemy extends Creature {
     private Map<String, Float> dropTable;
 
     private Timer findNewDestinationTimer;
-    private Rectangle closestRect;
 
     private Creature aggroed;
 
 
-    public Enemy(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem) throws SlickException {
-        super(id, posX, posY, creatures, lootSystem);
+    private float destinationX;
+    private float destinationY;
+    private boolean hasDestination;
+
+
+    public Enemy(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem) throws SlickException {
+        super(id, posX, posY, creatures, creaturesList, lootSystem);
 
         actionTimer = new Timer();
 
@@ -42,10 +48,17 @@ public class Enemy extends Creature {
         dropTable.put("hideGloves", 0.1f);
 
         findNewDestinationTimer = new Timer();
+
+        walkAnimation = new WalkAnimation(Assets.skeletonSpriteSheet, 9, 100, new int [] {0,1,2,3}, 0);
+
+        destinationX = 0.0f;
+        destinationY = 0.0f;
+        hasDestination = false;
+
     }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
         super.update(gc, i ,tiles, creatures, keyInput, arrowList);
 
         if (runningTimer.getTime() > 200) {
@@ -75,9 +88,9 @@ public class Enemy extends Creature {
     }
 
     @Override
-    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
+    public void performActions(GameContainer gc, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
 
-        int aggroDistance = 200;
+        int aggroDistance = 400;
         aggroed = null;
         for (Creature creature : creatures) {
             if (creature instanceof Enemy) continue;
@@ -110,34 +123,38 @@ public class Enemy extends Creature {
             }
         }
         else {
-            float walkUpDistance = 70f;
+            float walkUpDistance = 0f;
 
-            float shortestDist = Float.MAX_VALUE;
-
-
-            int[] t1 = {0,1,0,-1};
-            int[] t2 = {1,0,-1,0};
+            float attackDistance = 0f;
+            if (currentAttackType == AttackType.SWORD) {
+                attackDistance = 100f;
+                walkUpDistance = 100f;
+            }
+            else if (currentAttackType == AttackType.BOW) {
+                attackDistance = 300f;
+                walkUpDistance = 300f;
+            }
 
             if (findNewDestinationTimer.getTime() > 300f) {
-                for (int i = 0; i < 4; i++) {
-                    Rectangle rect = new Rectangle(aggroed.rect.getCenterX() + t1[i] * walkUpDistance, aggroed.rect.getCenterY() + t2[i] * walkUpDistance, 1, 1);
 
-                    float dist = Globals.distance(this.rect, rect);
+                float dist = Globals.distance(this.rect, aggroed.rect);
 
-                    if (dist < shortestDist) {
-                        shortestDist = dist;
-                        closestRect = rect;
-                    }
+                if (dist > walkUpDistance) {
+                    destinationX = aggroed.rect.getCenterX();
+                    destinationY = aggroed.rect.getCenterY();
+                    hasDestination = true;
                 }
+                else {
+                    hasDestination = false;
+                }
+
                 findNewDestinationTimer.reset();
             }
 
-            if (closestRect != null) {
-                goTo(closestRect.getCenterX(), closestRect.getCenterY());
+            if (hasDestination) {
+                goTo(destinationX, destinationY);
             }
 
-
-            float attackDistance = 100f;
             if (Globals.distance(aggroed.rect, rect) < attackDistance) {
                 float maxDist = 0.0f;
                 int dir = 0;
@@ -172,7 +189,8 @@ public class Enemy extends Creature {
                     }
                 }
                 direction = dir;
-                attack();
+
+                attack(arrowList, tiles, creatures);
             }
 
         }

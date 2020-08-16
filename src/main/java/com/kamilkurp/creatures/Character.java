@@ -24,16 +24,14 @@ public class Character extends Creature {
 
 
 
-    public Character(String id, int posX, int posY, Map<String, Creature> creatures, LootSystem lootSystem) throws SlickException {
-        super(id, posX, posY, creatures, lootSystem);
 
+    public Character(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem) throws SlickException {
+        super(id, posX, posY, creatures, creaturesList, lootSystem);
 
-
-        attackAnimation.getAnimation().setLooping(false);
     }
 
     @Override
-    public void performActions(GameContainer gc, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
+    public void performActions(GameContainer gc, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
         Input input = gc.getInput();
 
         boolean movement = false;
@@ -76,11 +74,7 @@ public class Character extends Creature {
         }
 
         if (keyInput.isKeyPressed(KeyInput.Key.SPACE)) {
-            attack();
-
-            Arrow arrow = new Arrow(rect.getX() + 20, rect.getY() + 20, facingVector, arrowList, tiles);
-
-            arrowList.add(arrow);
+            attack(arrowList, tiles, creatures);
         }
         //rewrite
         if (keyInput.isKeyPressed(KeyInput.Key.E)) {
@@ -96,7 +90,7 @@ public class Character extends Creature {
 }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Collection<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
         super.update(gc, i ,tiles, creatures, keyInput, arrowList);
 
         if (healthPoints <= 0f) {
@@ -148,7 +142,7 @@ public class Character extends Creature {
     private void interact(Collection<Creature> creatures) {
         for (Creature creature : creatures) {
             if (creature == this) continue;
-            if (attackRect.intersects(creature.rect) && creature instanceof NPC && creature.healthPoints > 0) {
+            if (swordAttackRect.intersects(creature.rect) && creature instanceof NPC && creature.healthPoints > 0) {
                 ((NPC)creature).triggerDialogue();
             }
         }

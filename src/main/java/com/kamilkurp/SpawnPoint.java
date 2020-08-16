@@ -19,16 +19,18 @@ public class SpawnPoint implements Renderable {
     private List<Creature> spawnedList;
     private int range;
     private Map<String, Creature> creatures;
+    private List<Creature> creaturesList;
     private LootSystem lootSystem;
     private int spawnedLimit;
     private int spawnTimeout;
     private Timer spawnTimer;
     private boolean spawning;
 
-    public SpawnPoint(int posX, int posY, int spawnedLimit, Map<String, Creature> creatures, LootSystem lootSystem) throws SlickException {
+    public SpawnPoint(int posX, int posY, int spawnedLimit, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem) throws SlickException {
         this.posX = posX;
         this.posY = posY;
         this.creatures = creatures;
+        this.creaturesList = creaturesList;
         this.lootSystem = lootSystem;
 
         range = 150;
@@ -50,7 +52,7 @@ public class SpawnPoint implements Renderable {
         int randX = Globals.randInt(posX - range, posX + range);
         int randY = Globals.randInt(posY - range, posY + range);
 
-        Enemy enemy = new Enemy("skellie"+Math.abs(Globals.random.nextInt()), randX, randY, creatures, lootSystem);
+        Enemy enemy = new Enemy("skellie"+Math.abs(Globals.random.nextInt()), randX, randY, creatures, creaturesList, lootSystem);
         spawnedList.add(enemy);
     }
 
