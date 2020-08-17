@@ -52,21 +52,15 @@ public class ItemType {
     }
 
     private static Map<String, ItemType> itemTypes;
-    private static SpriteSheet itemIcons;
-
-    public static void loadIcons(Image image, int width, int height) {
-        itemIcons = new SpriteSheet(image, width, height);
-
-    }
 
     public static void loadItemTypes() {
-        SpriteSheet itemIcons = Assets.itemIcons;
+        SpriteSheet itemIcons = Assets.niceItemIcons;
 
         itemTypes = new HashMap<>();
 
-        ItemType itemType1 = new ItemType("skinTunic", "Leather Armor", "-", itemIcons.getSubImage(0,0), "body", 50);
-        ItemType itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", itemIcons.getSubImage(1,0), "boots", 30);
-        ItemType itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", itemIcons.getSubImage(2,0), "gloves", 25);
+        ItemType itemType1 = new ItemType("skinTunic", "Leather Armor", "-", itemIcons.getSprite(8,7), "body", 50);
+        ItemType itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", itemIcons.getSprite(3,8), "boots", 30);
+        ItemType itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", itemIcons.getSprite(0,8), "gloves", 25);
 
         itemTypes.put(itemType1.getId(), itemType1);
         itemTypes.put(itemType2.getId(), itemType2);

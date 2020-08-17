@@ -112,7 +112,7 @@ public class Arrow implements Renderable {
             Rectangle arrowRect = new Rectangle(newPosX + hitbox.getX(), newPosY + hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
 
             if(creatureRect.intersects(arrowRect)) {
-                if (speedVector.equals(new Vector2f(0f, 0f))) return false;
+                if (speedVector.equals(new Vector2f(0f, 0f)) || creature.getHealthPoints() <= 0.0f) return false;
                 creature.takeDamage();
                 return true;
             }

@@ -134,7 +134,7 @@ public class InventoryWindow implements Renderable {
 
                 g.draw(traderInventorySlotList.get(i));
                 if (traderInventoryItems.get(i) != null) {
-                    g.drawImage(traderInventoryItems.get(i).getItemType().getImage(), traderInventorySlotList.get(i).getX(), traderInventorySlotList.get(i).getY());
+                    traderInventoryItems.get(i).getItemType().getImage().draw(traderInventorySlotList.get(i).getX(), traderInventorySlotList.get(i).getY(), slotWidth, slotHeight);
                 }
             }
             g.setColor(Color.white);
@@ -157,7 +157,7 @@ public class InventoryWindow implements Renderable {
 
                 g.draw(equipmentSlotList.get(i));
                 if (equipmentItems.get(i) != null) {
-                    g.drawImage(equipmentItems.get(i).getItemType().getImage(), equipmentSlotList.get(i).getX(), equipmentSlotList.get(i).getY());
+                    equipmentItems.get(i).getItemType().getImage().draw(equipmentSlotList.get(i).getX(), equipmentSlotList.get(i).getY(), slotWidth, slotHeight);
                 }
 
                 g.setColor(Color.white);
@@ -200,7 +200,7 @@ public class InventoryWindow implements Renderable {
 
             g.draw(slotList.get(i));
             if (inventoryItems.get(i) != null) {
-                g.drawImage(inventoryItems.get(i).getItemType().getImage(), slotList.get(i).getX(), slotList.get(i).getY());
+                inventoryItems.get(i).getItemType().getImage().draw(slotList.get(i).getX(), slotList.get(i).getY(), slotWidth, slotHeight);
             }
         }
 

@@ -20,6 +20,8 @@ public class Assets {
     public static SpriteSheet itemIcons;
     public static SpriteSheet male1SpriteSheet;
     public static SpriteSheet projectileSpriteSheet;
+    public static SpriteSheet niceItemIcons;
+
     public static Sound arrowWhizzSound;
 
     public static void loadAssets() throws SlickException {
@@ -41,6 +43,10 @@ public class Assets {
         male1SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male1.png", 32, 32);
 
         projectileSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "projectiles/arrow.png", 40, 40);
+
+        niceItemIcons = new SpriteSheet(Globals.getAssetsLocation() + "items/nice_icons.png", 32, 32);
+
+
 
     }
 }
