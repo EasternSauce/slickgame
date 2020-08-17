@@ -2,6 +2,8 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
+import com.kamilkurp.animations.WalkAnimation;
+import com.kamilkurp.assets.Assets;
 import com.kamilkurp.dialogue.DialogueWindow;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
@@ -40,6 +42,9 @@ public class NPC extends Creature {
         this.trader = trader;
 
         traderInventory = new LinkedList<>();
+
+        walkAnimation = new WalkAnimation(Assets.male1SpriteSheet, 3, 100, new int [] {3,1,0,2}, 1);
+
 
         dropTable = new HashMap<>();
         dropTable.put("ringmailGreaves", 0.9f);

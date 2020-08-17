@@ -51,7 +51,7 @@ public class Arrow implements Renderable {
         this.tiles = tiles;
         this.creatures = creatures;
 
-        hitbox = new Rectangle(10, 10, 20, 20);
+        hitbox = new Rectangle(19, 19, 2, 2);
 
         this.shooter = shooter;
     }

@@ -55,6 +55,9 @@ public class Enemy extends Creature {
         destinationY = 0.0f;
         hasDestination = false;
 
+        hitbox = new Rectangle(17, 15, 30, 46);
+
+
     }
 
     @Override
