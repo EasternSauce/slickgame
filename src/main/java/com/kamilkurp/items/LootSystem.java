@@ -58,6 +58,7 @@ public class LootSystem implements Renderable {
             if (Globals.random.nextFloat() < entry.getValue()) {
                 Item item = new Item(ItemType.getItemType(entry.getKey()), newLootPile);
                 newLootPile.addItem(item);
+                System.out.println("added item to lootpile: " + item.getName());
             }
 
         }

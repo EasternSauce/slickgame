@@ -5,6 +5,9 @@ import com.kamilkurp.terrain.TerrainLayout;
 import com.kamilkurp.terrain.TerrainTileset;
 import org.newdawn.slick.*;
 
+import java.awt.*;
+import java.awt.Font;
+
 public class Assets {
     public static TerrainTileset grassyTileset;
     public static TerrainTileset dungeonTileset;
@@ -21,6 +24,8 @@ public class Assets {
     public static SpriteSheet male1SpriteSheet;
     public static SpriteSheet projectileSpriteSheet;
     public static SpriteSheet niceItemIcons;
+    public static Font verdanaFont;
+    public static TrueTypeFont verdanaTtf;
 
     public static Sound arrowWhizzSound;
 
@@ -46,7 +51,8 @@ public class Assets {
 
         niceItemIcons = new SpriteSheet(Globals.getAssetsLocation() + "items/nice_icons.png", 32, 32);
 
-
+        verdanaFont = new Font("Verdana", Font.BOLD, 16);
+        verdanaTtf = new TrueTypeFont(verdanaFont, true);
 
     }
 }

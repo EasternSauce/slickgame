@@ -3,6 +3,7 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.items.Item;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
@@ -22,12 +23,16 @@ public class Character extends Creature {
     private boolean walking = false;
     private boolean sprint = false;
 
+    private Map<Integer, Item> equipmentItems;
 
 
 
-    public Character(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem) throws SlickException {
+    public Character(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem, Map<Integer, Item> equipmentItems) throws SlickException {
         super(id, posX, posY, creatures, creaturesList, lootSystem);
 
+        this.equipmentItems = equipmentItems;
+
+        updateAttackType();
     }
 
     @Override
@@ -168,7 +173,7 @@ public class Character extends Creature {
     @Override
     public void takeDamage() {
         if (!immune) {
-            float damage = 0f;
+            float damage = 20f;
             if (healthPoints - damage > 0) healthPoints -= damage;
             else healthPoints = 0f;
 
@@ -185,5 +190,15 @@ public class Character extends Creature {
 
     }
 
+    public void updateAttackType() {
+        String currentWeaponName = equipmentItems.get(0).getItemType().getId();
+        if (currentWeaponName == null) {
+            currentAttackType = AttackType.NONE;
+        } else if (currentWeaponName.equals("woodenSword") || currentWeaponName.equals("ironSword")) {
+            currentAttackType = AttackType.SWORD;
+        } else if (currentWeaponName.equals("crossbow")) {
+            currentAttackType = AttackType.BOW;
+        }
+    }
 
 }

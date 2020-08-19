@@ -4,6 +4,7 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.creatures.Character;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -34,6 +35,7 @@ public class InventoryWindow implements Renderable {
 
     private Map<Integer, Item> inventoryItems;
 
+
     private Map<Integer, Item> equipmentItems;
 
     private Map<Integer, Item> traderInventoryItems;
@@ -56,13 +58,14 @@ public class InventoryWindow implements Renderable {
     private int slotWidth = 40;
     private int slotHeight = 40;
 
-    private int equipmentSlots = 5;
+    private int equipmentSlots = 6;
 
     private int tradeInventoryRows = 6;
     private int tradeInventoryColumns = 2;
     private int tradeInventorySlots = tradeInventoryRows * tradeInventoryColumns;
 
     private int gold = 0;
+    private Character character;
 
     public InventoryWindow() throws SlickException {
 
@@ -70,7 +73,7 @@ public class InventoryWindow implements Renderable {
         equipmentSlotList = new LinkedList<>();
         traderInventorySlotList = new LinkedList<>();
 
-        equipmentSlotNameList = Arrays.asList("Helmet","Body","Gloves","Ring","Boots");
+        equipmentSlotNameList = Arrays.asList("Weapon", "Helmet","Body","Gloves","Ring","Boots");
 
         ItemType.loadItemTypes();
 
@@ -99,6 +102,8 @@ public class InventoryWindow implements Renderable {
         equipmentItems = new TreeMap<>();
 
         traderInventoryItems = new TreeMap<>();
+
+        equipmentItems.put(0, new Item(ItemType.getItemType("woodenSword"), null));
 
 
     }
@@ -316,6 +321,8 @@ public class InventoryWindow implements Renderable {
                                     equipmentItems.put(currentMoved, to);
                                     equipmentItems.put(currentSelected, from);
                                     moving = false;
+
+                                    character.updateAttackType();
                                 }
                             }
                             else {
@@ -328,6 +335,8 @@ public class InventoryWindow implements Renderable {
                                     equipmentItems.put(currentMoved, to);
                                     inventoryItems.put(currentSelected, from);
                                     moving = false;
+
+                                    character.updateAttackType();
                                 }
                             }
                         }
@@ -342,6 +351,8 @@ public class InventoryWindow implements Renderable {
                                     inventoryItems.put(currentMoved, to);
                                     equipmentItems.put(currentSelected, from);
                                     moving = false;
+
+                                    character.updateAttackType();
                                 }
                             }
                             else {
@@ -390,18 +401,21 @@ public class InventoryWindow implements Renderable {
     public String getEquipmentSlotName(int currentSelected) {
         String currentEquipmentType = null;
         if (currentSelected == 0) {
-            currentEquipmentType = "helmet";
+            currentEquipmentType = "weapon";
         }
         if (currentSelected == 1) {
-            currentEquipmentType = "body";
+            currentEquipmentType = "helmet";
         }
         if (currentSelected == 2) {
-            currentEquipmentType = "gloves";
+            currentEquipmentType = "body";
         }
         if (currentSelected == 3) {
-            currentEquipmentType = "ring";
+            currentEquipmentType = "gloves";
         }
         if (currentSelected == 4) {
+            currentEquipmentType = "ring";
+        }
+        if (currentSelected == 5) {
             currentEquipmentType = "boots";
         }
         return currentEquipmentType;
@@ -465,5 +479,13 @@ public class InventoryWindow implements Renderable {
             traderInventoryItems.put(i, traderItem);
             i++;
         }
+    }
+
+    public Map<Integer, Item> getEquipmentItems() {
+        return equipmentItems;
+    }
+
+    public void setCharacter(Character character) {
+        this.character = character;
     }
 }

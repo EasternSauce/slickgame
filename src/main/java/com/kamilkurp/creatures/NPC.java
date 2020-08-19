@@ -48,8 +48,9 @@ public class NPC extends Creature {
 
         dropTable = new HashMap<>();
         dropTable.put("ringmailGreaves", 0.9f);
-        dropTable.put("skinTunic", 0.2f);
+        dropTable.put("leatherArmor", 0.2f);
         dropTable.put("hideGloves", 0.1f);
+        dropTable.put("crossbow", 0.35f);
 
         if (trader) {
             for (Map.Entry<String, Float> entry : dropTable.entrySet()) {

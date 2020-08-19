@@ -51,7 +51,8 @@ public abstract class Creature implements Renderable {
 
     protected float speed = 0f;
 
-    protected float healthPoints = 100f;
+    protected float maxHealthPoints = 100f;
+    protected float healthPoints = maxHealthPoints;
 
     protected Rectangle swordAttackRect;
 
@@ -119,6 +120,8 @@ public abstract class Creature implements Renderable {
         else {
             walkAnimation.getAnimation(direction).draw((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY(), rect.getWidth(), rect.getHeight());
         }
+
+        Assets.verdanaTtf.drawString((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY() - 30f, (int)healthPoints + "/" + (int)maxHealthPoints, Color.red);;
     }
 
     public void renderAttackAnimation(Graphics g, Camera camera) {
@@ -191,7 +194,7 @@ public abstract class Creature implements Renderable {
 
             float beforeHP = healthPoints;
 
-            float damage = 100f;
+            float damage = 50f;
             if (healthPoints - damage > 0) healthPoints -= damage;
             else healthPoints = 0f;
 
@@ -364,6 +367,9 @@ public abstract class Creature implements Renderable {
         return healthPoints;
     }
 
+    public float getMaxHealthPoints() {
+        return maxHealthPoints;
+    }
 
-    public enum AttackType {SWORD, BOW};
+    public enum AttackType {NONE, SWORD, BOW};
 }
