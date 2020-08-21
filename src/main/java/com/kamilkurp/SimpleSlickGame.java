@@ -82,10 +82,11 @@ public class SimpleSlickGame extends BasicGame {
         lootSystem = new LootSystem(lootOptionWindow);
 
 
-        character = new Character("protagonist", 400, 400, creatures, creaturesList, lootSystem, inventoryWindow.getEquipmentItems());
+        character = new Character("protagonist", 400, 400, creatures, creaturesList, lootSystem);
         NPC npc = new NPC("johnny", 600, 600, creatures, creaturesList, lootSystem, dialogueWindow, "a1", true);
 
         inventoryWindow.setCharacter(character);
+        System.out.println("set equipment items");
 
 
 

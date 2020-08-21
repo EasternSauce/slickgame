@@ -5,6 +5,8 @@ import com.kamilkurp.Renderable;
 import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.items.Item;
+import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
@@ -76,6 +78,8 @@ public abstract class Creature implements Renderable {
 
     protected AttackType currentAttackType;
 
+    protected Map<Integer, Item> equipmentItems;
+
 
 
     public Creature(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem) throws SlickException {
@@ -104,6 +108,13 @@ public abstract class Creature implements Renderable {
         creaturesList.add(this);
 
         currentAttackType = AttackType.BOW;
+
+        equipmentItems = new TreeMap<>();
+
+        equipmentItems.put(0, new Item(ItemType.getItemType("woodenSword"), null));
+
+        updateAttackType();
+
 
     }
 
@@ -150,19 +161,19 @@ public abstract class Creature implements Renderable {
 
         setFacingDirection(gc);
 
-        attackLogic(i, creatures);
+        swordAttackLogic(i, creatures);
     }
 
     protected abstract void setFacingDirection(GameContainer gc);
 
-    private void attackLogic(int i, Collection<Creature> creatures) {
+    private void swordAttackLogic(int i, Collection<Creature> creatures) {
         if (attacking) {
             if (currentAttackType == AttackType.SWORD) {
                 for (Creature creature : creatures) {
                     if (creature == this) continue;
                     if (swordAttackRect.intersects(creature.rect)) {
                         if (!(this instanceof Enemy && creature instanceof Enemy)) {
-                            creature.takeDamage();
+                            creature.takeDamage(equipmentItems.get(0).getItemType().getDamage());
                         }
                     }
                 }
@@ -189,12 +200,11 @@ public abstract class Creature implements Renderable {
 
     }
 
-    public void takeDamage() {
+    public void takeDamage(float damage) {
         if (!immune) {
 
             float beforeHP = healthPoints;
 
-            float damage = 50f;
             if (healthPoints - damage > 0) healthPoints -= damage;
             else healthPoints = 0f;
 
@@ -372,4 +382,20 @@ public abstract class Creature implements Renderable {
     }
 
     public enum AttackType {NONE, SWORD, BOW};
+
+
+    public void updateAttackType() {
+        String currentWeaponName = equipmentItems.get(0).getItemType().getId();
+        if (currentWeaponName == null) {
+            currentAttackType = AttackType.NONE;
+        } else if (currentWeaponName.equals("woodenSword") || currentWeaponName.equals("ironSword")) {
+            currentAttackType = AttackType.SWORD;
+        } else if (currentWeaponName.equals("crossbow")) {
+            currentAttackType = AttackType.BOW;
+        }
+    }
+
+    public Map<Integer, Item> getEquipmentItems() {
+        return equipmentItems;
+    }
 }

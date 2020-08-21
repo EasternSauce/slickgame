@@ -99,12 +99,7 @@ public class InventoryWindow implements Renderable {
 
         inventoryItems = new TreeMap<>();
 
-        equipmentItems = new TreeMap<>();
-
         traderInventoryItems = new TreeMap<>();
-
-        equipmentItems.put(0, new Item(ItemType.getItemType("woodenSword"), null));
-
 
     }
 
@@ -487,5 +482,6 @@ public class InventoryWindow implements Renderable {
 
     public void setCharacter(Character character) {
         this.character = character;
+        this.equipmentItems = character.getEquipmentItems();
     }
 }

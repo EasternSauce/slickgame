@@ -14,16 +14,18 @@ public class ItemType {
     private Image image;
     private String equipmentType;
     private int worth;
+    private Float damage;
 
 
 
-    public ItemType(String id, String name, String description, Image image, String equipmentType, int worth) {
+    public ItemType(String id, String name, String description, Image image, String equipmentType, int worth, Float damage) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.image = image;
         this.equipmentType = equipmentType;
         this.worth = worth;
+        this.damage = damage;
     }
 
 
@@ -58,12 +60,12 @@ public class ItemType {
 
         itemTypes = new HashMap<>();
 
-        ItemType itemType1 = new ItemType("leatherArmor", "Leather Armor", "-", itemIcons.getSprite(8,7), "body", 50);
-        ItemType itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", itemIcons.getSprite(3,8), "boots", 30);
-        ItemType itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", itemIcons.getSprite(0,8), "gloves", 25);
-        ItemType itemType4 = new ItemType("crossbow", "Crossbow", "-", itemIcons.getSprite(4,6), "weapon", 250);
-        ItemType itemType5 = new ItemType("ironSword", "Iron Sword", "-", itemIcons.getSprite(2, 5), "weapon", 200);
-        ItemType itemType6 = new ItemType("woodenSword", "Wooden Sword", "-", itemIcons.getSprite(0, 5), "weapon", 200);
+        ItemType itemType1 = new ItemType("leatherArmor", "Leather Armor", "-", itemIcons.getSprite(8,7), "body", 50, null);
+        ItemType itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", itemIcons.getSprite(3,8), "boots", 30, null);
+        ItemType itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", itemIcons.getSprite(0,8), "gloves", 25, null);
+        ItemType itemType4 = new ItemType("crossbow", "Crossbow", "-", itemIcons.getSprite(4,6), "weapon", 250, 20f);
+        ItemType itemType5 = new ItemType("ironSword", "Iron Sword", "-", itemIcons.getSprite(2, 5), "weapon", 200, 15f);
+        ItemType itemType6 = new ItemType("woodenSword", "Wooden Sword", "-", itemIcons.getSprite(0, 5), "weapon", 200, 10f);
 
         itemTypes.put(itemType1.getId(), itemType1);
         itemTypes.put(itemType2.getId(), itemType2);
@@ -77,5 +79,9 @@ public class ItemType {
         ItemType itemType = itemTypes.get(itemTypeId);
         if (itemType == null) throw new RuntimeException("item type doesn't exist: " + itemTypeId);
         return itemType;
+    }
+
+    public float getDamage() {
+        return damage;
     }
 }

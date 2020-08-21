@@ -23,16 +23,15 @@ public class Character extends Creature {
     private boolean walking = false;
     private boolean sprint = false;
 
-    private Map<Integer, Item> equipmentItems;
 
 
-
-    public Character(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem, Map<Integer, Item> equipmentItems) throws SlickException {
+    public Character(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem) throws SlickException {
         super(id, posX, posY, creatures, creaturesList, lootSystem);
 
-        this.equipmentItems = equipmentItems;
+        maxHealthPoints = 300f;
+        healthPoints = 300f;
 
-        updateAttackType();
+
     }
 
     @Override
@@ -171,9 +170,8 @@ public class Character extends Creature {
     }
 
     @Override
-    public void takeDamage() {
+    public void takeDamage(float damage) {
         if (!immune) {
-            float damage = 20f;
             if (healthPoints - damage > 0) healthPoints -= damage;
             else healthPoints = 0f;
 
@@ -190,15 +188,6 @@ public class Character extends Creature {
 
     }
 
-    public void updateAttackType() {
-        String currentWeaponName = equipmentItems.get(0).getItemType().getId();
-        if (currentWeaponName == null) {
-            currentAttackType = AttackType.NONE;
-        } else if (currentWeaponName.equals("woodenSword") || currentWeaponName.equals("ironSword")) {
-            currentAttackType = AttackType.SWORD;
-        } else if (currentWeaponName.equals("crossbow")) {
-            currentAttackType = AttackType.BOW;
-        }
-    }
+
 
 }

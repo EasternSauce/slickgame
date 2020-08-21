@@ -113,7 +113,7 @@ public class Arrow implements Renderable {
 
             if(creatureRect.intersects(arrowRect)) {
                 if (speedVector.equals(new Vector2f(0f, 0f)) || creature.getHealthPoints() <= 0.0f) return false;
-                creature.takeDamage();
+                creature.takeDamage(shooter.getEquipmentItems().get(0).getItemType().getDamage());
                 return true;
             }
         }
