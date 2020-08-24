@@ -1,8 +1,8 @@
 creature johnny
 pos 400.0 600.0
 creature protagonist
-pos 482.54523 654.53467
-creature skellie1229537094
-pos 918.5997 1237.2007
-creature skellie741041186
-pos 849.43195 1133.2549
+pos 1321.5206 165.37283
+equipment_item 0 crossbow
+equipment_item 2 leatherArmor
+equipment_item 3 hideGloves
+equipment_item 5 ringmailGreaves

@@ -3,7 +3,6 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.items.Item;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
@@ -28,11 +27,11 @@ public class Character extends Creature {
     public Character(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem) throws SlickException {
         super(id, posX, posY, creatures, creaturesList, lootSystem);
 
-        maxHealthPoints = 300f;
-        healthPoints = 300f;
-
+        setHealthPoints(300f);
 
     }
+
+
 
     @Override
     public void performActions(GameContainer gc, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
@@ -172,7 +171,9 @@ public class Character extends Creature {
     @Override
     public void takeDamage(float damage) {
         if (!immune) {
-            if (healthPoints - damage > 0) healthPoints -= damage;
+            float actualDamage = damage * 100f/(100f + getTotalArmor());
+
+            if (healthPoints - damage > 0) healthPoints -= actualDamage;
             else healthPoints = 0f;
 
             immunityTimer.reset();

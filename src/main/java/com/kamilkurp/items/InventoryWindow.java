@@ -54,7 +54,7 @@ public class InventoryWindow implements Renderable {
     private int inventorySlots = inventoryRows * inventoryColumns;
 
     private int space = 10;
-    private int margin = 50;
+    private int margin = 10;
     private int slotWidth = 40;
     private int slotHeight = 40;
 
@@ -169,16 +169,33 @@ public class InventoryWindow implements Renderable {
     public void renderItemDescription(Graphics g) {
         g.setColor(Color.white);
         if (inEquipment) {
-            if (equipmentItems.get(currentSelected) != null) g.drawString(equipmentItems.get(currentSelected).getName(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space);
-            if (equipmentItems.get(currentSelected) != null) g.drawString(equipmentItems.get(currentSelected).getDescription() + ", Worth " + (int)(equipmentItems.get(currentSelected).getItemType().getWorth() * 0.3) + " Gold", background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
+            Item item = equipmentItems.get(currentSelected);
+            if (item != null) {
+                g.drawString(item.getName(),
+                        background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space);
+            }
+            if (item != null) {
+                g.drawString(item.getItemInformation(),
+                        background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
+            }
 
         } else if (inTraderInventory) {
-            if (traderInventoryItems.get(currentSelected) != null) g.drawString(traderInventoryItems.get(currentSelected).getName(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space);
-            if (traderInventoryItems.get(currentSelected) != null) g.drawString(traderInventoryItems.get(currentSelected).getDescription() + ", Price is " + traderInventoryItems.get(currentSelected).getItemType().getWorth() + " Gold", background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
+            Item item = traderInventoryItems.get(currentSelected);
+            if (item != null) {
+                g.drawString(item.getName(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space);
+            }
+            if (item != null) {
+                g.drawString(item.getItemInformation(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
+            }
 
         } else {
-            if (inventoryItems.get(currentSelected) != null) g.drawString(inventoryItems.get(currentSelected).getName(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space);
-            if (inventoryItems.get(currentSelected) != null) g.drawString(inventoryItems.get(currentSelected).getDescription() + ", Worth " + (int)(inventoryItems.get(currentSelected).getItemType().getWorth() * 0.3) + " Gold", background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
+            Item item = inventoryItems.get(currentSelected);
+            if (item != null) {
+                g.drawString(item.getName(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space);
+            }
+            if (item != null) {
+                g.drawString(item.getItemInformation(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
+            }
 
         }
 }
@@ -205,7 +222,7 @@ public class InventoryWindow implements Renderable {
         }
 
         g.setColor(Color.yellow);
-        g.drawString("Gold: " + gold, background.getX() + 5, background.getY() + 20f + (space + slotHeight) * (float)inventorySlots/ inventoryColumns + 90f);
+        g.drawString("Gold: " + gold, background.getX() + 5, background.getY() + 20f + (space + slotHeight) * (float)inventorySlots/ inventoryColumns + 110f);
 
 
     }

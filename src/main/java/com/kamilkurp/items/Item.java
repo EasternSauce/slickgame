@@ -32,4 +32,13 @@ public class Item {
     public ItemType getItemType() {
         return itemType;
     }
+
+    public String getItemInformation() {
+        return (this.getItemType().getDamage() != null ? "Damage: " + this.getItemType().getDamage().intValue() + "\n" : "")
+                + (this.getItemType().getArmor() != null ? "Armor: " + this.getItemType().getArmor().intValue() + "\n" : "")
+                + this.getDescription() + "\n"
+                + "Worth " + (int)(this.getItemType().getWorth() * 0.3) + " Gold" + "\n";
+
+    }
+
 }

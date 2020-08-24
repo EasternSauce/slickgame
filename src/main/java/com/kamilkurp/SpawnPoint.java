@@ -53,6 +53,8 @@ public class SpawnPoint implements Renderable {
         int randY = Globals.randInt(posY - range, posY + range);
 
         Enemy enemy = new Enemy("skellie"+Math.abs(Globals.random.nextInt()), randX, randY, creatures, creaturesList, lootSystem);
+        enemy.updateAttackType();
+
         spawnedList.add(enemy);
     }
 

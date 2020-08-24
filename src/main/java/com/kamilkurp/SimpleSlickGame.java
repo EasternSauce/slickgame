@@ -8,6 +8,8 @@ import com.kamilkurp.dialogue.DialogueWindow;
 import com.kamilkurp.gui.Hud;
 import com.kamilkurp.gui.LootOptionWindow;
 import com.kamilkurp.items.InventoryWindow;
+import com.kamilkurp.items.Item;
+import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.Area;
@@ -86,8 +88,6 @@ public class SimpleSlickGame extends BasicGame {
         NPC npc = new NPC("johnny", 600, 600, creatures, creaturesList, lootSystem, dialogueWindow, "a1", true);
 
         inventoryWindow.setCharacter(character);
-        System.out.println("set equipment items");
-
 
 
         area1 = new Area(Assets.grassyTileset, Assets.area1Layout);
@@ -228,8 +228,17 @@ public class SimpleSlickGame extends BasicGame {
             FileWriter writer = new FileWriter("saves/savegame.sav");
 
             for (Creature creature : creatures.values()) {
+                if (creature.getClass() != Character.class && creature.getClass() != NPC.class) continue;
                 writer.write("creature " + creature.getId() + "\n");
                 writer.write("pos " + creature.getRect().getX() + " " + creature.getRect().getY() + "\n");
+
+                Map<Integer, Item> equipmentItems = creature.getEquipmentItems();
+
+                for (Map.Entry<Integer, Item> equipmentItem : equipmentItems.entrySet()) {
+                    if (equipmentItem.getValue() != null) {
+                        writer.write("equipment_item " + equipmentItem.getKey() + " " + equipmentItem.getValue().getItemType().getId() + "\n");
+                    }
+                }
             }
 
             writer.close();
@@ -250,11 +259,22 @@ public class SimpleSlickGame extends BasicGame {
                 String[] s = line.split(" ");
                 if(s[0].equals("creature")) {
                     creature = creatures.get(s[1]);
+
+//                    if (creature == null) {
+//                        throw new RuntimeException("creature not found!");
+//                    }
                 }
                 if(s[0].equals("pos")) {
                     if (creature != null) {
                         creature.getRect().setX(Float.parseFloat(s[1]));
                         creature.getRect().setY(Float.parseFloat(s[2]));
+                    }
+
+                }
+                if(s[0].equals("equipment_item")) {
+                    if (creature != null) {
+                        Map<Integer, Item> equipmentItems = creature.getEquipmentItems();
+                        equipmentItems.put(Integer.parseInt(s[1]), new Item(ItemType.getItemType(s[2]), null));
                     }
 
                 }
@@ -264,6 +284,10 @@ public class SimpleSlickGame extends BasicGame {
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        for (Creature creature1 : creaturesList) {
+            creature1.updateAttackType();
         }
     }
 

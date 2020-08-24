@@ -6,7 +6,6 @@ import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.Item;
-import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
@@ -107,13 +106,10 @@ public abstract class Creature implements Renderable {
         creatures.put(this.getId(), this);
         creaturesList.add(this);
 
-        currentAttackType = AttackType.BOW;
+        currentAttackType = AttackType.UNARMED;
 
         equipmentItems = new TreeMap<>();
 
-        equipmentItems.put(0, new Item(ItemType.getItemType("woodenSword"), null));
-
-        updateAttackType();
 
 
     }
@@ -137,7 +133,13 @@ public abstract class Creature implements Renderable {
 
     public void renderAttackAnimation(Graphics g, Camera camera) {
         if (attacking) {
-            if (currentAttackType == AttackType.SWORD) {
+            if (currentAttackType == AttackType.UNARMED) {
+                //change animation to fist attack or something
+                Image image = swordAttackAnmation.getAnimation().getCurrentFrame();
+                image.setRotation((float) attackingAngle);
+
+                g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());
+            } else if (currentAttackType == AttackType.SWORD) {
                 Image image = swordAttackAnmation.getAnimation().getCurrentFrame();
                 image.setRotation((float) attackingAngle);
 
@@ -168,7 +170,34 @@ public abstract class Creature implements Renderable {
 
     private void swordAttackLogic(int i, Collection<Creature> creatures) {
         if (attacking) {
-            if (currentAttackType == AttackType.SWORD) {
+            if (currentAttackType == AttackType.UNARMED) {
+                for (Creature creature : creatures) {
+                    if (creature == this) continue;
+                    if (swordAttackRect.intersects(creature.rect)) {
+                        if (!(this instanceof Enemy && creature instanceof Enemy)) {
+                            float unarmedDamage = 5f;
+                            creature.takeDamage(unarmedDamage);
+                        }
+                    }
+                }
+
+                float attackRange = 60f;
+
+                float attackShiftX = attackingVector.getNormal().getX() * attackRange;
+                float attackShiftY = attackingVector.getNormal().getY() * attackRange;
+
+                int attackWidth = 40;
+                int attackHeight = 40;
+
+                float attackRectX = attackShiftX + rect.getCenterX() - attackWidth / 2f;
+                float attackRectY = attackShiftY + rect.getCenterY() - attackHeight / 2f;
+
+                swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
+
+
+                swordAttackAnmation.getAnimation().update(i);
+            }
+            else if (currentAttackType == AttackType.SWORD) {
                 for (Creature creature : creatures) {
                     if (creature == this) continue;
                     if (swordAttackRect.intersects(creature.rect)) {
@@ -205,7 +234,9 @@ public abstract class Creature implements Renderable {
 
             float beforeHP = healthPoints;
 
-            if (healthPoints - damage > 0) healthPoints -= damage;
+            float actualDamage = damage * 100f/(100f + getTotalArmor());
+
+            if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
             else healthPoints = 0f;
 
             if (beforeHP != healthPoints && healthPoints == 0f) {
@@ -216,6 +247,17 @@ public abstract class Creature implements Renderable {
             immune = true;
         }
 
+    }
+
+    public float getTotalArmor() {
+        float totalArmor = 0.0f;
+        for (Map.Entry<Integer, Item> equipmentItem : equipmentItems.entrySet()) {
+            if (equipmentItem.getValue().getItemType().getArmor() != null) {
+                totalArmor += equipmentItem.getValue().getItemType().getArmor();
+            }
+        }
+        System.out.println("total armor: " + totalArmor);
+        return totalArmor;
     }
 
     protected abstract void onDeath();
@@ -300,7 +342,21 @@ public abstract class Creature implements Renderable {
     }
 
     public void attack(List<Arrow> arrowList, List<TerrainTile> tiles, List<Creature> creatures) {
-        if (currentAttackType == AttackType.SWORD) {
+        if (currentAttackType == AttackType.UNARMED) {
+            if (swordAttackCooldownTimer.getTime() > 800f) {
+                swordAttackSound.play(1.0f, 0.1f);
+
+                if (!attacking) { // on start attack
+                    swordAttackAnmation.restart();
+
+                    attacking = true;
+                    attackingTimer.reset();
+                    attackingAngle = facingAngle;
+                    attackingVector = facingVector;
+                }
+                swordAttackCooldownTimer.reset();
+            }
+        } else if (currentAttackType == AttackType.SWORD) {
             if (swordAttackCooldownTimer.getTime() > 800f) {
                 swordAttackSound.play(1.0f, 0.1f);
 
@@ -381,13 +437,15 @@ public abstract class Creature implements Renderable {
         return maxHealthPoints;
     }
 
-    public enum AttackType {NONE, SWORD, BOW};
+    public enum AttackType {UNARMED, SWORD, BOW};
 
 
     public void updateAttackType() {
+        if (equipmentItems.get(0) == null) return;
+
         String currentWeaponName = equipmentItems.get(0).getItemType().getId();
         if (currentWeaponName == null) {
-            currentAttackType = AttackType.NONE;
+            currentAttackType = AttackType.UNARMED;
         } else if (currentWeaponName.equals("woodenSword") || currentWeaponName.equals("ironSword")) {
             currentAttackType = AttackType.SWORD;
         } else if (currentWeaponName.equals("crossbow")) {
@@ -397,5 +455,10 @@ public abstract class Creature implements Renderable {
 
     public Map<Integer, Item> getEquipmentItems() {
         return equipmentItems;
+    }
+
+    public void setHealthPoints(float healthPoints) {
+        this.maxHealthPoints = healthPoints;
+        this.healthPoints = healthPoints;
     }
 }

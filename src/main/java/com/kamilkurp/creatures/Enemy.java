@@ -4,6 +4,8 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.items.Item;
+import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
@@ -59,6 +61,14 @@ public class Enemy extends Creature {
         hasDestination = false;
 
         hitbox = new Rectangle(17, 15, 30, 46);
+
+        setHealthPoints(1f);
+
+
+        equipmentItems.put(0, new Item(ItemType.getItemType("woodenSword"), null));
+
+        updateAttackType();
+
 
 
     }
@@ -132,6 +142,10 @@ public class Enemy extends Creature {
             float walkUpDistance = 0f;
 
             float attackDistance = 0f;
+            if (currentAttackType == AttackType.UNARMED) {
+                attackDistance = 100f;
+                walkUpDistance = 100f;
+            } else
             if (currentAttackType == AttackType.SWORD) {
                 attackDistance = 100f;
                 walkUpDistance = 100f;
