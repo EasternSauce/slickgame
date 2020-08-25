@@ -14,20 +14,20 @@ public class ItemType {
     private Image image;
     private String equipmentType;
     private int worth;
-    private Float damage;
-    private Float armor;
+    private Float maxDamage;
+    private Float maxArmor;
 
 
 
-    public ItemType(String id, String name, String description, Image image, String equipmentType, int worth, Float damage, Float armor) {
+    public ItemType(String id, String name, String description, Image image, String equipmentType, int worth, Float maxDamage, Float maxArmor) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.image = image;
         this.equipmentType = equipmentType;
         this.worth = worth;
-        this.damage = damage;
-        this.armor = armor;
+        this.maxDamage = maxDamage;
+        this.maxArmor = maxArmor;
     }
 
 
@@ -68,6 +68,9 @@ public class ItemType {
         ItemType itemType4 = new ItemType("crossbow", "Crossbow", "-", itemIcons.getSprite(4,6), "weapon", 250, 20f, null);
         ItemType itemType5 = new ItemType("ironSword", "Iron Sword", "-", itemIcons.getSprite(2, 5), "weapon", 200, 15f, null);
         ItemType itemType6 = new ItemType("woodenSword", "Wooden Sword", "-", itemIcons.getSprite(0, 5), "weapon", 200, 10f, null);
+        ItemType itemType7 = new ItemType("leatherHelmet", "Leather Helmet", "-", itemIcons.getSprite(2, 7), "helmet", 70, null, 5f);
+        ItemType itemType8 = new ItemType("lifeRing", "Life Ring", "Increases life when worn", itemIcons.getSprite(5, 8), "ring", 300, null, null);
+
 
         itemTypes.put(itemType1.getId(), itemType1);
         itemTypes.put(itemType2.getId(), itemType2);
@@ -75,6 +78,8 @@ public class ItemType {
         itemTypes.put(itemType4.getId(), itemType4);
         itemTypes.put(itemType5.getId(), itemType5);
         itemTypes.put(itemType6.getId(), itemType6);
+        itemTypes.put(itemType7.getId(), itemType7);
+        itemTypes.put(itemType8.getId(), itemType8);
     }
 
     public static ItemType getItemType(String itemTypeId) {
@@ -83,11 +88,11 @@ public class ItemType {
         return itemType;
     }
 
-    public Float getDamage() {
-        return damage;
+    public Float getMaxDamage() {
+        return maxDamage;
     }
 
-    public Float getArmor() {
-        return armor;
+    public Float getMaxArmor() {
+        return maxArmor;
     }
 }

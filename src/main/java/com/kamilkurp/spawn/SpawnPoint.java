@@ -1,5 +1,7 @@
-package com.kamilkurp;
+package com.kamilkurp.spawn;
 
+import com.kamilkurp.Globals;
+import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Enemy;
 import com.kamilkurp.items.LootSystem;

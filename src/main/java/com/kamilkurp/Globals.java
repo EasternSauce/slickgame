@@ -52,6 +52,12 @@ public class Globals {
         return randomNum;
     }
 
+    public static float randFloat() {
+        float randomNum = random.nextFloat();
+
+        return randomNum;
+    }
+
     public static String getAssetsLocation() {
         return assetsLocation;
     }

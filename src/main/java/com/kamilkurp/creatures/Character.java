@@ -5,6 +5,7 @@ import com.kamilkurp.KeyInput;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
+import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.*;
@@ -17,15 +18,17 @@ import java.util.Map;
 
 public class Character extends Creature {
     private Sound stepSound = Assets.stepSound;
-    private Sound gruntSound = Assets.gruntSound;
 
     private boolean walking = false;
     private boolean sprint = false;
 
+    private PlayerRespawnPoint playerRespawnPoint;
 
 
-    public Character(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem) throws SlickException {
+    public Character(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem, PlayerRespawnPoint playerRespawnPoint) throws SlickException {
         super(id, posX, posY, creatures, creaturesList, lootSystem);
+
+        this.playerRespawnPoint = playerRespawnPoint;
 
         setHealthPoints(300f);
 
@@ -169,23 +172,9 @@ public class Character extends Creature {
     }
 
     @Override
-    public void takeDamage(float damage) {
-        if (!immune) {
-            float actualDamage = damage * 100f/(100f + getTotalArmor());
-
-            if (healthPoints - damage > 0) healthPoints -= actualDamage;
-            else healthPoints = 0f;
-
-            immunityTimer.reset();
-            immune = true;
-            gruntSound.play(1.0f, 0.1f);
-
-        }
-
-    }
-
-    @Override
     protected void onDeath() {
+        System.out.println("on death");
+        playerRespawnPoint.startRespawnProcess(this);
 
     }
 

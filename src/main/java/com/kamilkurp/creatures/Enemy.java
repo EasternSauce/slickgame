@@ -50,6 +50,8 @@ public class Enemy extends Creature {
         dropTable.put("hideGloves", 0.1f);
         dropTable.put("crossbow", 0.05f);
         dropTable.put("ironSword", 0.05f);
+        dropTable.put("leatherHelmet", 0.15f);
+        dropTable.put("lifeRing", 0.99f);
 
 
         findNewDestinationTimer = new Timer();

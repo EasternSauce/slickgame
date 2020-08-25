@@ -12,6 +12,8 @@ import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
+import com.kamilkurp.spawn.PlayerRespawnPoint;
+import com.kamilkurp.spawn.SpawnPoint;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.*;
@@ -53,6 +55,8 @@ public class SimpleSlickGame extends BasicGame {
     private SpawnPoint spawnPoint1;
     private SpawnPoint spawnPoint2;
 
+    private PlayerRespawnPoint playerRespawnPoint;
+
     private Music townMusic;
 
     private Queue<Creature> renderPriorityQueue;
@@ -83,8 +87,9 @@ public class SimpleSlickGame extends BasicGame {
 
         lootSystem = new LootSystem(lootOptionWindow);
 
+        playerRespawnPoint = new PlayerRespawnPoint(400, 400);
 
-        character = new Character("protagonist", 400, 400, creatures, creaturesList, lootSystem);
+        character = new Character("protagonist", 400, 400, creatures, creaturesList, lootSystem, playerRespawnPoint);
         NPC npc = new NPC("johnny", 600, 600, creatures, creaturesList, lootSystem, dialogueWindow, "a1", true);
 
         inventoryWindow.setCharacter(character);
@@ -151,6 +156,9 @@ public class SimpleSlickGame extends BasicGame {
         spawnPoint1.update();
         //spawnPoint2.update();
 
+
+        playerRespawnPoint.update();
+
         renderPriorityQueue = new PriorityQueue<>((o1, o2) -> {
             if (o1.getHealthPoints() <= 0.0f) return -1;
             if (o2.getHealthPoints() <= 0.0f) return 1;
@@ -170,6 +178,7 @@ public class SimpleSlickGame extends BasicGame {
         //spawnPoint2.render(g, camera);
 
 
+
         if (renderPriorityQueue != null) {
             while(!renderPriorityQueue.isEmpty()) {
                 Creature creature = renderPriorityQueue.poll();
@@ -183,6 +192,9 @@ public class SimpleSlickGame extends BasicGame {
         for (Creature creature : creatures.values()) {
             creature.renderAttackAnimation(g, camera);
         }
+
+        playerRespawnPoint.render(g, camera);
+
 
         for (Arrow arrow : arrowList) {
             arrow.render(g, camera);
@@ -236,7 +248,10 @@ public class SimpleSlickGame extends BasicGame {
 
                 for (Map.Entry<Integer, Item> equipmentItem : equipmentItems.entrySet()) {
                     if (equipmentItem.getValue() != null) {
-                        writer.write("equipment_item " + equipmentItem.getKey() + " " + equipmentItem.getValue().getItemType().getId() + "\n");
+                        String damage = equipmentItem.getValue().getDamage() == null ? "0" : "" + equipmentItem.getValue().getDamage().intValue();
+
+                        String armor = equipmentItem.getValue().getArmor() == null ? "0" : "" + equipmentItem.getValue().getArmor().intValue();
+                        writer.write("equipment_item " + equipmentItem.getKey() + " " + equipmentItem.getValue().getItemType().getId() + " " + damage + " " + armor + "\n");
                     }
                 }
             }
@@ -274,7 +289,7 @@ public class SimpleSlickGame extends BasicGame {
                 if(s[0].equals("equipment_item")) {
                     if (creature != null) {
                         Map<Integer, Item> equipmentItems = creature.getEquipmentItems();
-                        equipmentItems.put(Integer.parseInt(s[1]), new Item(ItemType.getItemType(s[2]), null));
+                        equipmentItems.put(Integer.parseInt(s[1]), new Item(ItemType.getItemType(s[2]), null, (s[3].equals("0") ? null : (float)(Integer.parseInt(s[3]))), (s[4].equals("0") ? null : (float)(Integer.parseInt(s[4])))));
                     }
 
                 }

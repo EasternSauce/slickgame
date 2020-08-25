@@ -29,6 +29,7 @@ public abstract class Creature implements Renderable {
 
     protected boolean attacking = false;
 
+    private Sound gruntSound = Assets.gruntSound;
 
 
     protected int direction = 0;
@@ -128,7 +129,7 @@ public abstract class Creature implements Renderable {
             walkAnimation.getAnimation(direction).draw((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY(), rect.getWidth(), rect.getHeight());
         }
 
-        Assets.verdanaTtf.drawString((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY() - 30f, (int)healthPoints + "/" + (int)maxHealthPoints, Color.red);;
+        Assets.verdanaTtf.drawString((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY() - 30f, (int)healthPoints + "/" + (int)getMaxHealthPoints(), Color.red);
     }
 
     public void renderAttackAnimation(Graphics g, Camera camera) {
@@ -202,7 +203,7 @@ public abstract class Creature implements Renderable {
                     if (creature == this) continue;
                     if (swordAttackRect.intersects(creature.rect)) {
                         if (!(this instanceof Enemy && creature instanceof Enemy)) {
-                            creature.takeDamage(equipmentItems.get(0).getItemType().getDamage());
+                            creature.takeDamage(equipmentItems.get(0).getDamage());
                         }
                     }
                 }
@@ -245,6 +246,7 @@ public abstract class Creature implements Renderable {
 
             immunityTimer.reset();
             immune = true;
+            gruntSound.play(1.0f, 0.1f);
         }
 
     }
@@ -252,11 +254,10 @@ public abstract class Creature implements Renderable {
     public float getTotalArmor() {
         float totalArmor = 0.0f;
         for (Map.Entry<Integer, Item> equipmentItem : equipmentItems.entrySet()) {
-            if (equipmentItem.getValue().getItemType().getArmor() != null) {
-                totalArmor += equipmentItem.getValue().getItemType().getArmor();
+            if (equipmentItem.getValue().getItemType().getMaxArmor() != null) {
+                totalArmor += equipmentItem.getValue().getItemType().getMaxArmor();
             }
         }
-        System.out.println("total armor: " + totalArmor);
         return totalArmor;
     }
 
@@ -434,7 +435,13 @@ public abstract class Creature implements Renderable {
     }
 
     public float getMaxHealthPoints() {
+        if (equipmentItems.get(4) != null && equipmentItems.get(4).getItemType().getId().equals("lifeRing")) return maxHealthPoints * 1.1f;
         return maxHealthPoints;
+    }
+
+    public void setPosition(float posX, float posY) {
+        this.rect.setX(posX);
+        this.rect.setY(posY);
     }
 
     public enum AttackType {UNARMED, SWORD, BOW};
@@ -459,6 +466,6 @@ public abstract class Creature implements Renderable {
 
     public void setHealthPoints(float healthPoints) {
         this.maxHealthPoints = healthPoints;
-        this.healthPoints = healthPoints;
+        this.healthPoints = getMaxHealthPoints();
     }
 }

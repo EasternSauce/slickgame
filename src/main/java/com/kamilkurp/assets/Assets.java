@@ -26,6 +26,8 @@ public class Assets {
     public static SpriteSheet niceItemIcons;
     public static Font verdanaFont;
     public static TrueTypeFont verdanaTtf;
+    public static Font verdanaHugeFont;
+    public static TrueTypeFont verdanaHugeTtf;
 
     public static Sound arrowWhizzSound;
 
@@ -53,6 +55,8 @@ public class Assets {
 
         verdanaFont = new Font("Verdana", Font.BOLD, 16);
         verdanaTtf = new TrueTypeFont(verdanaFont, true);
+        verdanaHugeFont = new Font("Verdana", Font.BOLD, 46);
+        verdanaHugeTtf = new TrueTypeFont(verdanaHugeFont, true);
 
     }
 }

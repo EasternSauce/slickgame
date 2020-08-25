@@ -1,8 +1,10 @@
 creature johnny
 pos 400.0 600.0
 creature protagonist
-pos 1321.5206 165.37283
-equipment_item 0 crossbow
-equipment_item 2 leatherArmor
-equipment_item 3 hideGloves
-equipment_item 5 ringmailGreaves
+pos 1044.3173 537.43115
+equipment_item 0 crossbow 19 0
+equipment_item 1 leatherHelmet 0 3
+equipment_item 2 leatherArmor 0 6
+equipment_item 3 hideGloves 0 2
+equipment_item 4 lifeRing 0 0
+equipment_item 5 ringmailGreaves 0 3
