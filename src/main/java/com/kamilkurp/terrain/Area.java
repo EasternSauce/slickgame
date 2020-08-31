@@ -36,13 +36,16 @@ public class Area implements Renderable {
 
     private LootSystem lootSystem;
 
+    private String id;
 
-    public Area(TerrainTileset terrainTileset, TerrainLayout terrainLayout, SpawnLocationsContainer spawnsContainer, LootSystem lootSystem) throws SlickException {
+    public Area(String id, TerrainTileset terrainTileset, TerrainLayout terrainLayout, SpawnLocationsContainer spawnsContainer, LootSystem lootSystem) throws SlickException {
         this.lootSystem = lootSystem;
 
         this.terrainTileset = terrainTileset;
         this.terrainLayout = terrainLayout;
         this.spawnLocationsContainer = spawnsContainer;
+
+        this.id = id;
 
 
         creaturesMap = new TreeMap<>();
@@ -163,5 +166,11 @@ public class Area implements Renderable {
     public List<Creature> getCreaturesList() {
         return creaturesList;
     }
+
+    public String getId() {
+        return id;
+    }
+
+
 }
 

@@ -3,12 +3,10 @@ package com.kamilkurp.spawn;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Character;
-import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
 
 public class PlayerRespawnPoint implements Renderable {
     private int posX;
@@ -34,7 +32,7 @@ public class PlayerRespawnPoint implements Renderable {
         if (respawning && timer.getTime() > 3000f) {
             respawning = false;
             character.setPosition(posX, posY);
-            character.setHealthPoints(character.getMaxHealthPoints());
+            character.setMaxHealthPoints(character.getMaxHealthPoints());
         }
 
     }

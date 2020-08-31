@@ -65,7 +65,8 @@ public class Skeleton extends Creature {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setHealthPoints(1f);
+        setMaxHealthPoints(1f);
+        setHealthPoints(getMaxHealthPoints());
 
 
         equipmentItems.put(0, new Item(ItemType.getItemType("woodenSword"), null));

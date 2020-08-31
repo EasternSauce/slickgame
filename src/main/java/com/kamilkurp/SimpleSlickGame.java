@@ -27,9 +27,6 @@ import java.util.logging.Logger;
 
 public class SimpleSlickGame extends BasicGame {
 
-    private Area area1;
-    private Area area2;
-
     private Area currentArea;
 
     private Camera camera;
@@ -61,6 +58,7 @@ public class SimpleSlickGame extends BasicGame {
 
     private List<Arrow> arrowList;
 
+    private Map<String, Area> areaMap;
 
     public SimpleSlickGame(String gamename) {
         super(gamename);
@@ -85,25 +83,17 @@ public class SimpleSlickGame extends BasicGame {
 
         playerRespawnPoint = new PlayerRespawnPoint(400, 400);
 
-        area1 = new Area(Assets.grassyTileset, Assets.area1Layout, Assets.area1Enemies, lootSystem);
+        areaMap = new HashMap<>();
+        areaMap.put("area1", new Area("area1", Assets.grassyTileset, Assets.area1Layout, Assets.area1Enemies, lootSystem));
+        areaMap.put("area2", new Area("area2", Assets.dungeonTileset, Assets.area2Layout, Assets.area2Enemies, lootSystem));
 
-        area2 = new Area(Assets.dungeonTileset, Assets.area2Layout, Assets.area2Enemies, lootSystem);
 
-
-        character = new Character("protagonist", 400, 400, area1, lootSystem, playerRespawnPoint);
-        NPC npc = new NPC("johnny", 600, 600, area1, lootSystem, dialogueWindow, "a1", true);
+        character = new Character("protagonist", 400, 400, areaMap.get("area1"), lootSystem, playerRespawnPoint);
+        NPC npc = new NPC("johnny", 600, 600, areaMap.get("area1"), lootSystem, dialogueWindow, "a1", true);
 
         inventoryWindow.setCharacter(character);
 
-
-        //kazdy area musi miec swoja liste kreatur!!!
-        //
-        //
-        //
-
-
-
-        currentArea = area1;
+        currentArea = areaMap.get("area1");
 
 
         camera = new Camera();
@@ -253,6 +243,8 @@ public class SimpleSlickGame extends BasicGame {
                 if (creature.getClass() != Character.class && creature.getClass() != NPC.class) continue;
                 writer.write("creature " + creature.getId() + "\n");
                 writer.write("pos " + creature.getRect().getX() + " " + creature.getRect().getY() + "\n");
+                writer.write("area " + creature.getArea().getId() + "\n");
+                writer.write("health " + creature.getHealthPoints() + "\n");
 
                 Map<Integer, Item> equipmentItems = creature.getEquipmentItems();
 
@@ -283,7 +275,14 @@ public class SimpleSlickGame extends BasicGame {
             while (line != null) {
                 String[] s = line.split(" ");
                 if(s[0].equals("creature")) {
-                    creature = currentArea.getCreaturesMap().get(s[1]);
+
+                    Map<String,Creature> allCreatures = new HashMap<>();
+
+                    for (Map.Entry<String, Area> areaEntry : areaMap.entrySet()) {
+                        allCreatures.putAll(areaEntry.getValue().getCreaturesMap());
+                    }
+
+                    creature = allCreatures.get(s[1]);
 
 //                    if (creature == null) {
 //                        throw new RuntimeException("creature not found!");
@@ -293,6 +292,18 @@ public class SimpleSlickGame extends BasicGame {
                     if (creature != null) {
                         creature.getRect().setX(Float.parseFloat(s[1]));
                         creature.getRect().setY(Float.parseFloat(s[2]));
+                    }
+
+                }
+                if(s[0].equals("area")) {
+                    if (creature != null) {
+                        creature.setArea(areaMap.get(s[1]));
+                    }
+
+                }
+                if(s[0].equals("health")) {
+                    if (creature != null) {
+                        creature.setHealthPoints(Float.parseFloat(s[1]));
                     }
 
                 }

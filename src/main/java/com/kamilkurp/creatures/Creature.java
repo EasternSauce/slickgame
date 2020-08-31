@@ -85,11 +85,14 @@ public abstract class Creature implements Renderable {
 
     protected Timer healthRegenTimer;
 
+    protected Area area;
+
 
 
     public Creature(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
         this.id = id;
         this.lootSystem = lootSystem;
+        this.area = area;
 
         rect = new Rectangle(posX, posY, 64, 64);
         hitbox = new Rectangle(2, 2, 60, 60);
@@ -128,7 +131,7 @@ public abstract class Creature implements Renderable {
         Image sprite = walkAnimation.getRestPosition(direction);
 
         if (!running) {
-            if (healthPoints == 0f) {
+            if (!isAlive()) {
                 sprite.rotate(90f);
             }
             sprite.draw((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY(), rect.getWidth(), rect.getHeight());
@@ -166,7 +169,10 @@ public abstract class Creature implements Renderable {
 
         beforeMovement(i);
 
-        if (healthPoints > 0f) performActions(gc, creatures, keyInput, arrowList, tiles);
+        if (isAlive()) {
+            performActions(gc, creatures, keyInput, arrowList, tiles);
+            regenerateHealth();
+        }
 
         afterMovement(tiles);
 
@@ -174,6 +180,10 @@ public abstract class Creature implements Renderable {
 
         swordAttackLogic(i, creatures);
 
+
+    }
+
+    public void regenerateHealth() {
         if (healthRegenTimer.getTime() > 500f) {
             if (getHealthPoints() < getMaxHealthPoints()) {
                 float afterRegen = getHealthPoints() + healthRegen;
@@ -480,8 +490,25 @@ public abstract class Creature implements Renderable {
         return equipmentItems;
     }
 
+    public void setMaxHealthPoints(float maxHealthPoints) {
+        this.maxHealthPoints = maxHealthPoints;
+    }
+
     public void setHealthPoints(float healthPoints) {
-        this.maxHealthPoints = healthPoints;
-        this.healthPoints = getMaxHealthPoints();
+        this.healthPoints = healthPoints;
+    }
+
+
+    public Area getArea() {
+        return area;
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
+
+    public boolean isAlive() {
+        if (healthPoints > 0f) return true;
+        return false;
     }
 }

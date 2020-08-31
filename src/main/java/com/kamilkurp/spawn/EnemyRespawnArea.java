@@ -66,7 +66,7 @@ public class EnemyRespawnArea implements Renderable {
         int spawnedAlive = 0;
 
         for (Creature creature : spawnedList) {
-            if (creature.getHealthPoints() > 0f) {
+            if (creature.isAlive()) {
                 spawnedAlive++;
             }
         }

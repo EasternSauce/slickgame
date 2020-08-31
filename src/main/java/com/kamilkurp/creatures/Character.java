@@ -15,7 +15,6 @@ import org.newdawn.slick.geom.Vector2f;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class Character extends Creature {
     private Sound stepSound = Assets.stepSound;
@@ -31,7 +30,7 @@ public class Character extends Creature {
 
         this.playerRespawnPoint = playerRespawnPoint;
 
-        setHealthPoints(300f);
+        setMaxHealthPoints(300f);
 
     }
 
@@ -100,7 +99,7 @@ public class Character extends Creature {
     public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
         super.update(gc, i ,tiles, creatures, keyInput, arrowList);
 
-        if (healthPoints <= 0f) {
+        if (!isAlive()) {
             stepSound.stop();
         }
 
