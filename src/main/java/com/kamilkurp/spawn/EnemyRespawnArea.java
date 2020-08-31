@@ -3,8 +3,9 @@ package com.kamilkurp.spawn;
 import com.kamilkurp.Globals;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.Creature;
-import com.kamilkurp.creatures.Enemy;
+import com.kamilkurp.creatures.Skeleton;
 import com.kamilkurp.items.LootSystem;
+import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.Color;
@@ -15,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class SpawnPoint implements Renderable {
+public class EnemyRespawnArea implements Renderable {
     private int posX;
     private int posY;
     private List<Creature> spawnedList;
@@ -27,17 +28,18 @@ public class SpawnPoint implements Renderable {
     private int spawnTimeout;
     private Timer spawnTimer;
     private boolean spawning;
+    private Area area;
 
-    public SpawnPoint(int posX, int posY, int spawnedLimit, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem) throws SlickException {
+    public EnemyRespawnArea(int posX, int posY, int spawnedLimit, Area area, LootSystem lootSystem) throws SlickException {
         this.posX = posX;
         this.posY = posY;
-        this.creatures = creatures;
-        this.creaturesList = creaturesList;
         this.lootSystem = lootSystem;
 
         range = 150;
 
         this.spawnedLimit = spawnedLimit;
+
+        this.area = area;
 
         spawnedList = new LinkedList<>();
         spawnTimeout = 5000;
@@ -54,7 +56,7 @@ public class SpawnPoint implements Renderable {
         int randX = Globals.randInt(posX - range, posX + range);
         int randY = Globals.randInt(posY - range, posY + range);
 
-        Enemy enemy = new Enemy("skellie"+Math.abs(Globals.random.nextInt()), randX, randY, creatures, creaturesList, lootSystem);
+        Skeleton enemy = new Skeleton("skellie"+Math.abs(Globals.random.nextInt()), randX, randY, area, lootSystem);
         enemy.updateAttackType();
 
         spawnedList.add(enemy);

@@ -9,6 +9,7 @@ import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
+import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
@@ -31,8 +32,8 @@ public class NPC extends Creature {
     private Map<String, Float> dropTable;
 
 
-    public NPC(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem, DialogueWindow dialogueWindow, String dialogueStartId, boolean trader) throws SlickException {
-        super(id, posX, posY, creatures, creaturesList, lootSystem);
+    public NPC(String id, int posX, int posY, Area area, LootSystem lootSystem, DialogueWindow dialogueWindow, String dialogueStartId, boolean trader) throws SlickException {
+        super(id, posX, posY, area, lootSystem);
 
         this.dialogueWindow = dialogueWindow;
         this.dialogueStartId = dialogueStartId;

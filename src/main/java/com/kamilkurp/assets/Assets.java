@@ -1,11 +1,11 @@
 package com.kamilkurp.assets;
 
 import com.kamilkurp.Globals;
+import com.kamilkurp.spawn.SpawnLocationsContainer;
 import com.kamilkurp.terrain.TerrainLayout;
 import com.kamilkurp.terrain.TerrainTileset;
 import org.newdawn.slick.*;
 
-import java.awt.*;
 import java.awt.Font;
 
 public class Assets {
@@ -30,13 +30,17 @@ public class Assets {
     public static TrueTypeFont verdanaHugeTtf;
 
     public static Sound arrowWhizzSound;
+    public static SpawnLocationsContainer area1Enemies;
+    public static SpawnLocationsContainer area2Enemies;
 
     public static void loadAssets() throws SlickException {
         String assetsLocation = Globals.getAssetsLocation();
         grassyTileset = new TerrainTileset(16,16,12,16,4, assetsLocation + "grassy_terrain/tileset.png", assetsLocation + "grassy_terrain/terrain_passable.txt");
         dungeonTileset = new TerrainTileset(16,16,10,10,4, assetsLocation + "dungeon_terrain/tileset.png", assetsLocation + "dungeon_terrain/terrain_passable.txt");
-        area1Layout = new TerrainLayout(assetsLocation + "area_layouts/area1_layout.txt");
-        area2Layout = new TerrainLayout(assetsLocation + "area_layouts/area2_layout.txt");
+        area1Layout = new TerrainLayout(assetsLocation + "areas/area1/layout.txt");
+        area1Enemies = new SpawnLocationsContainer(assetsLocation + "areas/area1/spawns.txt");
+        area2Layout = new TerrainLayout(assetsLocation + "areas/area2/layout.txt");
+        area2Enemies = new SpawnLocationsContainer(assetsLocation + "areas/area2/spawns.txt");
         skeletonSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/skeleton.png", 64, 64);
         slashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash.png", 40, 40);
         betterSlashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash_hd.png", 40, 40);

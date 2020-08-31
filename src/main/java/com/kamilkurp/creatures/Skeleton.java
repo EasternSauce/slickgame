@@ -8,6 +8,7 @@ import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
+import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
@@ -17,7 +18,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import java.util.*;
 
-public class Enemy extends Creature {
+public class Skeleton extends Creature {
 
     private Timer actionTimer;
 
@@ -39,8 +40,8 @@ public class Enemy extends Creature {
     private boolean hasDestination;
 
 
-    public Enemy(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem) throws SlickException {
-        super(id, posX, posY, creatures, creaturesList, lootSystem);
+    public Skeleton(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
+        super(id, posX, posY, area, lootSystem);
 
         actionTimer = new Timer();
 
@@ -111,7 +112,7 @@ public class Enemy extends Creature {
         int aggroDistance = 400;
         aggroed = null;
         for (Creature creature : creatures) {
-            if (creature instanceof Enemy) continue;
+            if (creature instanceof Skeleton) continue;
             if (Globals.distance(creature.rect, rect) < aggroDistance && creature.healthPoints > 0) {
                 aggroed = creature;
                 break;

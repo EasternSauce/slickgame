@@ -172,7 +172,6 @@ public class InventoryWindow implements Renderable {
             Item item = equipmentItems.get(currentSelected);
             if (item != null) {
                 Assets.verdanaTtf.drawString(background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space, item.getName(), Color.orange);
-
             }
             if (item != null) {
                 g.drawString(item.getItemInformation(),
@@ -182,9 +181,7 @@ public class InventoryWindow implements Renderable {
         } else if (inTraderInventory) {
             Item item = traderInventoryItems.get(currentSelected);
             if (item != null) {
-                g.setColor(Color.orange);
                 Assets.verdanaTtf.drawString(background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space, item.getName(), Color.orange);
-
             }
             if (item != null) {
                 g.drawString(item.getItemInformation(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
@@ -193,7 +190,6 @@ public class InventoryWindow implements Renderable {
         } else {
             Item item = inventoryItems.get(currentSelected);
             if (item != null) {
-                g.setColor(Color.orange);
                 Assets.verdanaTtf.drawString(background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space, item.getName(), Color.orange);
 
             }

@@ -13,7 +13,6 @@ import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
-import com.kamilkurp.spawn.SpawnPoint;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.*;
@@ -37,9 +36,6 @@ public class SimpleSlickGame extends BasicGame {
 
     private Hud hud;
 
-    private Map<String, Creature> creatures;
-    private List<Creature> creaturesList;
-
     private Character character;
 
     private InventoryWindow inventoryWindow;
@@ -52,8 +48,10 @@ public class SimpleSlickGame extends BasicGame {
 
     private KeyInput keyInput;
 
-    private SpawnPoint spawnPoint1;
-    private SpawnPoint spawnPoint2;
+//    private EnemyRespawnArea enemyRespawnArea1;
+//    private EnemyRespawnArea enemyRespawnArea2;
+//
+//    private EnemySpawnPoint enemySpawnPoint;
 
     private PlayerRespawnPoint playerRespawnPoint;
 
@@ -74,9 +72,7 @@ public class SimpleSlickGame extends BasicGame {
 
         Assets.loadAssets();
 
-        creatures = new TreeMap<>();
 
-        creaturesList = new LinkedList<>();
 
         inventoryWindow = new InventoryWindow();
 
@@ -89,15 +85,22 @@ public class SimpleSlickGame extends BasicGame {
 
         playerRespawnPoint = new PlayerRespawnPoint(400, 400);
 
-        character = new Character("protagonist", 400, 400, creatures, creaturesList, lootSystem, playerRespawnPoint);
-        NPC npc = new NPC("johnny", 600, 600, creatures, creaturesList, lootSystem, dialogueWindow, "a1", true);
+        area1 = new Area(Assets.grassyTileset, Assets.area1Layout, Assets.area1Enemies, lootSystem);
+
+        area2 = new Area(Assets.dungeonTileset, Assets.area2Layout, Assets.area2Enemies, lootSystem);
+
+
+        character = new Character("protagonist", 400, 400, area1, lootSystem, playerRespawnPoint);
+        NPC npc = new NPC("johnny", 600, 600, area1, lootSystem, dialogueWindow, "a1", true);
 
         inventoryWindow.setCharacter(character);
 
 
-        area1 = new Area(Assets.grassyTileset, Assets.area1Layout);
+        //kazdy area musi miec swoja liste kreatur!!!
+        //
+        //
+        //
 
-        area2 = new Area(Assets.dungeonTileset, Assets.area2Layout);
 
 
         currentArea = area1;
@@ -110,8 +113,10 @@ public class SimpleSlickGame extends BasicGame {
         hud = new Hud();
 
 
-        spawnPoint1 = new SpawnPoint(1000, 1400, 1, creatures, creaturesList, lootSystem);
-        //spawnPoint2 = new SpawnPoint(1900, 1900, 1, creatures, lootSystem);
+//        enemyRespawnArea1 = new EnemyRespawnArea(1000, 1400, 1, creatures, creaturesList, lootSystem);
+//        //spawnPoint2 = new SpawnPoint(1900, 1900, 1, creatures, lootSystem);
+//
+//        enemySpawnPoint = new EnemySpawnPoint(1600, 2000, creatures, creaturesList, lootSystem);
 
 
         keyInput = new KeyInput();
@@ -131,14 +136,14 @@ public class SimpleSlickGame extends BasicGame {
 
         keyInput.readKeyPresses(gc.getInput());
 
-        for (Creature creature : creatures.values()) {
+        for (Creature creature : currentArea.getCreaturesMap().values()) {
             if (creature instanceof Character) {
                 if (!inventoryWindow.isInventoryOpen() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
-                    creature.update(gc, i, currentArea.getTiles(), creaturesList, keyInput, arrowList);
+                    creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesList(), keyInput, arrowList);
                 }
             }
             else {
-                creature.update(gc, i, currentArea.getTiles(), creaturesList, keyInput, arrowList);
+                creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesList(), keyInput, arrowList);
             }
 
         }
@@ -153,7 +158,9 @@ public class SimpleSlickGame extends BasicGame {
 
         lootSystem.update(keyInput, character);
 
-        spawnPoint1.update();
+        currentArea.updateSpawns();
+
+//        enemyRespawnArea1.update();
         //spawnPoint2.update();
 
 
@@ -166,7 +173,7 @@ public class SimpleSlickGame extends BasicGame {
             return (o1.getRect().getY() - o2.getRect().getY() > 0.0f) ? 1 : -1;
         });
 
-        renderPriorityQueue.addAll(creatures.values());
+        renderPriorityQueue.addAll(currentArea.getCreaturesMap().values());
 
 
     }
@@ -174,7 +181,11 @@ public class SimpleSlickGame extends BasicGame {
     public void render(GameContainer gc, Graphics g) {
         currentArea.render(g, camera);
 
-        spawnPoint1.render(g, camera);
+        currentArea.renderSpawns(g, camera);
+
+        playerRespawnPoint.render(g, camera);
+
+
         //spawnPoint2.render(g, camera);
 
 
@@ -189,11 +200,10 @@ public class SimpleSlickGame extends BasicGame {
         }
 
 
-        for (Creature creature : creatures.values()) {
+        for (Creature creature : currentArea.getCreaturesMap().values()) {
             creature.renderAttackAnimation(g, camera);
         }
 
-        playerRespawnPoint.render(g, camera);
 
 
         for (Arrow arrow : arrowList) {
@@ -239,7 +249,7 @@ public class SimpleSlickGame extends BasicGame {
         try {
             FileWriter writer = new FileWriter("saves/savegame.sav");
 
-            for (Creature creature : creatures.values()) {
+            for (Creature creature : currentArea.getCreaturesMap().values()) {
                 if (creature.getClass() != Character.class && creature.getClass() != NPC.class) continue;
                 writer.write("creature " + creature.getId() + "\n");
                 writer.write("pos " + creature.getRect().getX() + " " + creature.getRect().getY() + "\n");
@@ -273,7 +283,7 @@ public class SimpleSlickGame extends BasicGame {
             while (line != null) {
                 String[] s = line.split(" ");
                 if(s[0].equals("creature")) {
-                    creature = creatures.get(s[1]);
+                    creature = currentArea.getCreaturesMap().get(s[1]);
 
 //                    if (creature == null) {
 //                        throw new RuntimeException("creature not found!");
@@ -301,7 +311,7 @@ public class SimpleSlickGame extends BasicGame {
             e.printStackTrace();
         }
 
-        for (Creature creature1 : creaturesList) {
+        for (Creature creature1 : currentArea.getCreaturesList()) {
             creature1.updateAttackType();
         }
     }

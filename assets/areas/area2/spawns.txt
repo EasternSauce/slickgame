@@ -1,0 +1,3 @@
+spawnPoint skeleton 1600 2000
+spawnPoint skeleton 1600 3000
+respawnArea skeleton 1000 1400

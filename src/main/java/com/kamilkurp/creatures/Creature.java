@@ -8,6 +8,7 @@ import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
+import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
@@ -80,9 +81,13 @@ public abstract class Creature implements Renderable {
 
     protected Map<Integer, Item> equipmentItems;
 
+    protected float healthRegen = 0.3f;
+
+    protected Timer healthRegenTimer;
 
 
-    public Creature(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem) throws SlickException {
+
+    public Creature(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
         this.id = id;
         this.lootSystem = lootSystem;
 
@@ -96,6 +101,7 @@ public abstract class Creature implements Renderable {
         immunityTimer = new Timer();
         swordAttackCooldownTimer = new Timer();
         bowAttackCooldownTimer = new Timer();
+        healthRegenTimer = new Timer();
 
         swordAttackRect = new Rectangle(-999, -999, 1, 1);
 
@@ -104,12 +110,14 @@ public abstract class Creature implements Renderable {
         facingAngle = 0.0f;
         facingVector = new Vector2f(0f, 0f);
 
-        creatures.put(this.getId(), this);
-        creaturesList.add(this);
+
+        area.getCreaturesMap().put(this.getId(), this);
+        area.getCreaturesList().add(this);
 
         currentAttackType = AttackType.UNARMED;
 
         equipmentItems = new TreeMap<>();
+
 
 
 
@@ -165,6 +173,14 @@ public abstract class Creature implements Renderable {
         setFacingDirection(gc);
 
         swordAttackLogic(i, creatures);
+
+        if (healthRegenTimer.getTime() > 500f) {
+            if (getHealthPoints() < getMaxHealthPoints()) {
+                float afterRegen = getHealthPoints() + healthRegen;
+                healthPoints = Math.min(afterRegen, getMaxHealthPoints());
+            }
+            healthRegenTimer.reset();
+        }
     }
 
     protected abstract void setFacingDirection(GameContainer gc);
@@ -175,7 +191,7 @@ public abstract class Creature implements Renderable {
                 for (Creature creature : creatures) {
                     if (creature == this) continue;
                     if (swordAttackRect.intersects(creature.rect)) {
-                        if (!(this instanceof Enemy && creature instanceof Enemy)) {
+                        if (!(this instanceof Skeleton && creature instanceof Skeleton)) {
                             float unarmedDamage = 5f;
                             creature.takeDamage(unarmedDamage);
                         }
@@ -202,7 +218,7 @@ public abstract class Creature implements Renderable {
                 for (Creature creature : creatures) {
                     if (creature == this) continue;
                     if (swordAttackRect.intersects(creature.rect)) {
-                        if (!(this instanceof Enemy && creature instanceof Enemy)) {
+                        if (!(this instanceof Skeleton && creature instanceof Skeleton)) {
                             creature.takeDamage(equipmentItems.get(0).getDamage());
                         }
                     }

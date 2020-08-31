@@ -1,9 +1,15 @@
 package com.kamilkurp.terrain;
 
 import com.kamilkurp.Renderable;
+import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.items.LootSystem;
+import com.kamilkurp.spawn.EnemyRespawnArea;
+import com.kamilkurp.spawn.EnemySpawnPoint;
+import com.kamilkurp.spawn.SpawnLocationsContainer;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.io.FileWriter;
@@ -11,6 +17,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Area implements Renderable {
 
@@ -18,17 +26,57 @@ public class Area implements Renderable {
 
     private TerrainTileset terrainTileset;
     private TerrainLayout terrainLayout;
+    private SpawnLocationsContainer spawnLocationsContainer;
 
-    public Area(TerrainTileset terrainTileset, TerrainLayout terrainLayout) {
+    private List<EnemyRespawnArea> enemyRespawnAreaList;
+    private List<EnemySpawnPoint> enemySpawnPointList;
 
-        tiles = new LinkedList<>();
+    private Map<String, Creature> creaturesMap;
+    private List<Creature> creaturesList;
+
+    private LootSystem lootSystem;
+
+
+    public Area(TerrainTileset terrainTileset, TerrainLayout terrainLayout, SpawnLocationsContainer spawnsContainer, LootSystem lootSystem) throws SlickException {
+        this.lootSystem = lootSystem;
 
         this.terrainTileset = terrainTileset;
         this.terrainLayout = terrainLayout;
+        this.spawnLocationsContainer = spawnsContainer;
 
+
+        creaturesMap = new TreeMap<>();
+        creaturesList = new LinkedList<>();
+
+        tiles = new LinkedList<>();
+
+        enemyRespawnAreaList = new LinkedList<>();
+        enemySpawnPointList = new LinkedList<>();
 
         loadLayoutTiles();
 
+        if (creaturesMap != null && creaturesList != null && lootSystem != null) {
+            loadSpawns();
+
+        }
+
+    }
+
+    private void loadSpawns() throws SlickException {
+        for (SpawnLocationsContainer.SpawnLocation spawnLocation : spawnLocationsContainer.getSpawnLocationList()) {
+            int posX = spawnLocation.getPosX();
+            int posY = spawnLocation.getPosY();
+
+            if (spawnLocation.getSpawnType().equals("respawnArea")) {
+                if (spawnLocation.getEnemyType().equals("skeleton")) {
+                    enemyRespawnAreaList.add(new EnemyRespawnArea(posX, posY, 3, this, lootSystem));
+                }
+            } else if (spawnLocation.getSpawnType().equals("spawnPoint")) {
+                if (spawnLocation.getEnemyType().equals("skeleton")) {
+                    enemySpawnPointList.add(new EnemySpawnPoint(posX, posY, this, lootSystem));
+                }
+            }
+        }
     }
 
     @Override
@@ -44,6 +92,12 @@ public class Area implements Renderable {
 
     public List<TerrainTile> getTiles() {
         return tiles;
+    }
+
+    public void updateSpawns() throws SlickException {
+        for (EnemyRespawnArea enemyRespawnArea : enemyRespawnAreaList) {
+            enemyRespawnArea.update();
+        }
     }
 
 
@@ -94,6 +148,20 @@ public class Area implements Renderable {
             }
 
         }
+    }
+
+    public void renderSpawns(Graphics g, Camera camera) {
+        for (EnemyRespawnArea enemyRespawnArea : enemyRespawnAreaList) {
+            enemyRespawnArea.render(g, camera);
+        }
+    }
+
+    public Map<String, Creature> getCreaturesMap() {
+        return creaturesMap;
+    }
+
+    public List<Creature> getCreaturesList() {
+        return creaturesList;
     }
 }
 

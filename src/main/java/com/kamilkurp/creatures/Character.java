@@ -6,6 +6,7 @@ import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
+import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.*;
@@ -25,8 +26,8 @@ public class Character extends Creature {
     private PlayerRespawnPoint playerRespawnPoint;
 
 
-    public Character(String id, int posX, int posY, Map<String, Creature> creatures, List<Creature> creaturesList, LootSystem lootSystem, PlayerRespawnPoint playerRespawnPoint) throws SlickException {
-        super(id, posX, posY, creatures, creaturesList, lootSystem);
+    public Character(String id, int posX, int posY, Area area, LootSystem lootSystem, PlayerRespawnPoint playerRespawnPoint) throws SlickException {
+        super(id, posX, posY, area, lootSystem);
 
         this.playerRespawnPoint = playerRespawnPoint;
 
@@ -148,7 +149,7 @@ public class Character extends Creature {
     private void interact(Collection<Creature> creatures) {
         for (Creature creature : creatures) {
             if (creature == this) continue;
-            if (swordAttackRect.intersects(creature.rect) && creature instanceof NPC && creature.healthPoints > 0) {
+            if (rect.intersects(creature.rect) && creature instanceof NPC && creature.healthPoints > 0) {
                 ((NPC)creature).triggerDialogue();
             }
         }
