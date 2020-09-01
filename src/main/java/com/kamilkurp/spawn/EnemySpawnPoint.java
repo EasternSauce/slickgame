@@ -36,6 +36,8 @@ public class EnemySpawnPoint {
     public void spawn() throws SlickException {
         spawnedCreature = new Skeleton("skellie"+Math.abs(Globals.random.nextInt()), posX, posY, area, lootSystem);
         spawnedCreature.updateAttackType();
+        spawnedCreature.setAreaToMoveTo(area);
+
     }
 
 }

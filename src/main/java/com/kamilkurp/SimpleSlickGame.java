@@ -1,5 +1,6 @@
 package com.kamilkurp;
 
+import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Character;
 import com.kamilkurp.creatures.Creature;
@@ -14,6 +15,7 @@ import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.terrain.Area;
+import com.kamilkurp.terrain.CurrentAreaManager;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.*;
 
@@ -27,7 +29,7 @@ import java.util.logging.Logger;
 
 public class SimpleSlickGame extends BasicGame {
 
-    private Area currentArea;
+    private CurrentAreaManager currentAreaManager;
 
     private Camera camera;
 
@@ -50,8 +52,6 @@ public class SimpleSlickGame extends BasicGame {
 //
 //    private EnemySpawnPoint enemySpawnPoint;
 
-    private PlayerRespawnPoint playerRespawnPoint;
-
     private Music townMusic;
 
     private Queue<Creature> renderPriorityQueue;
@@ -59,6 +59,8 @@ public class SimpleSlickGame extends BasicGame {
     private List<Arrow> arrowList;
 
     private Map<String, Area> areaMap;
+
+    private List<AreaGate> gateList;
 
     public SimpleSlickGame(String gamename) {
         super(gamename);
@@ -81,19 +83,22 @@ public class SimpleSlickGame extends BasicGame {
 
         lootSystem = new LootSystem(lootOptionWindow);
 
-        playerRespawnPoint = new PlayerRespawnPoint(400, 400);
-
         areaMap = new HashMap<>();
         areaMap.put("area1", new Area("area1", Assets.grassyTileset, Assets.area1Layout, Assets.area1Enemies, lootSystem));
         areaMap.put("area2", new Area("area2", Assets.dungeonTileset, Assets.area2Layout, Assets.area2Enemies, lootSystem));
 
+        areaMap.get("area1").addRespawnPoint(new PlayerRespawnPoint(500, 500, areaMap.get("area1")));
 
-        character = new Character("protagonist", 400, 400, areaMap.get("area1"), lootSystem, playerRespawnPoint);
+
+        currentAreaManager = new CurrentAreaManager();
+
+
+        character = new Character("protagonist", 400, 400, areaMap.get("area1"), lootSystem);
         NPC npc = new NPC("johnny", 600, 600, areaMap.get("area1"), lootSystem, dialogueWindow, "a1", true);
+
 
         inventoryWindow.setCharacter(character);
 
-        currentArea = areaMap.get("area1");
 
 
         camera = new Camera();
@@ -113,9 +118,15 @@ public class SimpleSlickGame extends BasicGame {
 
         loadGame();
 
+
+
         townMusic = Assets.townMusic;
 
         arrowList = new LinkedList<>();
+
+        gateList = new LinkedList<>();
+
+        gateList.add(new AreaGate(areaMap.get("area1"), 50, 50, areaMap.get("area2"), 150, 150));
 
 //        townMusic.loop(1.0f, 0.5f);
     }
@@ -126,16 +137,33 @@ public class SimpleSlickGame extends BasicGame {
 
         keyInput.readKeyPresses(gc.getInput());
 
+        Area currentArea = currentAreaManager.getCurrentArea();
+
+
+        List<Creature> pendingAreaChange = new LinkedList<>();
+
         for (Creature creature : currentArea.getCreaturesMap().values()) {
             if (creature instanceof Character) {
                 if (!inventoryWindow.isInventoryOpen() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
-                    creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesList(), keyInput, arrowList);
+                    creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesList(), keyInput, arrowList, gateList);
                 }
             }
             else {
-                creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesList(), keyInput, arrowList);
+                creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesList(), keyInput, arrowList, gateList);
             }
 
+
+
+            if (creature.getAreaToMoveTo() != null) {
+                pendingAreaChange.add(creature);
+            }
+
+        }
+
+        for (Creature creature : pendingAreaChange) {
+            System.out.println("moving " + creature.getId() + " to " + creature.getAreaToMoveTo().getId());
+            creature.setArea(creature.getAreaToMoveTo());
+            creature.setAreaToMoveTo(null);
         }
 
         camera.update(gc, character.getRect());
@@ -150,11 +178,9 @@ public class SimpleSlickGame extends BasicGame {
 
         currentArea.updateSpawns();
 
-//        enemyRespawnArea1.update();
-        //spawnPoint2.update();
-
-
-        playerRespawnPoint.update();
+        for (AreaGate areaGate : gateList) {
+            areaGate.update(currentAreaManager);
+        }
 
         renderPriorityQueue = new PriorityQueue<>((o1, o2) -> {
             if (o1.getHealthPoints() <= 0.0f) return -1;
@@ -169,11 +195,19 @@ public class SimpleSlickGame extends BasicGame {
     }
 
     public void render(GameContainer gc, Graphics g) {
+        Area currentArea = currentAreaManager.getCurrentArea();
+
         currentArea.render(g, camera);
 
         currentArea.renderSpawns(g, camera);
 
-        playerRespawnPoint.render(g, camera);
+        for (PlayerRespawnPoint playerRespawnPoint : currentArea.getRespawnList()) {
+            playerRespawnPoint.render(g, camera);
+        }
+
+        for (AreaGate areaGate : gateList) {
+            areaGate.render(g, camera, currentArea);
+        }
 
 
         //spawnPoint2.render(g, camera);
@@ -210,6 +244,10 @@ public class SimpleSlickGame extends BasicGame {
 
         lootOptionWindow.render(g, camera);
 
+        if (character.isRespawning()) {
+            Assets.verdanaHugeTtf.drawString(175, 175, "YOU DIED", Color.red);
+        }
+
     }
 
     public static void main(String[] args) {
@@ -239,7 +277,14 @@ public class SimpleSlickGame extends BasicGame {
         try {
             FileWriter writer = new FileWriter("saves/savegame.sav");
 
-            for (Creature creature : currentArea.getCreaturesMap().values()) {
+            Map<String,Creature> allCreatures = new HashMap<>();
+
+            for (Map.Entry<String, Area> areaEntry : areaMap.entrySet()) {
+                allCreatures.putAll(areaEntry.getValue().getCreaturesMap());
+            }
+
+
+            for (Creature creature : allCreatures.values()) {
                 if (creature.getClass() != Character.class && creature.getClass() != NPC.class) continue;
                 writer.write("creature " + creature.getId() + "\n");
                 writer.write("pos " + creature.getRect().getX() + " " + creature.getRect().getY() + "\n");
@@ -297,7 +342,10 @@ public class SimpleSlickGame extends BasicGame {
                 }
                 if(s[0].equals("area")) {
                     if (creature != null) {
-                        creature.setArea(areaMap.get(s[1]));
+                        creature.setAreaToMoveTo(areaMap.get(s[1]));
+                        if (creature instanceof Character) {
+                            currentAreaManager.setCurrentArea(areaMap.get(s[1]));
+                        }
                     }
 
                 }
@@ -322,7 +370,12 @@ public class SimpleSlickGame extends BasicGame {
             e.printStackTrace();
         }
 
-        for (Creature creature1 : currentArea.getCreaturesList()) {
+        if(currentAreaManager.getCurrentArea() == null) {
+            currentAreaManager.setCurrentArea(areaMap.get("area1"));
+        }
+
+
+        for (Creature creature1 : currentAreaManager.getCurrentArea().getCreaturesList()) {
             creature1.updateAttackType();
         }
     }

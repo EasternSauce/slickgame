@@ -4,6 +4,7 @@ import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.animations.WalkAnimation;
+import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.LootSystem;
@@ -87,12 +88,15 @@ public abstract class Creature implements Renderable {
 
     protected Area area;
 
+    protected boolean passedGateRecently = false;
+
+    protected Area areaToMove;
+
 
 
     public Creature(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
         this.id = id;
         this.lootSystem = lootSystem;
-        this.area = area;
 
         rect = new Rectangle(posX, posY, 64, 64);
         hitbox = new Rectangle(2, 2, 60, 60);
@@ -120,6 +124,8 @@ public abstract class Creature implements Renderable {
         currentAttackType = AttackType.UNARMED;
 
         equipmentItems = new TreeMap<>();
+
+
 
 
 
@@ -164,7 +170,7 @@ public abstract class Creature implements Renderable {
         }
     }
 
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) {
 
 
         beforeMovement(i);
@@ -180,7 +186,30 @@ public abstract class Creature implements Renderable {
 
         swordAttackLogic(i, creatures);
 
+        areaGateLogic(gatesList);
 
+    }
+
+    public void areaGateLogic(List<AreaGate> gatesList) {
+        if (passedGateRecently) {
+            boolean leftGate = true;
+            for (AreaGate areaGate : gatesList) {
+                if (areaGate.getAreaFrom() == area) {
+                    if (rect.intersects(areaGate.getFromRect())) {
+                        leftGate = false;
+                        break;
+                    }
+                }
+                if (areaGate.getAreaTo() == area) {
+                    if (rect.intersects(areaGate.getToRect())) {
+                        leftGate = false;
+                        break;
+                    }
+                }
+            }
+
+            passedGateRecently = !leftGate;
+        }
     }
 
     public void regenerateHealth() {
@@ -504,11 +533,38 @@ public abstract class Creature implements Renderable {
     }
 
     public void setArea(Area area) {
-        this.area = area;
+        Area oldArea = this.area;
+        Area newArea = area;
+
+        if (oldArea != null) {
+            oldArea.removeCreature(this);
+        }
+        newArea.addCreature(this);
+
+//        System.out.println("setting area for " + id + " to be " + area.getId());
+
+        this.area = newArea;
+
     }
 
     public boolean isAlive() {
         if (healthPoints > 0f) return true;
         return false;
+    }
+
+    public void setPassedGateRecently(boolean passedGateRecently) {
+        this.passedGateRecently = passedGateRecently;
+    }
+
+    public boolean isPassedGateRecently() {
+        return passedGateRecently;
+    }
+
+    public Area getAreaToMoveTo() {
+        return areaToMove;
+    }
+
+    public void setAreaToMoveTo(Area areaToMove) {
+        this.areaToMove = areaToMove;
     }
 }

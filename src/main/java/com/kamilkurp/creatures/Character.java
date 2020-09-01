@@ -2,13 +2,16 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
+import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.terrain.Area;
+import com.kamilkurp.terrain.CurrentAreaManager;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
+import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -22,16 +25,20 @@ public class Character extends Creature {
     private boolean walking = false;
     private boolean sprint = false;
 
-    private PlayerRespawnPoint playerRespawnPoint;
+    private boolean respawning;
 
+    private Timer respawnTimer;
 
-    public Character(String id, int posX, int posY, Area area, LootSystem lootSystem, PlayerRespawnPoint playerRespawnPoint) throws SlickException {
+    private PlayerRespawnPoint currentRespawnPoint;
+
+    public Character(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
         super(id, posX, posY, area, lootSystem);
 
-        this.playerRespawnPoint = playerRespawnPoint;
-
+        respawning = false;
+        respawnTimer = new Timer();
         setMaxHealthPoints(300f);
 
+        currentRespawnPoint = area.getRespawnList().get(0);
     }
 
 
@@ -96,8 +103,8 @@ public class Character extends Creature {
 }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
-        super.update(gc, i ,tiles, creatures, keyInput, arrowList);
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) {
+        super.update(gc, i ,tiles, creatures, keyInput, arrowList, gatesList);
 
         if (!isAlive()) {
             stepSound.stop();
@@ -126,6 +133,12 @@ public class Character extends Creature {
         arrowList.removeAll(toBeDeleted);
 
 
+        if (respawning && respawnTimer.getTime() > 3000f) {
+            respawning = false;
+            setPosition(currentRespawnPoint.getPosX(), currentRespawnPoint.getPosY());
+            areaToMove = currentRespawnPoint.getArea();
+            setHealthPoints(getMaxHealthPoints());
+        }
 
 
 
@@ -173,11 +186,18 @@ public class Character extends Creature {
 
     @Override
     protected void onDeath() {
-        System.out.println("on death");
-        playerRespawnPoint.startRespawnProcess(this);
+        respawnTimer.reset();
+        respawning = true;
 
     }
 
 
+    public boolean isRespawning() {
+        return respawning;
+    }
+
+    public void setRespawning(boolean respawning) {
+        this.respawning = respawning;
+    }
 
 }

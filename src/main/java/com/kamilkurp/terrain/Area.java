@@ -5,6 +5,7 @@ import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.spawn.EnemyRespawnArea;
 import com.kamilkurp.spawn.EnemySpawnPoint;
+import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.spawn.SpawnLocationsContainer;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
@@ -38,6 +39,9 @@ public class Area implements Renderable {
 
     private String id;
 
+    private List <PlayerRespawnPoint> respawnList;
+
+
     public Area(String id, TerrainTileset terrainTileset, TerrainLayout terrainLayout, SpawnLocationsContainer spawnsContainer, LootSystem lootSystem) throws SlickException {
         this.lootSystem = lootSystem;
 
@@ -55,6 +59,7 @@ public class Area implements Renderable {
 
         enemyRespawnAreaList = new LinkedList<>();
         enemySpawnPointList = new LinkedList<>();
+        respawnList = new LinkedList<>();
 
         loadLayoutTiles();
 
@@ -171,6 +176,22 @@ public class Area implements Renderable {
         return id;
     }
 
+    public void removeCreature(Creature creature) {
+        creaturesList.remove(creature);
+        creaturesMap.remove(creature.getId());
+    }
 
+    public void addCreature(Creature creature) {
+        creaturesList.add(creature);
+        creaturesMap.put(creature.getId(), creature);
+    }
+
+    public void addRespawnPoint(PlayerRespawnPoint respawnPoint) {
+        respawnList.add(respawnPoint);
+    }
+
+    public List<PlayerRespawnPoint> getRespawnList() {
+        return respawnList;
+    }
 }
 

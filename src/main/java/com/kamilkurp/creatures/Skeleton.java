@@ -3,6 +3,7 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
+import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
@@ -78,8 +79,8 @@ public class Skeleton extends Creature {
     }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList) {
-        super.update(gc, i ,tiles, creatures, keyInput, arrowList);
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) {
+        super.update(gc, i ,tiles, creatures, keyInput, arrowList, gatesList);
 
         if (runningTimer.getTime() > 200) {
             running = false;
