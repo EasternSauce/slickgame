@@ -31,8 +31,12 @@ public class Character extends Creature {
 
     private PlayerRespawnPoint currentRespawnPoint;
 
-    public Character(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
+    private CurrentAreaManager areaManager;
+
+    public Character(String id, int posX, int posY, Area area, LootSystem lootSystem, CurrentAreaManager areaManager) throws SlickException {
         super(id, posX, posY, area, lootSystem);
+
+        this.areaManager = areaManager;
 
         respawning = false;
         respawnTimer = new Timer();
@@ -138,6 +142,8 @@ public class Character extends Creature {
             setPosition(currentRespawnPoint.getPosX(), currentRespawnPoint.getPosY());
             areaToMove = currentRespawnPoint.getArea();
             setHealthPoints(getMaxHealthPoints());
+            areaManager.setCurrentArea(currentRespawnPoint.getArea());
+            areaToMove.reset();
         }
 
 

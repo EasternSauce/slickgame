@@ -377,7 +377,7 @@ public class InventoryWindow implements Renderable {
 
                         }
 
-
+                        if (character.getHealthPoints() > character.getMaxHealthPoints()) character.setHealthPoints(character.getMaxHealthPoints());
                     }
                 }
                 else {
@@ -501,4 +501,10 @@ public class InventoryWindow implements Renderable {
         this.character = character;
         this.equipmentItems = character.getEquipmentItems();
     }
+
+    public Map<Integer, Item> getInventoryItems() {
+        return inventoryItems;
+    }
+
+
 }

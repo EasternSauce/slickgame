@@ -53,7 +53,7 @@ public class Skeleton extends Creature {
         dropTable.put("crossbow", 0.05f);
         dropTable.put("ironSword", 0.05f);
         dropTable.put("leatherHelmet", 0.15f);
-        dropTable.put("lifeRing", 0.99f);
+        dropTable.put("lifeRing", 0.05f);
 
 
         findNewDestinationTimer = new Timer();

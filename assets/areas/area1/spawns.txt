@@ -1,2 +1,2 @@
-spawnPoint skeleton 1600 2000
-spawnPoint skeleton 1600 2500
+spawnPoint skeleton 1600 2200
+spawnPoint skeleton 1600 2400

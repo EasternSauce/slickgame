@@ -56,8 +56,6 @@ public class SimpleSlickGame extends BasicGame {
 
     private Queue<Creature> renderPriorityQueue;
 
-    private List<Arrow> arrowList;
-
     private Map<String, Area> areaMap;
 
     private List<AreaGate> gateList;
@@ -93,7 +91,7 @@ public class SimpleSlickGame extends BasicGame {
         currentAreaManager = new CurrentAreaManager();
 
 
-        character = new Character("protagonist", 400, 400, areaMap.get("area1"), lootSystem);
+        character = new Character("protagonist", 400, 400, areaMap.get("area1"), lootSystem, currentAreaManager);
         NPC npc = new NPC("johnny", 600, 600, areaMap.get("area1"), lootSystem, dialogueWindow, "a1", true);
 
 
@@ -122,11 +120,10 @@ public class SimpleSlickGame extends BasicGame {
 
         townMusic = Assets.townMusic;
 
-        arrowList = new LinkedList<>();
 
         gateList = new LinkedList<>();
 
-        gateList.add(new AreaGate(areaMap.get("area1"), 50, 50, areaMap.get("area2"), 150, 150));
+        gateList.add(new AreaGate(areaMap.get("area1"), 1855, 2300, areaMap.get("area2"), 150, 150));
 
 //        townMusic.loop(1.0f, 0.5f);
     }
@@ -145,11 +142,11 @@ public class SimpleSlickGame extends BasicGame {
         for (Creature creature : currentArea.getCreaturesMap().values()) {
             if (creature instanceof Character) {
                 if (!inventoryWindow.isInventoryOpen() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
-                    creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesList(), keyInput, arrowList, gateList);
+                    creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesList(), keyInput, currentArea.getArrowList(), gateList);
                 }
             }
             else {
-                creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesList(), keyInput, arrowList, gateList);
+                creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesList(), keyInput, currentArea.getArrowList(), gateList);
             }
 
 
@@ -230,7 +227,7 @@ public class SimpleSlickGame extends BasicGame {
 
 
 
-        for (Arrow arrow : arrowList) {
+        for (Arrow arrow : currentArea.getArrowList()) {
             arrow.render(g, camera);
         }
 
@@ -286,6 +283,7 @@ public class SimpleSlickGame extends BasicGame {
 
             for (Creature creature : allCreatures.values()) {
                 if (creature.getClass() != Character.class && creature.getClass() != NPC.class) continue;
+                System.out.println("saving " + creature.getId());
                 writer.write("creature " + creature.getId() + "\n");
                 writer.write("pos " + creature.getRect().getX() + " " + creature.getRect().getY() + "\n");
                 writer.write("area " + creature.getArea().getId() + "\n");
@@ -300,6 +298,24 @@ public class SimpleSlickGame extends BasicGame {
                         String armor = equipmentItem.getValue().getArmor() == null ? "0" : "" + equipmentItem.getValue().getArmor().intValue();
                         writer.write("equipment_item " + equipmentItem.getKey() + " " + equipmentItem.getValue().getItemType().getId() + " " + damage + " " + armor + "\n");
                     }
+                }
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            FileWriter writer = new FileWriter("saves/inventory.sav");
+
+            for (Map.Entry<Integer, Item> inventoryItem : inventoryWindow.getInventoryItems().entrySet()) {
+                if (inventoryItem.getValue() != null) {
+                    int slotId = inventoryItem.getKey();
+                    String damage = inventoryItem.getValue().getDamage() == null ? "0" : "" + inventoryItem.getValue().getDamage().intValue();
+
+                    String armor = inventoryItem.getValue().getArmor() == null ? "0" : "" + inventoryItem.getValue().getArmor().intValue();
+                    writer.write("inventory_item " + slotId + " " + inventoryItem.getValue().getItemType().getId() + " " + damage + " " + armor + "\n");
                 }
             }
 
@@ -342,7 +358,7 @@ public class SimpleSlickGame extends BasicGame {
                 }
                 if(s[0].equals("area")) {
                     if (creature != null) {
-                        creature.setAreaToMoveTo(areaMap.get(s[1]));
+                        creature.setArea(areaMap.get(s[1]));
                         if (creature instanceof Character) {
                             currentAreaManager.setCurrentArea(areaMap.get(s[1]));
                         }
@@ -369,6 +385,30 @@ public class SimpleSlickGame extends BasicGame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+            reader = new BufferedReader(new FileReader("saves/inventory.sav"));
+            String line = reader.readLine();
+            while (line != null) {
+                String[] s = line.split(" ");
+
+                if(s[0].equals("inventory_item")) {
+                    if (creature != null) {
+                        Map<Integer, Item> inventoryItems = inventoryWindow.getInventoryItems();
+                        inventoryItems.put(Integer.parseInt(s[1]), new Item(ItemType.getItemType(s[2]), null, (s[3].equals("0") ? null : (float)(Integer.parseInt(s[3]))), (s[4].equals("0") ? null : (float)(Integer.parseInt(s[4])))));
+                    }
+
+                }
+
+                line = reader.readLine();
+
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
 
         if(currentAreaManager.getCurrentArea() == null) {
             currentAreaManager.setCurrentArea(areaMap.get("area1"));

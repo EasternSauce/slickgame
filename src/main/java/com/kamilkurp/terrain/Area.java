@@ -3,6 +3,7 @@ package com.kamilkurp.terrain;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.items.LootSystem;
+import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.EnemyRespawnArea;
 import com.kamilkurp.spawn.EnemySpawnPoint;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
@@ -41,6 +42,7 @@ public class Area implements Renderable {
 
     private List <PlayerRespawnPoint> respawnList;
 
+    private List<Arrow> arrowList;
 
     public Area(String id, TerrainTileset terrainTileset, TerrainLayout terrainLayout, SpawnLocationsContainer spawnsContainer, LootSystem lootSystem) throws SlickException {
         this.lootSystem = lootSystem;
@@ -60,6 +62,7 @@ public class Area implements Renderable {
         enemyRespawnAreaList = new LinkedList<>();
         enemySpawnPointList = new LinkedList<>();
         respawnList = new LinkedList<>();
+        arrowList = new LinkedList<>();
 
         loadLayoutTiles();
 
@@ -112,6 +115,7 @@ public class Area implements Renderable {
 
 
     public void saveTerrainLayoutToFile(String fileName) throws IOException {
+        System.out.println("saving " + fileName + "...");
         FileWriter fileWriter = new FileWriter(fileName);
         PrintWriter printWriter = new PrintWriter(fileWriter);
 
@@ -192,6 +196,14 @@ public class Area implements Renderable {
 
     public List<PlayerRespawnPoint> getRespawnList() {
         return respawnList;
+    }
+
+    public void reset() {
+        arrowList.clear();
+    }
+
+    public List<Arrow> getArrowList() {
+        return arrowList;
     }
 }
 

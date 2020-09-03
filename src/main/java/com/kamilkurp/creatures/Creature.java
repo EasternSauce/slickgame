@@ -533,6 +533,7 @@ public abstract class Creature implements Renderable {
     }
 
     public void setArea(Area area) {
+        System.out.println("setting area for " + getId() + " to " + area.getId());
         Area oldArea = this.area;
         Area newArea = area;
 

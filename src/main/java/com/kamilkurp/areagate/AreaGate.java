@@ -5,6 +5,7 @@ import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.CurrentAreaManager;
 import com.kamilkurp.utils.Camera;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
@@ -28,11 +29,12 @@ public class AreaGate {
 
 
     public void render(Graphics g, Camera camera, Area currentArea) {
+        g.setColor(Color.blue);
         if (currentArea == areaFrom) {
-            g.drawRect(fromRect.getX() - camera.getPosX(), fromRect.getY() - camera.getPosY(), fromRect.getWidth(), fromRect.getHeight());
+            g.fillRect(fromRect.getX() - camera.getPosX(), fromRect.getY() - camera.getPosY(), fromRect.getWidth(), fromRect.getHeight());
         }
         if (currentArea == areaTo) {
-            g.drawRect(toRect.getX() - camera.getPosX(), toRect.getY() - camera.getPosY(), toRect.getWidth(), toRect.getHeight());
+            g.fillRect(toRect.getX() - camera.getPosX(), toRect.getY() - camera.getPosY(), toRect.getWidth(), toRect.getHeight());
         }
     }
 
@@ -64,6 +66,7 @@ public class AreaGate {
                         currentAreaManager.setCurrentArea(destinationArea);
                         creature.setPassedGateRecently(true);
                         creature.setAreaToMoveTo(destinationArea);
+                        destinationArea.reset();
                     }
                 }
             }
