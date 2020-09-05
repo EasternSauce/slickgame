@@ -60,6 +60,9 @@ public class SimpleSlickGame extends BasicGame {
 
     private List<AreaGate> gateList;
 
+    private List<Creature> creaturesToMove;
+
+
     public SimpleSlickGame(String gamename) {
         super(gamename);
     }
@@ -125,6 +128,7 @@ public class SimpleSlickGame extends BasicGame {
 
         gateList.add(new AreaGate(areaMap.get("area1"), 1855, 2300, areaMap.get("area2"), 150, 150));
 
+        creaturesToMove = new LinkedList<>();
 //        townMusic.loop(1.0f, 0.5f);
     }
 
@@ -136,32 +140,52 @@ public class SimpleSlickGame extends BasicGame {
 
         Area currentArea = currentAreaManager.getCurrentArea();
 
-
-        List<Creature> pendingAreaChange = new LinkedList<>();
+        creaturesToMove.clear();
 
         for (Creature creature : currentArea.getCreaturesMap().values()) {
             if (creature instanceof Character) {
                 if (!inventoryWindow.isInventoryOpen() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
-                    creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesList(), keyInput, currentArea.getArrowList(), gateList);
+                    creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesMap(), keyInput, currentArea.getArrowList(), gateList);
                 }
             }
             else {
-                creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesList(), keyInput, currentArea.getArrowList(), gateList);
+                creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesMap(), keyInput, currentArea.getArrowList(), gateList);
             }
 
+            if (creature.getAreaToMoveTo() != null) creaturesToMove.add(creature);
+        }
 
+        for (Creature creature : creaturesToMove) {
 
             if (creature.getAreaToMoveTo() != null) {
-                pendingAreaChange.add(creature);
+//                System.out.println("setting area for " + creature.getId() + " to " + creature.getAreaToMoveTo().getId());
+                Area oldArea = creature.getArea();
+                Area newArea = creature.getAreaToMoveTo();
+
+                if (oldArea != null) {
+                    oldArea.getCreaturesMap().remove(creature.getId());
+                }
+
+                newArea.getCreaturesMap().put(creature.getId(), creature);
+
+//        System.out.println("setting area for " + id + " to be " + area.getId());
+
+
+                System.out.println("actually setting area for " + creature.getId());
+                creature.setArea(newArea);
+                creature.setAreaToMoveTo(null);
+
+//                creature.setPassedGateRecently(true);
+
+                if (creature instanceof Character) {
+                    currentAreaManager.setCurrentArea(newArea);
+                }
             }
 
         }
 
-        for (Creature creature : pendingAreaChange) {
-            System.out.println("moving " + creature.getId() + " to " + creature.getAreaToMoveTo().getId());
-            creature.setArea(creature.getAreaToMoveTo());
-            creature.setAreaToMoveTo(null);
-        }
+        currentArea.getCreaturesMap().entrySet().removeIf(e -> e.getValue().isToBeRemoved());
+
 
         camera.update(gc, character.getRect());
 
@@ -415,7 +439,7 @@ public class SimpleSlickGame extends BasicGame {
         }
 
 
-        for (Creature creature1 : currentAreaManager.getCurrentArea().getCreaturesList()) {
+        for (Creature creature1 : currentAreaManager.getCurrentArea().getCreaturesMap().values()) {
             creature1.updateAttackType();
         }
     }

@@ -1,6 +1,7 @@
 package com.kamilkurp.terrain;
 
 import com.kamilkurp.Renderable;
+import com.kamilkurp.creatures.Character;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
@@ -34,7 +35,6 @@ public class Area implements Renderable {
     private List<EnemySpawnPoint> enemySpawnPointList;
 
     private Map<String, Creature> creaturesMap;
-    private List<Creature> creaturesList;
 
     private LootSystem lootSystem;
 
@@ -55,7 +55,6 @@ public class Area implements Renderable {
 
 
         creaturesMap = new TreeMap<>();
-        creaturesList = new LinkedList<>();
 
         tiles = new LinkedList<>();
 
@@ -66,7 +65,7 @@ public class Area implements Renderable {
 
         loadLayoutTiles();
 
-        if (creaturesMap != null && creaturesList != null && lootSystem != null) {
+        if (creaturesMap != null && lootSystem != null) {
             loadSpawns();
 
         }
@@ -108,6 +107,10 @@ public class Area implements Renderable {
     public void updateSpawns() throws SlickException {
         for (EnemyRespawnArea enemyRespawnArea : enemyRespawnAreaList) {
             enemyRespawnArea.update();
+        }
+
+        for (EnemySpawnPoint enemySpawnPoint : enemySpawnPointList) {
+            enemySpawnPoint.update();
         }
     }
 
@@ -172,23 +175,10 @@ public class Area implements Renderable {
         return creaturesMap;
     }
 
-    public List<Creature> getCreaturesList() {
-        return creaturesList;
-    }
-
     public String getId() {
         return id;
     }
 
-    public void removeCreature(Creature creature) {
-        creaturesList.remove(creature);
-        creaturesMap.remove(creature.getId());
-    }
-
-    public void addCreature(Creature creature) {
-        creaturesList.add(creature);
-        creaturesMap.put(creature.getId(), creature);
-    }
 
     public void addRespawnPoint(PlayerRespawnPoint respawnPoint) {
         respawnList.add(respawnPoint);
@@ -198,8 +188,21 @@ public class Area implements Renderable {
         return respawnList;
     }
 
-    public void reset() {
+    public void reset() throws SlickException {
         arrowList.clear();
+
+        for (EnemySpawnPoint enemySpawnPoint : enemySpawnPointList) {
+            enemySpawnPoint.markForRespawn();
+        }
+
+        for (Creature creature : creaturesMap.values()) {
+            if (!(creature instanceof Character)) {
+                if (!creature.isAlive()) creature.markForDeletion();
+
+            }
+        }
+
+
     }
 
     public List<Arrow> getArrowList() {

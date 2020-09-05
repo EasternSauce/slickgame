@@ -92,6 +92,9 @@ public abstract class Creature implements Renderable {
 
     protected Area areaToMove;
 
+    protected boolean toBeRemoved;
+
+    protected Timer passedGateTimer;
 
 
     public Creature(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
@@ -119,14 +122,15 @@ public abstract class Creature implements Renderable {
 
 
         area.getCreaturesMap().put(this.getId(), this);
-        area.getCreaturesList().add(this);
 
         currentAttackType = AttackType.UNARMED;
 
         equipmentItems = new TreeMap<>();
 
+        toBeRemoved = false;
 
 
+        passedGateTimer = new Timer();
 
 
 
@@ -170,7 +174,7 @@ public abstract class Creature implements Renderable {
         }
     }
 
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) {
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) throws SlickException {
 
 
         beforeMovement(i);
@@ -209,6 +213,7 @@ public abstract class Creature implements Renderable {
             }
 
             passedGateRecently = !leftGate;
+
         }
     }
 
@@ -224,10 +229,10 @@ public abstract class Creature implements Renderable {
 
     protected abstract void setFacingDirection(GameContainer gc);
 
-    private void swordAttackLogic(int i, Collection<Creature> creatures) {
+    private void swordAttackLogic(int i, Map<String, Creature> creatures) {
         if (attacking) {
             if (currentAttackType == AttackType.UNARMED) {
-                for (Creature creature : creatures) {
+                for (Creature creature : creatures.values()) {
                     if (creature == this) continue;
                     if (swordAttackRect.intersects(creature.rect)) {
                         if (!(this instanceof Skeleton && creature instanceof Skeleton)) {
@@ -254,7 +259,7 @@ public abstract class Creature implements Renderable {
                 swordAttackAnmation.getAnimation().update(i);
             }
             else if (currentAttackType == AttackType.SWORD) {
-                for (Creature creature : creatures) {
+                for (Creature creature : creatures.values()) {
                     if (creature == this) continue;
                     if (swordAttackRect.intersects(creature.rect)) {
                         if (!(this instanceof Skeleton && creature instanceof Skeleton)) {
@@ -397,7 +402,7 @@ public abstract class Creature implements Renderable {
         totalDirections++;
     }
 
-    public void attack(List<Arrow> arrowList, List<TerrainTile> tiles, List<Creature> creatures) {
+    public void attack(List<Arrow> arrowList, List<TerrainTile> tiles, Map<String, Creature> creatures) {
         if (currentAttackType == AttackType.UNARMED) {
             if (swordAttackCooldownTimer.getTime() > 800f) {
                 swordAttackSound.play(1.0f, 0.1f);
@@ -474,7 +479,7 @@ public abstract class Creature implements Renderable {
         }
     }
 
-    public abstract void performActions(GameContainer gc, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles);
+    public abstract void performActions(GameContainer gc, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles);
 
 
     public String getId() {
@@ -497,6 +502,10 @@ public abstract class Creature implements Renderable {
     public void setPosition(float posX, float posY) {
         this.rect.setX(posX);
         this.rect.setY(posY);
+    }
+
+    public void kill() {
+        healthPoints = 0f;
     }
 
     public enum AttackType {UNARMED, SWORD, BOW};
@@ -533,18 +542,7 @@ public abstract class Creature implements Renderable {
     }
 
     public void setArea(Area area) {
-        System.out.println("setting area for " + getId() + " to " + area.getId());
-        Area oldArea = this.area;
-        Area newArea = area;
-
-        if (oldArea != null) {
-            oldArea.removeCreature(this);
-        }
-        newArea.addCreature(this);
-
-//        System.out.println("setting area for " + id + " to be " + area.getId());
-
-        this.area = newArea;
+        this.area = area;
 
     }
 
@@ -555,6 +553,7 @@ public abstract class Creature implements Renderable {
 
     public void setPassedGateRecently(boolean passedGateRecently) {
         this.passedGateRecently = passedGateRecently;
+        System.out.println("set passed gate recently for " + this.getId() + " to " + passedGateRecently);
     }
 
     public boolean isPassedGateRecently() {
@@ -566,6 +565,19 @@ public abstract class Creature implements Renderable {
     }
 
     public void setAreaToMoveTo(Area areaToMove) {
+//        System.out.println("running setareatomoveto for " + getId() + " to " + (areaToMove == null ? "null" : areaToMove.getId()));
         this.areaToMove = areaToMove;
+    }
+
+    public void markForDeletion() {
+        toBeRemoved = true;
+    }
+
+    public boolean isToBeRemoved() {
+        return toBeRemoved;
+    }
+
+    public Timer getPassedGateTimer() {
+        return passedGateTimer;
     }
 }

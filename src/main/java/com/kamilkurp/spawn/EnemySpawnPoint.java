@@ -21,6 +21,8 @@ public class EnemySpawnPoint {
 
     private Area area;
 
+    private boolean isToBeRespawned = false;
+
     public EnemySpawnPoint(int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
         this.posX = posX;
         this.posY = posY;
@@ -29,15 +31,28 @@ public class EnemySpawnPoint {
 
         this.area = area;
 
-        spawn();
+        markForRespawn();
     }
 
 
-    public void spawn() throws SlickException {
-        spawnedCreature = new Skeleton("skellie"+Math.abs(Globals.random.nextInt()), posX, posY, area, lootSystem);
-        spawnedCreature.updateAttackType();
-        spawnedCreature.setAreaToMoveTo(area);
+    public void update() throws SlickException {
+        if (isToBeRespawned) {
+            if (spawnedCreature != null) {
+                spawnedCreature.kill();
+            }
 
+            spawnedCreature = new Skeleton("skellie"+Math.abs(Globals.random.nextInt()), posX, posY, area, lootSystem);
+            spawnedCreature.updateAttackType();
+            spawnedCreature.setAreaToMoveTo(area);
+
+            isToBeRespawned = false;
+        }
+
+
+    }
+
+    public void markForRespawn() {
+        isToBeRespawned = true;
     }
 
 }

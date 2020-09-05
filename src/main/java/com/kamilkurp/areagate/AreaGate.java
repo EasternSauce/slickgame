@@ -7,6 +7,7 @@ import com.kamilkurp.terrain.CurrentAreaManager;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.LinkedList;
@@ -38,10 +39,8 @@ public class AreaGate {
         }
     }
 
-    public void update(CurrentAreaManager currentAreaManager) {
+    public void update(CurrentAreaManager currentAreaManager) throws SlickException {
         Area currentArea = currentAreaManager.getCurrentArea();
-
-        List<Creature> pendingAreaChange = new LinkedList<>();
 
         for (Creature creature : currentArea.getCreaturesMap().values()) {
             if (creature instanceof Character) {
@@ -60,29 +59,18 @@ public class AreaGate {
                         destinationRect = fromRect;
                     }
 
-                    if (creature.getRect().intersects(gateRect)) {
+                    if (creature.getRect().intersects(gateRect) && creature.getPassedGateTimer().getTime() > 1000f) {
+                        creature.getPassedGateTimer().reset();
                         creature.getRect().setX(destinationRect.getX());
                         creature.getRect().setY(destinationRect.getY());
-                        currentAreaManager.setCurrentArea(destinationArea);
                         creature.setPassedGateRecently(true);
+                        System.out.println("setting area to move to for " + creature.getId() + " to " + destinationArea.getId());
                         creature.setAreaToMoveTo(destinationArea);
                         destinationArea.reset();
                     }
                 }
             }
-
-            if (creature.getAreaToMoveTo() != null) {
-                pendingAreaChange.add(creature);
-            }
         }
-
-        for (Creature creature : pendingAreaChange) {
-            creature.setArea(creature.getAreaToMoveTo());
-            creature.setAreaToMoveTo(null);
-        }
-
-
-
     }
 
     public Area getAreaFrom() {

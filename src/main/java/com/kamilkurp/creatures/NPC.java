@@ -68,7 +68,7 @@ public class NPC extends Creature {
     }
 
     @Override
-    public void performActions(GameContainer gc, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
+    public void performActions(GameContainer gc, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
 
         if (actionTimer.getTime() > 4000) {
             direction = Math.abs(random.nextInt()%4);
@@ -79,7 +79,7 @@ public class NPC extends Creature {
     }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) {
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) throws SlickException {
         super.update(gc, i, tiles, creatures, keyInput, arrowList, gatesList);
 
         // CHANGE THESE to only update once...

@@ -79,7 +79,7 @@ public class Skeleton extends Creature {
     }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) {
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) throws SlickException {
         super.update(gc, i ,tiles, creatures, keyInput, arrowList, gatesList);
 
         if (runningTimer.getTime() > 200) {
@@ -109,11 +109,11 @@ public class Skeleton extends Creature {
     }
 
     @Override
-    public void performActions(GameContainer gc, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
+    public void performActions(GameContainer gc, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
 
         int aggroDistance = 400;
         aggroed = null;
-        for (Creature creature : creatures) {
+        for (Creature creature : creatures.values()) {
             if (creature instanceof Skeleton) continue;
             if (Globals.distance(creature.rect, rect) < aggroDistance && creature.healthPoints > 0) {
                 aggroed = creature;

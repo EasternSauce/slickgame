@@ -18,6 +18,7 @@ import org.newdawn.slick.geom.Vector2f;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Character extends Creature {
     private Sound stepSound = Assets.stepSound;
@@ -48,7 +49,7 @@ public class Character extends Creature {
 
 
     @Override
-    public void performActions(GameContainer gc, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
+    public void performActions(GameContainer gc, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
         Input input = gc.getInput();
 
         boolean movement = false;
@@ -107,7 +108,7 @@ public class Character extends Creature {
 }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, List<Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) {
+    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) throws SlickException {
         super.update(gc, i ,tiles, creatures, keyInput, arrowList, gatesList);
 
         if (!isAlive()) {
@@ -164,8 +165,8 @@ public class Character extends Creature {
     }
 
 
-    private void interact(Collection<Creature> creatures) {
-        for (Creature creature : creatures) {
+    private void interact(Map<String, Creature> creatures) {
+        for (Creature creature : creatures.values()) {
             if (creature == this) continue;
             if (rect.intersects(creature.rect) && creature instanceof NPC && creature.healthPoints > 0) {
                 ((NPC)creature).triggerDialogue();

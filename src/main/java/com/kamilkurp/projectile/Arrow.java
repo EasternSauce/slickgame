@@ -11,6 +11,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.List;
+import java.util.Map;
 
 public class Arrow implements Renderable {
 
@@ -25,7 +26,7 @@ public class Arrow implements Renderable {
 
     private List<Arrow> arrowList;
     private List<TerrainTile> tiles;
-    private List<Creature> creatures;
+    private Map<String, Creature> creatures;
 
 
     private Rectangle rect;
@@ -39,7 +40,7 @@ public class Arrow implements Renderable {
 
     private Creature shooter;
 
-    public Arrow(float x, float y, Vector2f facingVector, List<Arrow> arrowList, List<TerrainTile> tiles, List<Creature> creatures, Creature shooter) {
+    public Arrow(float x, float y, Vector2f facingVector, List<Arrow> arrowList, List<TerrainTile> tiles, Map<String, Creature> creatures, Creature shooter) {
         posX = x;
         posY = y;
 
@@ -103,8 +104,8 @@ public class Arrow implements Renderable {
         return false;
     }
 
-    public boolean isCollidingWithCreatures(List<Creature> creatures, float newPosX, float newPosY) {
-        for(Creature creature : creatures) {
+    public boolean isCollidingWithCreatures(Map<String, Creature> creatures, float newPosX, float newPosY) {
+        for(Creature creature : creatures.values()) {
             if (creature == shooter) continue;
 
             Rectangle creatureRect = creature.getRect();
