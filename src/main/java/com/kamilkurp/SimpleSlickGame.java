@@ -47,11 +47,6 @@ public class SimpleSlickGame extends BasicGame {
 
     private KeyInput keyInput;
 
-//    private EnemyRespawnArea enemyRespawnArea1;
-//    private EnemyRespawnArea enemyRespawnArea2;
-//
-//    private EnemySpawnPoint enemySpawnPoint;
-
     private Music townMusic;
 
     private Queue<Creature> renderPriorityQueue;
@@ -109,12 +104,6 @@ public class SimpleSlickGame extends BasicGame {
         hud = new Hud();
 
 
-//        enemyRespawnArea1 = new EnemyRespawnArea(1000, 1400, 1, creatures, creaturesList, lootSystem);
-//        //spawnPoint2 = new SpawnPoint(1900, 1900, 1, creatures, lootSystem);
-//
-//        enemySpawnPoint = new EnemySpawnPoint(1600, 2000, creatures, creaturesList, lootSystem);
-
-
         keyInput = new KeyInput();
 
         loadGame();
@@ -158,7 +147,6 @@ public class SimpleSlickGame extends BasicGame {
         for (Creature creature : creaturesToMove) {
 
             if (creature.getAreaToMoveTo() != null) {
-//                System.out.println("setting area for " + creature.getId() + " to " + creature.getAreaToMoveTo().getId());
                 Area oldArea = creature.getArea();
                 Area newArea = creature.getAreaToMoveTo();
 
@@ -168,14 +156,8 @@ public class SimpleSlickGame extends BasicGame {
 
                 newArea.getCreaturesMap().put(creature.getId(), creature);
 
-//        System.out.println("setting area for " + id + " to be " + area.getId());
-
-
-                System.out.println("actually setting area for " + creature.getId());
                 creature.setArea(newArea);
                 creature.setAreaToMoveTo(null);
-
-//                creature.setPassedGateRecently(true);
 
                 if (creature instanceof Character) {
                     currentAreaManager.setCurrentArea(newArea);
@@ -229,11 +211,6 @@ public class SimpleSlickGame extends BasicGame {
         for (AreaGate areaGate : gateList) {
             areaGate.render(g, camera, currentArea);
         }
-
-
-        //spawnPoint2.render(g, camera);
-
-
 
         if (renderPriorityQueue != null) {
             while(!renderPriorityQueue.isEmpty()) {
@@ -369,9 +346,6 @@ public class SimpleSlickGame extends BasicGame {
 
                     creature = allCreatures.get(s[1]);
 
-//                    if (creature == null) {
-//                        throw new RuntimeException("creature not found!");
-//                    }
                 }
                 if(s[0].equals("pos")) {
                     if (creature != null) {
@@ -402,6 +376,13 @@ public class SimpleSlickGame extends BasicGame {
                     }
 
                 }
+
+                if (creature instanceof Character) {
+                  if (creature.getHealthPoints() <= 0f) {
+                    creature.onDeath();
+                  }
+                }
+
                 line = reader.readLine();
 
             }

@@ -104,7 +104,7 @@ public class Skeleton extends Creature {
     }
 
     @Override
-    protected void onDeath() {
+    public void onDeath() {
         lootSystem.spawnLootPile(rect.getCenterX(), rect.getCenterY(), dropTable);
     }
 

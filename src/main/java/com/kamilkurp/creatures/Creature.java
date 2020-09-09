@@ -321,7 +321,7 @@ public abstract class Creature implements Renderable {
         return totalArmor;
     }
 
-    protected abstract void onDeath();
+    public abstract void onDeath();
 
 
     public void move(float dx, float dy) {

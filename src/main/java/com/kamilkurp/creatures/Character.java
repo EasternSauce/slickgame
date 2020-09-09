@@ -192,7 +192,7 @@ public class Character extends Creature {
     }
 
     @Override
-    protected void onDeath() {
+    public void onDeath() {
         respawnTimer.reset();
         respawning = true;
 

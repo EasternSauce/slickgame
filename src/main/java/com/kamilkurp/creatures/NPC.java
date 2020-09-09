@@ -105,7 +105,7 @@ public class NPC extends Creature {
     }
 
     @Override
-    protected void onDeath() {
+    public void onDeath() {
 
     }
 
