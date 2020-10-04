@@ -19,10 +19,12 @@ import org.newdawn.slick.geom.Vector2f;
 
 import java.util.*;
 
-public class Skeleton extends Mob {
+public class Wolf extends Mob {
 
 
-    public Skeleton(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
+
+
+    public Wolf(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
         super(id, posX, posY, area, lootSystem);
 
         actionTimer = new Timer();
@@ -39,7 +41,7 @@ public class Skeleton extends Mob {
 
         findNewDestinationTimer = new Timer();
 
-        walkAnimation = new WalkAnimation(Assets.skeletonSpriteSheet, 9, 100, new int [] {0,1,2,3}, 0);
+        walkAnimation = new WalkAnimation(Assets.wolfSpriteSheet, 4, 100, new int [] {3,1,2,0}, 0);
 
         destinationX = 0.0f;
         destinationY = 0.0f;
@@ -66,6 +68,8 @@ public class Skeleton extends Mob {
 
     @Override
     public String getCreatureType() {
-        return "skeleton";
+        return "wolf";
     }
+
+
 }

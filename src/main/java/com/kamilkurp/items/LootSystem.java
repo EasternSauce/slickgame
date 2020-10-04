@@ -3,6 +3,7 @@ package com.kamilkurp.items;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
+import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.gui.LootOptionWindow;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
@@ -30,12 +31,12 @@ public class LootSystem implements Renderable {
         }
     }
 
-    public void update(KeyInput keyInput, com.kamilkurp.creatures.Character character) {
+    public void update(KeyInput keyInput, PlayerCharacter playerCharacter) {
         List<LootPile> visibleLootPile = new LinkedList<>();
 
         List<Item> visibleItems = new ArrayList<>();
         for (LootPile lootPile : lootPileList) {
-            if (Globals.distance(character.getRect(), lootPile.getRect()) < 40f) {
+            if (Globals.distance(playerCharacter.getRect(), lootPile.getRect()) < 40f) {
                 lootOptionWindow.setVisible(true);
 
                 visibleLootPile.add(lootPile);

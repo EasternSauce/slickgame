@@ -14,6 +14,7 @@ public class Assets {
     public static TerrainLayout area1Layout;
     public static TerrainLayout area2Layout;
     public static SpriteSheet skeletonSpriteSheet;
+    public static SpriteSheet wolfSpriteSheet;
     public static SpriteSheet slashSpriteSheet;
     public static SpriteSheet betterSlashSpriteSheet;
     public static Sound stepSound;
@@ -42,6 +43,7 @@ public class Assets {
         area2Layout = new TerrainLayout(assetsLocation + "areas/area2/layout.txt");
         area2Enemies = new SpawnLocationsContainer(assetsLocation + "areas/area2/spawns.txt");
         skeletonSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/skeleton.png", 64, 64);
+        wolfSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/wolf.png", 50, 35);
         slashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash.png", 40, 40);
         betterSlashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash_hd.png", 40, 40);
         stepSound = new Sound(Globals.getAssetsLocation() + "sounds/running.wav");

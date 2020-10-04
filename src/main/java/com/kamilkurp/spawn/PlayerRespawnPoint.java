@@ -1,11 +1,8 @@
 package com.kamilkurp.spawn;
 
 import com.kamilkurp.Renderable;
-import com.kamilkurp.assets.Assets;
-import com.kamilkurp.creatures.Character;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
-import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 

@@ -1,8 +1,9 @@
 package com.kamilkurp.terrain;
 
 import com.kamilkurp.Renderable;
-import com.kamilkurp.creatures.Character;
+import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.creatures.NonPlayerCharacter;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.EnemyRespawnArea;
@@ -78,13 +79,11 @@ public class Area implements Renderable {
             int posY = spawnLocation.getPosY();
 
             if (spawnLocation.getSpawnType().equals("respawnArea")) {
-                if (spawnLocation.getEnemyType().equals("skeleton")) {
+                if (spawnLocation.getCreatureType().equals("skeleton")) {
                     enemyRespawnAreaList.add(new EnemyRespawnArea(posX, posY, 3, this, lootSystem));
                 }
             } else if (spawnLocation.getSpawnType().equals("spawnPoint")) {
-                if (spawnLocation.getEnemyType().equals("skeleton")) {
-                    enemySpawnPointList.add(new EnemySpawnPoint(posX, posY, this, lootSystem));
-                }
+                enemySpawnPointList.add(new EnemySpawnPoint(posX, posY, this, lootSystem, spawnLocation.getCreatureType()));
             }
         }
     }
@@ -118,7 +117,6 @@ public class Area implements Renderable {
 
 
     public void saveTerrainLayoutToFile(String fileName) throws IOException {
-        System.out.println("saving " + fileName + "...");
         FileWriter fileWriter = new FileWriter(fileName);
         PrintWriter printWriter = new PrintWriter(fileWriter);
 
@@ -188,21 +186,29 @@ public class Area implements Renderable {
         return respawnList;
     }
 
-    public void reset() throws SlickException {
+    public void onLeave() throws SlickException {
         arrowList.clear();
 
         for (EnemySpawnPoint enemySpawnPoint : enemySpawnPointList) {
             enemySpawnPoint.markForRespawn();
         }
 
+
+
+    }
+
+    public void onEntry() {
+
         for (Creature creature : creaturesMap.values()) {
-            if (!(creature instanceof Character)) {
-                if (!creature.isAlive()) creature.markForDeletion();
+            if (!(creature instanceof PlayerCharacter || creature instanceof NonPlayerCharacter)) {
+                if (!creature.isAlive()) {
+                    creature.markForDeletion();
+                }
 
             }
         }
 
-
+        getCreaturesMap().entrySet().removeIf(e -> e.getValue().isToBeRemoved());
     }
 
     public List<Arrow> getArrowList() {

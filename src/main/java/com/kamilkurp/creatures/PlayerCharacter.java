@@ -15,12 +15,11 @@ import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class Character extends Creature {
+public class PlayerCharacter extends Creature {
     private Sound stepSound = Assets.stepSound;
 
     private boolean walking = false;
@@ -34,7 +33,7 @@ public class Character extends Creature {
 
     private CurrentAreaManager areaManager;
 
-    public Character(String id, int posX, int posY, Area area, LootSystem lootSystem, CurrentAreaManager areaManager) throws SlickException {
+    public PlayerCharacter(String id, int posX, int posY, Area area, LootSystem lootSystem, CurrentAreaManager areaManager) throws SlickException {
         super(id, posX, posY, area, lootSystem);
 
         this.areaManager = areaManager;
@@ -101,6 +100,11 @@ public class Character extends Creature {
     }
 
     @Override
+    public String getCreatureType() {
+        return "playerCharacter";
+    }
+
+    @Override
     public void render(Graphics g, Camera camera) {
         super.render(g, camera);
 
@@ -144,7 +148,7 @@ public class Character extends Creature {
             areaToMove = currentRespawnPoint.getArea();
             setHealthPoints(getMaxHealthPoints());
             areaManager.setCurrentArea(currentRespawnPoint.getArea());
-            areaToMove.reset();
+            //areaToMove.onLeave();
         }
 
 
@@ -168,8 +172,8 @@ public class Character extends Creature {
     private void interact(Map<String, Creature> creatures) {
         for (Creature creature : creatures.values()) {
             if (creature == this) continue;
-            if (rect.intersects(creature.rect) && creature instanceof NPC && creature.healthPoints > 0) {
-                ((NPC)creature).triggerDialogue();
+            if (rect.intersects(creature.rect) && creature instanceof NonPlayerCharacter && creature.healthPoints > 0) {
+                ((NonPlayerCharacter)creature).triggerDialogue();
             }
         }
     }

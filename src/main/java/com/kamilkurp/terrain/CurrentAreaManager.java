@@ -9,7 +9,5 @@ public class CurrentAreaManager {
 
     public void setCurrentArea(Area area) {
         currentArea = area;
-
-        System.out.println("setting current area to be " + area.getId());
     }
 }

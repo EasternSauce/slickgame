@@ -1,6 +1,6 @@
 package com.kamilkurp.areagate;
 
-import com.kamilkurp.creatures.Character;
+import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.CurrentAreaManager;
@@ -10,8 +10,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 
 
 public class AreaGate {
@@ -39,38 +38,49 @@ public class AreaGate {
         }
     }
 
-    public void update(CurrentAreaManager currentAreaManager) throws SlickException {
-        Area currentArea = currentAreaManager.getCurrentArea();
+    public void update(Map<String, Area> areaMap, CurrentAreaManager currentAreaManager) throws SlickException {
 
-        for (Creature creature : currentArea.getCreaturesMap().values()) {
-            if (creature instanceof Character) {
-                if (!creature.isPassedGateRecently()) {
-                    Rectangle gateRect = null;
-                    Area destinationArea = null;
-                    Rectangle destinationRect = null;
-                    if (currentArea == areaFrom) {
-                        gateRect = fromRect;
-                        destinationArea = areaTo;
-                        destinationRect = toRect;
-                    }
-                    if (currentArea == areaTo) {
-                        gateRect = toRect;
-                        destinationArea = areaFrom;
-                        destinationRect = fromRect;
-                    }
+;
 
-                    if (creature.getRect().intersects(gateRect) && creature.getPassedGateTimer().getTime() > 1000f) {
-                        creature.getPassedGateTimer().reset();
-                        creature.getRect().setX(destinationRect.getX());
-                        creature.getRect().setY(destinationRect.getY());
-                        creature.setPassedGateRecently(true);
-                        System.out.println("setting area to move to for " + creature.getId() + " to " + destinationArea.getId());
-                        creature.setAreaToMoveTo(destinationArea);
-                        destinationArea.reset();
+        for (Area area : areaMap.values()) {
+            for (Creature creature : area.getCreaturesMap().values()) {
+                if (creature instanceof PlayerCharacter) {
+                    if (!creature.isPassedGateRecently()) {
+                        Rectangle gateRect = null;
+                        Area destinationArea = null;
+                        Area oldArea = null;
+                        Rectangle destinationRect = null;
+                        if (area == areaFrom) {
+                            gateRect = fromRect;
+                            oldArea = areaFrom;
+                            destinationArea = areaTo;
+                            destinationRect = toRect;
+                        }
+                        if (area == areaTo) {
+                            gateRect = toRect;
+                            oldArea = areaTo;
+                            destinationArea = areaFrom;
+                            destinationRect = fromRect;
+                        }
+
+                        if (creature.getRect().intersects(gateRect)) {
+                            creature.getRect().setX(destinationRect.getX());
+                            creature.getRect().setY(destinationRect.getY());
+                            creature.setPassedGateRecently(true);
+                            creature.setAreaToMoveTo(destinationArea);
+
+                            currentAreaManager.setCurrentArea(destinationArea);
+
+
+                            oldArea.onLeave();
+                            destinationArea.onEntry();
+
+                        }
                     }
                 }
             }
         }
+
     }
 
     public Area getAreaFrom() {

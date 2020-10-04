@@ -45,13 +45,13 @@ public class SpawnLocationsContainer {
 
     public class SpawnLocation {
         String spawnType;
-        String enemyType;
+        String creatureType;
         int posX;
         int posY;
 
-        public SpawnLocation(String spawnType, String enemyType, int posX, int posY) {
+        public SpawnLocation(String spawnType, String creatureType, int posX, int posY) {
             this.spawnType = spawnType;
-            this.enemyType = enemyType;
+            this.creatureType = creatureType;
             this.posX = posX;
             this.posY = posY;
         }
@@ -60,8 +60,8 @@ public class SpawnLocationsContainer {
             return spawnType;
         }
 
-        public String getEnemyType() {
-            return enemyType;
+        public String getCreatureType() {
+            return creatureType;
         }
 
         public int getPosX() {

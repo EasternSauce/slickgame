@@ -3,6 +3,7 @@ package com.kamilkurp.spawn;
 import com.kamilkurp.Globals;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Skeleton;
+import com.kamilkurp.creatures.Wolf;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.terrain.Area;
 import org.newdawn.slick.SlickException;
@@ -23,13 +24,17 @@ public class EnemySpawnPoint {
 
     private boolean isToBeRespawned = false;
 
-    public EnemySpawnPoint(int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
+    private String creatureType;
+
+    public EnemySpawnPoint(int posX, int posY, Area area, LootSystem lootSystem, String creatureType) throws SlickException {
         this.posX = posX;
         this.posY = posY;
 
         this.lootSystem = lootSystem;
 
         this.area = area;
+
+        this.creatureType = creatureType;
 
         markForRespawn();
     }
@@ -41,7 +46,14 @@ public class EnemySpawnPoint {
                 spawnedCreature.kill();
             }
 
-            spawnedCreature = new Skeleton("skellie"+Math.abs(Globals.random.nextInt()), posX, posY, area, lootSystem);
+            if (creatureType.equals("skeleton")) {
+                spawnedCreature = new Skeleton("skellie"+Math.abs(Globals.random.nextInt()), posX, posY, area, lootSystem);
+            }
+
+            if (creatureType.equals("wolf")) {
+                spawnedCreature = new Wolf("wolfie"+Math.abs(Globals.random.nextInt()), posX, posY, area, lootSystem);
+            }
+
             spawnedCreature.updateAttackType();
             spawnedCreature.setAreaToMoveTo(area);
 

@@ -4,11 +4,10 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.creatures.Character;
+import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
@@ -65,7 +64,7 @@ public class InventoryWindow implements Renderable {
     private int tradeInventorySlots = tradeInventoryRows * tradeInventoryColumns;
 
     private int gold = 0;
-    private Character character;
+    private PlayerCharacter playerCharacter;
 
     public InventoryWindow() throws SlickException {
 
@@ -334,7 +333,7 @@ public class InventoryWindow implements Renderable {
                                     equipmentItems.put(currentSelected, from);
                                     moving = false;
 
-                                    character.updateAttackType();
+                                    playerCharacter.updateAttackType();
                                 }
                             }
                             else {
@@ -348,7 +347,7 @@ public class InventoryWindow implements Renderable {
                                     inventoryItems.put(currentSelected, from);
                                     moving = false;
 
-                                    character.updateAttackType();
+                                    playerCharacter.updateAttackType();
                                 }
                             }
                         }
@@ -364,7 +363,7 @@ public class InventoryWindow implements Renderable {
                                     equipmentItems.put(currentSelected, from);
                                     moving = false;
 
-                                    character.updateAttackType();
+                                    playerCharacter.updateAttackType();
                                 }
                             }
                             else {
@@ -377,7 +376,7 @@ public class InventoryWindow implements Renderable {
 
                         }
 
-                        if (character.getHealthPoints() > character.getMaxHealthPoints()) character.setHealthPoints(character.getMaxHealthPoints());
+                        if (playerCharacter.getHealthPoints() > playerCharacter.getMaxHealthPoints()) playerCharacter.setHealthPoints(playerCharacter.getMaxHealthPoints());
                     }
                 }
                 else {
@@ -497,9 +496,9 @@ public class InventoryWindow implements Renderable {
         return equipmentItems;
     }
 
-    public void setCharacter(Character character) {
-        this.character = character;
-        this.equipmentItems = character.getEquipmentItems();
+    public void setPlayerCharacter(PlayerCharacter playerCharacter) {
+        this.playerCharacter = playerCharacter;
+        this.equipmentItems = playerCharacter.getEquipmentItems();
     }
 
     public Map<Integer, Item> getInventoryItems() {

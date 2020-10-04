@@ -2,7 +2,7 @@ package com.kamilkurp.dialogue;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.creatures.NPC;
+import com.kamilkurp.creatures.NonPlayerCharacter;
 import com.kamilkurp.items.InventoryWindow;
 import com.kamilkurp.items.Item;
 import org.newdawn.slick.Color;
@@ -22,7 +22,7 @@ public class DialogueWindow {
 
     Dialogue currentDialogue = null;
 
-    private NPC dialogueNPC;
+    private NonPlayerCharacter dialogueNonPlayerCharacter;
 
     List<Dialogue> currentDialogueChoices = null;
 
@@ -133,12 +133,12 @@ public class DialogueWindow {
                 }
             }
             
-            if (dialogueNPC != null) {
+            if (dialogueNonPlayerCharacter != null) {
                 if (!activated) {
 
                     activated = true;
 
-                    currentDialogue = findDialogueById(dialogueNPC.getDialogueStartId());
+                    currentDialogue = findDialogueById(dialogueNonPlayerCharacter.getDialogueStartId());
 
 
                     setDialogueChoices();
@@ -162,7 +162,7 @@ public class DialogueWindow {
             }
         }
 
-        dialogueNPC = null;
+        dialogueNonPlayerCharacter = null;
     }
 
     private Dialogue findDialogueById(String dialogueId) {
@@ -191,8 +191,8 @@ public class DialogueWindow {
         }
     }
 
-    public void setDialogueNPC(NPC npc) {
-        dialogueNPC = npc;
+    public void setDialogueNonPlayerCharacter(NonPlayerCharacter nonPlayerCharacter) {
+        dialogueNonPlayerCharacter = nonPlayerCharacter;
     }
 
     public boolean isActivated() {

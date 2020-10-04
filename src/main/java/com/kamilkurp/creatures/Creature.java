@@ -94,9 +94,6 @@ public abstract class Creature implements Renderable {
 
     protected boolean toBeRemoved;
 
-    protected Timer passedGateTimer;
-
-
     public Creature(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
         this.id = id;
         this.lootSystem = lootSystem;
@@ -128,10 +125,6 @@ public abstract class Creature implements Renderable {
         equipmentItems = new TreeMap<>();
 
         toBeRemoved = false;
-
-
-        passedGateTimer = new Timer();
-
 
 
     }
@@ -176,7 +169,6 @@ public abstract class Creature implements Renderable {
 
     public void update(GameContainer gc, int i, List<TerrainTile> tiles, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) throws SlickException {
 
-
         beforeMovement(i);
 
         if (isAlive()) {
@@ -190,12 +182,13 @@ public abstract class Creature implements Renderable {
 
         swordAttackLogic(i, creatures);
 
-        areaGateLogic(gatesList);
+
 
     }
 
     public void areaGateLogic(List<AreaGate> gatesList) {
         if (passedGateRecently) {
+
             boolean leftGate = true;
             for (AreaGate areaGate : gatesList) {
                 if (areaGate.getAreaFrom() == area) {
@@ -235,7 +228,7 @@ public abstract class Creature implements Renderable {
                 for (Creature creature : creatures.values()) {
                     if (creature == this) continue;
                     if (swordAttackRect.intersects(creature.rect)) {
-                        if (!(this instanceof Skeleton && creature instanceof Skeleton)) {
+                        if (!(this instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
                             float unarmedDamage = 5f;
                             creature.takeDamage(unarmedDamage);
                         }
@@ -262,7 +255,7 @@ public abstract class Creature implements Renderable {
                 for (Creature creature : creatures.values()) {
                     if (creature == this) continue;
                     if (swordAttackRect.intersects(creature.rect)) {
-                        if (!(this instanceof Skeleton && creature instanceof Skeleton)) {
+                        if (!(this instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
                             creature.takeDamage(equipmentItems.get(0).getDamage());
                         }
                     }
@@ -553,7 +546,6 @@ public abstract class Creature implements Renderable {
 
     public void setPassedGateRecently(boolean passedGateRecently) {
         this.passedGateRecently = passedGateRecently;
-        System.out.println("set passed gate recently for " + this.getId() + " to " + passedGateRecently);
     }
 
     public boolean isPassedGateRecently() {
@@ -565,7 +557,6 @@ public abstract class Creature implements Renderable {
     }
 
     public void setAreaToMoveTo(Area areaToMove) {
-//        System.out.println("running setareatomoveto for " + getId() + " to " + (areaToMove == null ? "null" : areaToMove.getId()));
         this.areaToMove = areaToMove;
     }
 
@@ -577,7 +568,5 @@ public abstract class Creature implements Renderable {
         return toBeRemoved;
     }
 
-    public Timer getPassedGateTimer() {
-        return passedGateTimer;
-    }
+    abstract public String getCreatureType();
 }

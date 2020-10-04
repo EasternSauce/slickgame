@@ -2,9 +2,9 @@ package com.kamilkurp;
 
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.creatures.Character;
+import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.creatures.Creature;
-import com.kamilkurp.creatures.NPC;
+import com.kamilkurp.creatures.NonPlayerCharacter;
 import com.kamilkurp.dialogue.DialogueWindow;
 import com.kamilkurp.gui.Hud;
 import com.kamilkurp.gui.LootOptionWindow;
@@ -35,7 +35,7 @@ public class SimpleSlickGame extends BasicGame {
 
     private Hud hud;
 
-    private Character character;
+    private PlayerCharacter playerCharacter;
 
     private InventoryWindow inventoryWindow;
 
@@ -56,6 +56,8 @@ public class SimpleSlickGame extends BasicGame {
     private List<AreaGate> gateList;
 
     private List<Creature> creaturesToMove;
+
+    private Creature cameraFocusedCreature;
 
 
     public SimpleSlickGame(String gamename) {
@@ -89,11 +91,14 @@ public class SimpleSlickGame extends BasicGame {
         currentAreaManager = new CurrentAreaManager();
 
 
-        character = new Character("protagonist", 400, 400, areaMap.get("area1"), lootSystem, currentAreaManager);
-        NPC npc = new NPC("johnny", 600, 600, areaMap.get("area1"), lootSystem, dialogueWindow, "a1", true);
+        playerCharacter = new PlayerCharacter("protagonist", 400, 400, areaMap.get("area1"), lootSystem, currentAreaManager);
+
+        cameraFocusedCreature = playerCharacter;
+
+        NonPlayerCharacter nonPlayerCharacter = new NonPlayerCharacter("johnny", 600, 600, areaMap.get("area1"), lootSystem, dialogueWindow, "a1", true);
 
 
-        inventoryWindow.setCharacter(character);
+        inventoryWindow.setPlayerCharacter(playerCharacter);
 
 
 
@@ -131,17 +136,31 @@ public class SimpleSlickGame extends BasicGame {
 
         creaturesToMove.clear();
 
+        // for current area
         for (Creature creature : currentArea.getCreaturesMap().values()) {
-            if (creature instanceof Character) {
+            if (creature instanceof PlayerCharacter) {
                 if (!inventoryWindow.isInventoryOpen() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
                     creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesMap(), keyInput, currentArea.getArrowList(), gateList);
+
+                    creature.areaGateLogic(gateList);
                 }
             }
             else {
                 creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesMap(), keyInput, currentArea.getArrowList(), gateList);
             }
 
-            if (creature.getAreaToMoveTo() != null) creaturesToMove.add(creature);
+        }
+
+        // for all areas
+        for (Area area : areaMap.values()) {
+            for (Creature creature : area.getCreaturesMap().values()) {
+                if (creature.getAreaToMoveTo() != null) {
+                    creaturesToMove.add(creature);
+                }
+            }
+
+            area.updateSpawns();
+
         }
 
         for (Creature creature : creaturesToMove) {
@@ -159,17 +178,14 @@ public class SimpleSlickGame extends BasicGame {
                 creature.setArea(newArea);
                 creature.setAreaToMoveTo(null);
 
-                if (creature instanceof Character) {
-                    currentAreaManager.setCurrentArea(newArea);
-                }
+
             }
 
         }
 
-        currentArea.getCreaturesMap().entrySet().removeIf(e -> e.getValue().isToBeRemoved());
 
 
-        camera.update(gc, character.getRect());
+        camera.update(gc, cameraFocusedCreature.getRect());
 
 
         inventoryWindow.update(keyInput);
@@ -177,12 +193,11 @@ public class SimpleSlickGame extends BasicGame {
         dialogueWindow.update(keyInput);
 
 
-        lootSystem.update(keyInput, character);
+        lootSystem.update(keyInput, playerCharacter);
 
-        currentArea.updateSpawns();
 
         for (AreaGate areaGate : gateList) {
-            areaGate.update(currentAreaManager);
+            areaGate.update(areaMap, currentAreaManager);
         }
 
         renderPriorityQueue = new PriorityQueue<>((o1, o2) -> {
@@ -200,51 +215,53 @@ public class SimpleSlickGame extends BasicGame {
     public void render(GameContainer gc, Graphics g) {
         Area currentArea = currentAreaManager.getCurrentArea();
 
-        currentArea.render(g, camera);
+        if (cameraFocusedCreature.getArea() == currentArea) {
 
-        currentArea.renderSpawns(g, camera);
+            currentArea.render(g, camera);
 
-        for (PlayerRespawnPoint playerRespawnPoint : currentArea.getRespawnList()) {
-            playerRespawnPoint.render(g, camera);
-        }
+            currentArea.renderSpawns(g, camera);
 
-        for (AreaGate areaGate : gateList) {
-            areaGate.render(g, camera, currentArea);
-        }
-
-        if (renderPriorityQueue != null) {
-            while(!renderPriorityQueue.isEmpty()) {
-                Creature creature = renderPriorityQueue.poll();
-
-                creature.render(g, camera);
+            for (PlayerRespawnPoint playerRespawnPoint : currentArea.getRespawnList()) {
+                playerRespawnPoint.render(g, camera);
             }
 
+            for (AreaGate areaGate : gateList) {
+                areaGate.render(g, camera, currentArea);
+            }
+
+            if (renderPriorityQueue != null) {
+                while (!renderPriorityQueue.isEmpty()) {
+                    Creature creature = renderPriorityQueue.poll();
+
+                    creature.render(g, camera);
+                }
+
+            }
+
+
+            for (Creature creature : currentArea.getCreaturesMap().values()) {
+                creature.renderAttackAnimation(g, camera);
+            }
+
+
+            for (Arrow arrow : currentArea.getArrowList()) {
+                arrow.render(g, camera);
+            }
+
+
+            lootSystem.render(g, camera);
+            inventoryWindow.render(g, camera);
+
+            if (playerCharacter.isRespawning()) {
+                Assets.verdanaHugeTtf.drawString(175, 175, "YOU DIED", Color.red);
+            }
         }
-
-
-        for (Creature creature : currentArea.getCreaturesMap().values()) {
-            creature.renderAttackAnimation(g, camera);
-        }
-
-
-
-        for (Arrow arrow : currentArea.getArrowList()) {
-            arrow.render(g, camera);
-        }
-
-
-        lootSystem.render(g, camera);
-        inventoryWindow.render(g, camera);
 
         hud.render(g);
 
         dialogueWindow.render(g);
 
         lootOptionWindow.render(g, camera);
-
-        if (character.isRespawning()) {
-            Assets.verdanaHugeTtf.drawString(175, 175, "YOU DIED", Color.red);
-        }
 
     }
 
@@ -283,8 +300,7 @@ public class SimpleSlickGame extends BasicGame {
 
 
             for (Creature creature : allCreatures.values()) {
-                if (creature.getClass() != Character.class && creature.getClass() != NPC.class) continue;
-                System.out.println("saving " + creature.getId());
+                if (creature.getClass() != PlayerCharacter.class && creature.getClass() != NonPlayerCharacter.class) continue;
                 writer.write("creature " + creature.getId() + "\n");
                 writer.write("pos " + creature.getRect().getX() + " " + creature.getRect().getY() + "\n");
                 writer.write("area " + creature.getArea().getId() + "\n");
@@ -357,7 +373,10 @@ public class SimpleSlickGame extends BasicGame {
                 if(s[0].equals("area")) {
                     if (creature != null) {
                         creature.setArea(areaMap.get(s[1]));
-                        if (creature instanceof Character) {
+
+                        areaMap.get(s[1]).getCreaturesMap().put(creature.getId(), creature);
+
+                        if (creature instanceof PlayerCharacter) {
                             currentAreaManager.setCurrentArea(areaMap.get(s[1]));
                         }
                     }
@@ -377,7 +396,7 @@ public class SimpleSlickGame extends BasicGame {
 
                 }
 
-                if (creature instanceof Character) {
+                if (creature instanceof PlayerCharacter) {
                   if (creature.getHealthPoints() <= 0f) {
                     creature.onDeath();
                   }

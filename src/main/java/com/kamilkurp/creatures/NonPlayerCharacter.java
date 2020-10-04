@@ -18,7 +18,7 @@ import org.newdawn.slick.SlickException;
 
 import java.util.*;
 
-public class NPC extends Creature {
+public class NonPlayerCharacter extends Creature {
     private Timer actionTimer;
 
     public Random random = new Random();
@@ -33,7 +33,7 @@ public class NPC extends Creature {
     private Map<String, Float> dropTable;
 
 
-    public NPC(String id, int posX, int posY, Area area, LootSystem lootSystem, DialogueWindow dialogueWindow, String dialogueStartId, boolean trader) throws SlickException {
+    public NonPlayerCharacter(String id, int posX, int posY, Area area, LootSystem lootSystem, DialogueWindow dialogueWindow, String dialogueStartId, boolean trader) throws SlickException {
         super(id, posX, posY, area, lootSystem);
 
         this.dialogueWindow = dialogueWindow;
@@ -79,6 +79,11 @@ public class NPC extends Creature {
     }
 
     @Override
+    public String getCreatureType() {
+        return "nonPlayerCharacter";
+    }
+
+    @Override
     public void update(GameContainer gc, int i, List<TerrainTile> tiles, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) throws SlickException {
         super.update(gc, i, tiles, creatures, keyInput, arrowList, gatesList);
 
@@ -111,7 +116,7 @@ public class NPC extends Creature {
 
     public void triggerDialogue() {
         if (!dialogueWindow.isActivated()) {
-            dialogueWindow.setDialogueNPC(this);
+            dialogueWindow.setDialogueNonPlayerCharacter(this);
             dialogueWindow.setTraderInventory(traderInventory);
         }
 
