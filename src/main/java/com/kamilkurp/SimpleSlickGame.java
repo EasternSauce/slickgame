@@ -78,8 +78,9 @@ public class SimpleSlickGame extends BasicGame {
 
         dialogueWindow = new DialogueWindow(Globals.getAssetsLocation() + "dialogues/dialogues.txt", inventoryWindow);
 
+        currentAreaManager = new CurrentAreaManager();
 
-        lootSystem = new LootSystem(lootOptionWindow);
+        lootSystem = new LootSystem(lootOptionWindow, currentAreaManager);
 
         areaMap = new HashMap<>();
         areaMap.put("area1", new Area("area1", Assets.grassyTileset, Assets.area1Layout, Assets.area1Enemies, lootSystem));
@@ -88,7 +89,6 @@ public class SimpleSlickGame extends BasicGame {
         areaMap.get("area1").addRespawnPoint(new PlayerRespawnPoint(500, 500, areaMap.get("area1")));
 
 
-        currentAreaManager = new CurrentAreaManager();
 
 
         playerCharacter = new PlayerCharacter("protagonist", 400, 400, areaMap.get("area1"), lootSystem, currentAreaManager);

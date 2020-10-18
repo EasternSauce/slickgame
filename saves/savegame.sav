@@ -1,11 +1,11 @@
 creature johnny
 pos 400.0 600.0
 area area1
-health 100.0
+health 0.0
 creature protagonist
-pos 1582.0476 2202.6772
-area area1
-health 327.45276
+pos 1705.9645 2469.3918
+area area2
+health 279.03906
 equipment_item 0 crossbow 19 0
 equipment_item 1 leatherHelmet 0 3
 equipment_item 2 leatherArmor 0 6

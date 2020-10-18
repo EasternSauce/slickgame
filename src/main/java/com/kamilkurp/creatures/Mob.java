@@ -70,7 +70,7 @@ public abstract class Mob extends Creature {
 
     @Override
     public void onDeath() {
-        lootSystem.spawnLootPile(rect.getCenterX(), rect.getCenterY(), dropTable);
+        lootSystem.spawnLootPile(area, rect.getCenterX(), rect.getCenterY(), dropTable);
     }
 
     @Override

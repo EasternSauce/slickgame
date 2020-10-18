@@ -41,7 +41,7 @@ public class Wolf extends Mob {
 
         findNewDestinationTimer = new Timer();
 
-        walkAnimation = new WalkAnimation(Assets.wolfSpriteSheet, 4, 100, new int [] {3,1,2,0}, 0);
+        walkAnimation = new WalkAnimation(Assets.wolfSpriteSheet, 4, 100, new int [] {3,1,0,2}, 0);
 
         destinationX = 0.0f;
         destinationY = 0.0f;

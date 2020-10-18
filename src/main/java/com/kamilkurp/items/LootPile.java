@@ -1,6 +1,7 @@
 package com.kamilkurp.items;
 
 import com.kamilkurp.Renderable;
+import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -17,11 +18,14 @@ public class LootPile implements Renderable {
 
     private boolean visible = true;
 
+    private Area area = null;
+
     List<Item> itemList;
 
-    public LootPile(float x, float y) {
+    public LootPile(Area area, float x, float y) {
         rect = new Rectangle(x, y, width, height);
         itemList = new LinkedList<>();
+        this.area = area;
     }
 
     @Override
@@ -50,5 +54,9 @@ public class LootPile implements Renderable {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public Area getArea() {
+        return area;
     }
 }

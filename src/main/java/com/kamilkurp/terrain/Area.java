@@ -4,6 +4,7 @@ import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.NonPlayerCharacter;
+import com.kamilkurp.items.LootPile;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.EnemyRespawnArea;
@@ -45,6 +46,8 @@ public class Area implements Renderable {
 
     private List<Arrow> arrowList;
 
+    private List<LootPile> lootPileList;
+
     public Area(String id, TerrainTileset terrainTileset, TerrainLayout terrainLayout, SpawnLocationsContainer spawnsContainer, LootSystem lootSystem) throws SlickException {
         this.lootSystem = lootSystem;
 
@@ -63,6 +66,7 @@ public class Area implements Renderable {
         enemySpawnPointList = new LinkedList<>();
         respawnList = new LinkedList<>();
         arrowList = new LinkedList<>();
+        lootPileList = new LinkedList<>();
 
         loadLayoutTiles();
 
@@ -209,10 +213,15 @@ public class Area implements Renderable {
         }
 
         getCreaturesMap().entrySet().removeIf(e -> e.getValue().isToBeRemoved());
+
     }
 
     public List<Arrow> getArrowList() {
         return arrowList;
+    }
+
+    public List<LootPile> getLootPileList() {
+        return lootPileList;
     }
 }
 

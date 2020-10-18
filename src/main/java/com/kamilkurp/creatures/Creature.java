@@ -117,8 +117,9 @@ public abstract class Creature implements Renderable {
         facingAngle = 0.0f;
         facingVector = new Vector2f(0f, 0f);
 
+        this.area = area;
 
-        area.getCreaturesMap().put(this.getId(), this);
+        this.area.getCreaturesMap().put(this.getId(), this);
 
         currentAttackType = AttackType.UNARMED;
 
