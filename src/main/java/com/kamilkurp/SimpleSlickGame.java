@@ -258,6 +258,8 @@ public class SimpleSlickGame extends BasicGame {
                 }
             }
 
+            writer.write("gold " + inventoryWindow.getGold() + "\n");
+
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -346,6 +348,9 @@ public class SimpleSlickGame extends BasicGame {
                         inventoryItems.put(Integer.parseInt(s[1]), new Item(ItemType.getItemType(s[2]), null, (s[3].equals("0") ? null : (float)(Integer.parseInt(s[3]))), (s[4].equals("0") ? null : (float)(Integer.parseInt(s[4])))));
                     }
 
+                }
+                if(s[0].equals("gold")) {
+                    inventoryWindow.setGold(Integer.parseInt(s[1]));
                 }
 
                 line = reader.readLine();

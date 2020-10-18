@@ -499,5 +499,11 @@ public class InventoryWindow implements Renderable {
         return inventoryItems;
     }
 
+    public int getGold() {
+        return gold;
+    }
 
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
 }

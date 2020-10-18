@@ -12,6 +12,7 @@ import com.kamilkurp.terrain.CurrentAreaManager;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
+import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -85,7 +86,8 @@ public class PlayerCharacter extends Creature {
             }
         }
 
-        if (keyInput.isKeyPressed(KeyInput.Key.SPACE)) {
+
+        if (Mouse.isButtonDown(0)) {
             attack(arrowList, tiles, creatures);
         }
         //rewrite
