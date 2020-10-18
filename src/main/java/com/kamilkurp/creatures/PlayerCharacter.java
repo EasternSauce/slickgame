@@ -148,10 +148,7 @@ public class PlayerCharacter extends Creature {
             pendingArea = currentRespawnPoint.getArea();
             setHealthPoints(getMaxHealthPoints());
             areaManager.setCurrentArea(currentRespawnPoint.getArea());
-            //areaToMove.onLeave();
         }
-
-
 
     }
 

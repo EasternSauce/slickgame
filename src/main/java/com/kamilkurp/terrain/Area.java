@@ -189,6 +189,7 @@ public class Area implements Renderable {
 
     public void onLeave() {
         arrowList.clear();
+        lootPileList.clear();
 
         for (EnemySpawnPoint enemySpawnPoint : enemySpawnPointList) {
             enemySpawnPoint.markForRespawn();
