@@ -154,7 +154,7 @@ public class SimpleSlickGame extends BasicGame {
         // for all areas
         for (Area area : areaMap.values()) {
             for (Creature creature : area.getCreaturesMap().values()) {
-                if (creature.getAreaToMoveTo() != null) {
+                if (creature.getPendingArea() != null) {
                     creaturesToMove.add(creature);
                 }
             }
@@ -165,21 +165,7 @@ public class SimpleSlickGame extends BasicGame {
 
         for (Creature creature : creaturesToMove) {
 
-            if (creature.getAreaToMoveTo() != null) {
-                Area oldArea = creature.getArea();
-                Area newArea = creature.getAreaToMoveTo();
-
-                if (oldArea != null) {
-                    oldArea.getCreaturesMap().remove(creature.getId());
-                }
-
-                newArea.getCreaturesMap().put(creature.getId(), creature);
-
-                creature.setArea(newArea);
-                creature.setAreaToMoveTo(null);
-
-
-            }
+            creature.transportLogic();
 
         }
 

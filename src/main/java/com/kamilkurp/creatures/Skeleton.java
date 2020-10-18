@@ -22,7 +22,7 @@ import java.util.*;
 public class Skeleton extends Mob {
 
 
-    public Skeleton(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
+    public Skeleton(String id, float posX, float posY, Area area, LootSystem lootSystem) throws SlickException {
         super(id, posX, posY, area, lootSystem);
 
         actionTimer = new Timer();

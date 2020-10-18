@@ -64,10 +64,10 @@ public class AreaGate {
                         }
 
                         if (creature.getRect().intersects(gateRect)) {
-                            creature.getRect().setX(destinationRect.getX());
-                            creature.getRect().setY(destinationRect.getY());
                             creature.setPassedGateRecently(true);
-                            creature.setAreaToMoveTo(destinationArea);
+                            System.out.println("set passed gate = true");
+
+                            creature.transport(destinationArea, destinationRect.getX(), destinationRect.getY());
 
                             currentAreaManager.setCurrentArea(destinationArea);
 

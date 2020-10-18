@@ -145,7 +145,7 @@ public class PlayerCharacter extends Creature {
         if (respawning && respawnTimer.getTime() > 3000f) {
             respawning = false;
             setPosition(currentRespawnPoint.getPosX(), currentRespawnPoint.getPosY());
-            areaToMove = currentRespawnPoint.getArea();
+            pendingArea = currentRespawnPoint.getArea();
             setHealthPoints(getMaxHealthPoints());
             areaManager.setCurrentArea(currentRespawnPoint.getArea());
             //areaToMove.onLeave();

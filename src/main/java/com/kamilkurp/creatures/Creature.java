@@ -90,11 +90,14 @@ public abstract class Creature implements Renderable {
 
     protected boolean passedGateRecently = false;
 
-    protected Area areaToMove;
+    protected Area pendingArea;
 
     protected boolean toBeRemoved;
 
-    public Creature(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
+    protected Float pendingX;
+    protected Float pendingY;
+
+    public Creature(String id, float posX, float posY, Area area, LootSystem lootSystem) throws SlickException {
         this.id = id;
         this.lootSystem = lootSystem;
 
@@ -502,6 +505,31 @@ public abstract class Creature implements Renderable {
         healthPoints = 0f;
     }
 
+    public void transport(Area area, float posX, float posY) {
+        pendingArea = area;
+        pendingX = posX;
+        pendingY = posY;
+    }
+
+    public void transportLogic() {
+        if (getPendingArea() != null) {
+            Area oldArea = getArea();
+            Area newArea = getPendingArea();
+
+            if (oldArea != null) {
+                oldArea.getCreaturesMap().remove(getId());
+            }
+
+            newArea.getCreaturesMap().put(getId(), this);
+
+            getRect().setX(getPendingX());
+            getRect().setY(getPendingY());
+
+            setArea(newArea);
+
+        }
+    }
+
     public enum AttackType {UNARMED, SWORD, BOW};
 
 
@@ -537,6 +565,7 @@ public abstract class Creature implements Renderable {
 
     public void setArea(Area area) {
         this.area = area;
+        pendingArea = null;
 
     }
 
@@ -553,12 +582,8 @@ public abstract class Creature implements Renderable {
         return passedGateRecently;
     }
 
-    public Area getAreaToMoveTo() {
-        return areaToMove;
-    }
-
-    public void setAreaToMoveTo(Area areaToMove) {
-        this.areaToMove = areaToMove;
+    public Area getPendingArea() {
+        return pendingArea;
     }
 
     public void markForDeletion() {
@@ -570,4 +595,13 @@ public abstract class Creature implements Renderable {
     }
 
     abstract public String getCreatureType();
+
+    public Float getPendingX() {
+        return pendingX;
+    }
+
+    public Float getPendingY() {
+        return pendingY;
+    }
+
 }

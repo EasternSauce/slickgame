@@ -24,7 +24,7 @@ public class Wolf extends Mob {
 
 
 
-    public Wolf(String id, int posX, int posY, Area area, LootSystem lootSystem) throws SlickException {
+    public Wolf(String id, float posX, float posY, Area area, LootSystem lootSystem) throws SlickException {
         super(id, posX, posY, area, lootSystem);
 
         actionTimer = new Timer();

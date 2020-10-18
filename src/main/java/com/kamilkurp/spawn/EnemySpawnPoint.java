@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class EnemySpawnPoint {
-    private int posX;
-    private int posY;
+    private float posX;
+    private float posY;
     private Creature spawnedCreature;
 
     private Map<String, Creature> creatures;
@@ -55,7 +55,7 @@ public class EnemySpawnPoint {
             }
 
             spawnedCreature.updateAttackType();
-            spawnedCreature.setAreaToMoveTo(area);
+            spawnedCreature.transport(area, posX, posY);
 
             isToBeRespawned = false;
         }
