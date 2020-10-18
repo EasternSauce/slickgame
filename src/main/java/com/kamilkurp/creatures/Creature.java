@@ -9,6 +9,7 @@ import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
@@ -66,8 +67,6 @@ public abstract class Creature implements Renderable {
 
     protected boolean immune;
 
-    protected LootSystem lootSystem;
-
     protected Vector2f facingVector;
     protected double facingAngle;
     protected Vector2f attackingVector;
@@ -99,10 +98,11 @@ public abstract class Creature implements Renderable {
     protected Float pendingX;
     protected Float pendingY;
 
-    public Creature(String id, float posX, float posY, Area area, LootSystem lootSystem) {
-        this.id = id;
-        this.lootSystem = lootSystem;
+    protected GameSystem gameSystem;
 
+    public Creature(GameSystem gameSystem, String id, float posX, float posY, Area area) {
+        this.gameSystem = gameSystem;
+        this.id = id;
         rect = new Rectangle(posX, posY, 64, 64);
         hitbox = new Rectangle(2, 2, 60, 60);
 

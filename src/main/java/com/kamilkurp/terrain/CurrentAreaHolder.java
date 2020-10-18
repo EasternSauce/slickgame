@@ -1,6 +1,6 @@
 package com.kamilkurp.terrain;
 
-public class CurrentAreaManager {
+public class CurrentAreaHolder {
     private Area currentArea;
 
     public Area getCurrentArea() {

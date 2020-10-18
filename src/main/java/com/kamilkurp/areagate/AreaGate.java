@@ -1,13 +1,11 @@
 package com.kamilkurp.areagate;
 
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
-import com.kamilkurp.terrain.CurrentAreaManager;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
-
-import java.util.Map;
 
 
 public class AreaGate {
@@ -35,10 +33,10 @@ public class AreaGate {
         }
     }
 
-    public void update(Map<String, Area> areaMap, CurrentAreaManager currentAreaManager) {
+    public void update(GameSystem gameSystem) {
 
-        for (Area area : areaMap.values()) {
-            area.getAreaCreaturesHolder().updateGatesLogic(this, currentAreaManager);
+        for (Area area : gameSystem.getAreaMap().values()) {
+            area.getAreaCreaturesHolder().updateGatesLogic(this, gameSystem.getCurrentAreaHolder());
         }
 
     }

@@ -5,6 +5,7 @@ import com.kamilkurp.KeyInput;
 import com.kamilkurp.creatures.NonPlayerCharacter;
 import com.kamilkurp.items.InventoryWindow;
 import com.kamilkurp.items.Item;
+import com.kamilkurp.systems.GameSystem;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -28,11 +29,12 @@ public class DialogueWindow {
 
     private int currentSelected = 0;
 
-    private final InventoryWindow inventoryWindow;
+    private final GameSystem gameSystem;
 
-    public DialogueWindow(String filename, InventoryWindow inventoryWindow) {
+    public DialogueWindow(GameSystem gameSystem, String filename) {
+        this.gameSystem = gameSystem;
+
         dialogueList = new ArrayList<>();
-        this.inventoryWindow = inventoryWindow;
 
         loadDialogueFromFile(filename);
 
@@ -122,7 +124,7 @@ public class DialogueWindow {
                         activated = false;
                     }
                     else if (dialogue.getAction() == Dialogue.Action.TRADE) {
-                        inventoryWindow.openTradeWindow();
+                        gameSystem.getInventoryWindow().openTradeWindow();
                     }
                 } else {
                     if (currentDialogue.getAction() == Dialogue.Action.GOTO) {
@@ -149,7 +151,7 @@ public class DialogueWindow {
 
         }
 
-        if (currentDialogueChoices != null && !inventoryWindow.isTrading()) {
+        if (currentDialogueChoices != null && !gameSystem.getInventoryWindow().isTrading()) {
             if (keyInput.isKeyPressed(KeyInput.Key.W)) {
                 if (currentSelected > 0) {
                     currentSelected--;
@@ -200,6 +202,6 @@ public class DialogueWindow {
     }
 
     public void setTraderInventory(List<Item> traderInventory) {
-        inventoryWindow.setTraderInventory(traderInventory);
+        gameSystem.getInventoryWindow().setTraderInventory(traderInventory);
     }
 }

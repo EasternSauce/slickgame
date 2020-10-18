@@ -49,7 +49,7 @@ public class MapEditor extends BasicGame {
 
         String areaId = "area1";
 
-        area = new Area(areaId, Assets.grassyTileset, Assets.area1Layout, Assets.area1Enemies, null);
+        area = new Area(null, areaId, Assets.grassyTileset, Assets.area1Layout, Assets.area1Enemies);
 
         terrainFile = "assets/areas/" + areaId + "/layout.txt";
 

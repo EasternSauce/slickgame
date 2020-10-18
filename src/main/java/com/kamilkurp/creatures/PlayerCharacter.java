@@ -7,8 +7,9 @@ import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
-import com.kamilkurp.terrain.CurrentAreaManager;
+import com.kamilkurp.terrain.CurrentAreaHolder;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
@@ -32,12 +33,8 @@ public class PlayerCharacter extends Creature {
 
     private final PlayerRespawnPoint currentRespawnPoint;
 
-    private final CurrentAreaManager areaManager;
-
-    public PlayerCharacter(String id, int posX, int posY, Area area, LootSystem lootSystem, CurrentAreaManager areaManager) {
-        super(id, posX, posY, area, lootSystem);
-
-        this.areaManager = areaManager;
+    public PlayerCharacter(GameSystem gameSystem, String id, int posX, int posY, Area area) {
+        super(gameSystem, id, posX, posY, area);
 
         respawning = false;
         respawnTimer = new Timer();
@@ -144,7 +141,7 @@ public class PlayerCharacter extends Creature {
             setPosition(currentRespawnPoint.getPosX(), currentRespawnPoint.getPosY());
             pendingArea = currentRespawnPoint.getArea();
             setHealthPoints(getMaxHealthPoints());
-            areaManager.setCurrentArea(currentRespawnPoint.getArea());
+            gameSystem.getCurrentAreaHolder().setCurrentArea(currentRespawnPoint.getArea());
         }
 
     }

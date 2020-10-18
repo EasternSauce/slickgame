@@ -5,6 +5,7 @@ import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Skeleton;
 import com.kamilkurp.items.LootSystem;
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
@@ -23,17 +24,18 @@ public class EnemyRespawnArea implements Renderable {
     private final int range;
     private Map<String, Creature> creatures;
     private List<Creature> creaturesList;
-    private final LootSystem lootSystem;
     private final int spawnedLimit;
     private final int spawnTimeout;
     private final Timer spawnTimer;
     private boolean spawning;
     private final Area area;
 
-    public EnemyRespawnArea(int posX, int posY, int spawnedLimit, Area area, LootSystem lootSystem) throws SlickException {
+    private GameSystem gameSystem;
+
+    public EnemyRespawnArea(GameSystem gameSystem, int posX, int posY, int spawnedLimit, Area area) throws SlickException {
         this.posX = posX;
         this.posY = posY;
-        this.lootSystem = lootSystem;
+        this.gameSystem = gameSystem;
 
         range = 150;
 
@@ -56,7 +58,7 @@ public class EnemyRespawnArea implements Renderable {
         int randX = Globals.randInt(posX - range, posX + range);
         int randY = Globals.randInt(posY - range, posY + range);
 
-        Skeleton enemy = new Skeleton("skellie"+Math.abs(Globals.random.nextInt()), randX, randY, area, lootSystem);
+        Skeleton enemy = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()), randX, randY, area);
         enemy.updateAttackType();
 
         spawnedList.add(enemy);

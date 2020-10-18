@@ -10,6 +10,7 @@ import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Timer;
@@ -23,7 +24,6 @@ public class NonPlayerCharacter extends Creature {
 
     public Random random = new Random();
 
-    private final DialogueWindow dialogueWindow;
     private String dialogueStartId;
 
     private final List<Item> traderInventory;
@@ -33,10 +33,9 @@ public class NonPlayerCharacter extends Creature {
     private final Map<String, Float> dropTable;
 
 
-    public NonPlayerCharacter(String id, int posX, int posY, Area area, LootSystem lootSystem, DialogueWindow dialogueWindow, String dialogueStartId, boolean trader) {
-        super(id, posX, posY, area, lootSystem);
+    public NonPlayerCharacter(GameSystem gameSystem, String id, int posX, int posY, Area area, String dialogueStartId, boolean trader) {
+        super(gameSystem, id, posX, posY, area);
 
-        this.dialogueWindow = dialogueWindow;
         this.dialogueStartId = dialogueStartId;
 
         actionTimer = new Timer();
@@ -115,9 +114,9 @@ public class NonPlayerCharacter extends Creature {
     }
 
     public void triggerDialogue() {
-        if (!dialogueWindow.isActivated()) {
-            dialogueWindow.setDialogueNonPlayerCharacter(this);
-            dialogueWindow.setTraderInventory(traderInventory);
+        if (!gameSystem.getDialogueWindow().isActivated()) {
+            gameSystem.getDialogueWindow().setDialogueNonPlayerCharacter(this);
+            gameSystem.getDialogueWindow().setTraderInventory(traderInventory);
         }
 
 

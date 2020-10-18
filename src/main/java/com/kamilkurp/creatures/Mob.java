@@ -5,6 +5,7 @@ import com.kamilkurp.KeyInput;
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Timer;
@@ -37,8 +38,8 @@ public abstract class Mob extends Creature {
     protected float destinationY;
     protected boolean hasDestination;
 
-    public Mob(String id, float posX, float posY, Area area, LootSystem lootSystem) {
-        super(id, posX, posY, area, lootSystem);
+    public Mob(GameSystem gameSystem, String id, float posX, float posY, Area area) {
+        super(gameSystem, id, posX, posY, area);
     }
 
     @Override
@@ -70,7 +71,7 @@ public abstract class Mob extends Creature {
 
     @Override
     public void onDeath() {
-        lootSystem.spawnLootPile(area, rect.getCenterX(), rect.getCenterY(), dropTable);
+        gameSystem.getLootSystem().spawnLootPile(area, rect.getCenterX(), rect.getCenterY(), dropTable);
     }
 
     @Override

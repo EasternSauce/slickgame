@@ -1,6 +1,7 @@
 package com.kamilkurp.spawn;
 
 import com.kamilkurp.Renderable;
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
@@ -15,7 +16,10 @@ public class PlayerRespawnPoint implements Renderable {
 
     private final Area area;
 
-    public PlayerRespawnPoint(int posX, int posY, Area area) {
+    private GameSystem gameSystem;
+
+    public PlayerRespawnPoint(GameSystem gameSystem, int posX, int posY, Area area) {
+        this.gameSystem = gameSystem;
         this.posX = posX;
         this.posY = posY;
         this.area = area;

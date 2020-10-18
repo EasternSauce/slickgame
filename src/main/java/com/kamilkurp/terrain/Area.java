@@ -9,6 +9,7 @@ import com.kamilkurp.spawn.EnemyRespawnArea;
 import com.kamilkurp.spawn.EnemySpawnPoint;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.spawn.SpawnLocationsContainer;
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -34,7 +35,6 @@ public class Area implements Renderable {
 
     private final AreaCreaturesHolder areaCreaturesHolder;
 
-    private final LootSystem lootSystem;
 
     private final String id;
 
@@ -44,9 +44,10 @@ public class Area implements Renderable {
 
     private final List<LootPile> lootPileList;
 
-    public Area(String id, TerrainTileset terrainTileset, TerrainLayout terrainLayout, SpawnLocationsContainer spawnsContainer, LootSystem lootSystem) throws SlickException {
-        this.lootSystem = lootSystem;
+    private GameSystem gameSystem;
 
+    public Area(GameSystem gameSystem, String id, TerrainTileset terrainTileset, TerrainLayout terrainLayout, SpawnLocationsContainer spawnsContainer) throws SlickException {
+        this.gameSystem = gameSystem;
         this.terrainTileset = terrainTileset;
         this.terrainLayout = terrainLayout;
         this.spawnLocationsContainer = spawnsContainer;
@@ -66,7 +67,7 @@ public class Area implements Renderable {
 
         loadLayoutTiles();
 
-        if (lootSystem != null) {
+        if (gameSystem != null && gameSystem.getLootSystem() != null) {
             loadSpawns();
 
         }
@@ -80,10 +81,10 @@ public class Area implements Renderable {
 
             if (spawnLocation.getSpawnType().equals("respawnArea")) {
                 if (spawnLocation.getCreatureType().equals("skeleton")) {
-                    enemyRespawnAreaList.add(new EnemyRespawnArea(posX, posY, 3, this, lootSystem));
+                    enemyRespawnAreaList.add(new EnemyRespawnArea(gameSystem, posX, posY, 3, this));
                 }
             } else if (spawnLocation.getSpawnType().equals("spawnPoint")) {
-                enemySpawnPointList.add(new EnemySpawnPoint(posX, posY, this, lootSystem, spawnLocation.getCreatureType()));
+                enemySpawnPointList.add(new EnemySpawnPoint(gameSystem, posX, posY, this, spawnLocation.getCreatureType()));
             }
         }
     }

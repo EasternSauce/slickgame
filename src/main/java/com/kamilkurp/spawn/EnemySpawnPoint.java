@@ -5,7 +5,9 @@ import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Skeleton;
 import com.kamilkurp.creatures.Wolf;
 import com.kamilkurp.items.LootSystem;
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
+import org.newdawn.slick.Game;
 import org.newdawn.slick.SlickException;
 
 import java.util.List;
@@ -18,7 +20,6 @@ public class EnemySpawnPoint {
 
     private Map<String, Creature> creatures;
     private List<Creature> creaturesList;
-    private final LootSystem lootSystem;
 
     private final Area area;
 
@@ -26,11 +27,13 @@ public class EnemySpawnPoint {
 
     private final String creatureType;
 
-    public EnemySpawnPoint(int posX, int posY, Area area, LootSystem lootSystem, String creatureType) {
+    private GameSystem gameSystem;
+
+    public EnemySpawnPoint(GameSystem gameSystem, int posX, int posY, Area area, String creatureType) {
+        this.gameSystem = gameSystem;
+
         this.posX = posX;
         this.posY = posY;
-
-        this.lootSystem = lootSystem;
 
         this.area = area;
 
@@ -47,11 +50,11 @@ public class EnemySpawnPoint {
             }
 
             if (creatureType.equals("skeleton")) {
-                spawnedCreature = new Skeleton("skellie"+Math.abs(Globals.random.nextInt()), posX, posY, area, lootSystem);
+                spawnedCreature = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()), posX, posY, area);
             }
 
             if (creatureType.equals("wolf")) {
-                spawnedCreature = new Wolf("wolfie"+Math.abs(Globals.random.nextInt()), posX, posY, area, lootSystem);
+                spawnedCreature = new Wolf(gameSystem, "wolfie"+Math.abs(Globals.random.nextInt()), posX, posY, area);
             }
 
             spawnedCreature.updateAttackType();

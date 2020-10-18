@@ -5,6 +5,7 @@ import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.items.InventoryWindow;
 import com.kamilkurp.items.Item;
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 
@@ -20,12 +21,12 @@ public class LootOptionWindow implements Renderable {
 
     private List<Item> itemList;
 
-    private final InventoryWindow inventoryWindow;
-
     private int scroll = 0;
 
-    public LootOptionWindow(InventoryWindow inventoryWindow) {
-        this.inventoryWindow = inventoryWindow;
+    private GameSystem gameSystem;
+
+    public LootOptionWindow(GameSystem gameSystem) {
+        this.gameSystem = gameSystem;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class LootOptionWindow implements Renderable {
                 }
                 if (keyInput.isKeyPressed(KeyInput.Key.E)) {
                     if (itemList.size() != 0) {
-                        inventoryWindow.pickUpItem(itemList.get(currentSelected), itemList);
+                        gameSystem.getInventoryWindow().pickUpItem(itemList.get(currentSelected), itemList);
                         if (currentSelected > 0) currentSelected--;
                         if(scroll > 0) scroll--;
                         if (itemList.size() == 0) {

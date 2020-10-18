@@ -5,6 +5,7 @@ import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.PlayerCharacter;
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -65,7 +66,10 @@ public class InventoryWindow implements Renderable {
     private int gold = 0;
     private PlayerCharacter playerCharacter;
 
-    public InventoryWindow() {
+    private GameSystem gameSystem;
+
+    public InventoryWindow(GameSystem gameSystem) {
+        this.gameSystem = gameSystem;
 
         slotList = new LinkedList<>();
         equipmentSlotList = new LinkedList<>();

@@ -8,6 +8,7 @@ import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Timer;
@@ -22,8 +23,8 @@ import java.util.Map;
 public class Skeleton extends Mob {
 
 
-    public Skeleton(String id, float posX, float posY, Area area, LootSystem lootSystem) throws SlickException {
-        super(id, posX, posY, area, lootSystem);
+    public Skeleton(GameSystem gameSystem, String id, float posX, float posY, Area area) throws SlickException {
+        super(gameSystem, id, posX, posY, area);
 
         actionTimer = new Timer();
 
