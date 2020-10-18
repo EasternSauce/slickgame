@@ -5,12 +5,12 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
 public class WalkAnimation {
-    private SpriteSheet spriteSheet;
+    private final SpriteSheet spriteSheet;
     private Animation[] walkAnimation;
-    private int framesPerDirection;
-    private int frameDuration;
-    private int[] directions;
-    private int restPosition;
+    private final int framesPerDirection;
+    private final int frameDuration;
+    private final int[] directions;
+    private final int restPosition;
 
     public WalkAnimation(SpriteSheet spriteSheet, int framesPerDirection, int frameDuration, int[] directions, int restPosition) {
         this.spriteSheet = spriteSheet;

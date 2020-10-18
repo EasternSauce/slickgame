@@ -12,21 +12,21 @@ import java.util.List;
 import java.util.Map;
 
 public class EnemySpawnPoint {
-    private float posX;
-    private float posY;
+    private final float posX;
+    private final float posY;
     private Creature spawnedCreature;
 
     private Map<String, Creature> creatures;
     private List<Creature> creaturesList;
-    private LootSystem lootSystem;
+    private final LootSystem lootSystem;
 
-    private Area area;
+    private final Area area;
 
     private boolean isToBeRespawned = false;
 
-    private String creatureType;
+    private final String creatureType;
 
-    public EnemySpawnPoint(int posX, int posY, Area area, LootSystem lootSystem, String creatureType) throws SlickException {
+    public EnemySpawnPoint(int posX, int posY, Area area, LootSystem lootSystem, String creatureType) {
         this.posX = posX;
         this.posY = posY;
 

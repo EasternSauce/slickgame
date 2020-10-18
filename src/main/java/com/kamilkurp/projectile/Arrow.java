@@ -20,35 +20,26 @@ public class Arrow implements Renderable {
 
     private Vector2f speedVector;
 
-    private float arrowSpeed = 0.6f;
+    private final float arrowSpeed = 0.6f;
 
-    private Image arrowImage = Assets.projectileSpriteSheet.getSprite(0, 0).copy();
+    private final Image arrowImage = Assets.projectileSpriteSheet.getSprite(0, 0).copy();
 
-    private List<Arrow> arrowList;
-    private List<TerrainTile> tiles;
-    private Map<String, Creature> creatures;
-
-
-    private Rectangle rect;
-
-    private final int ARROW_WIDTH = 40;
-    private final int ARROW_HEIGHT = 40;
+    private final List<TerrainTile> tiles;
+    private final Map<String, Creature> creatures;
 
     private boolean markedForDeletion = false;
 
-    private Rectangle hitbox;
+    private final Rectangle hitbox;
 
-    private Creature shooter;
+    private final Creature shooter;
 
     public Arrow(float x, float y, Vector2f facingVector, List<Arrow> arrowList, List<TerrainTile> tiles, Map<String, Creature> creatures, Creature shooter) {
         posX = x;
         posY = y;
 
-        rect = new Rectangle(x + ARROW_WIDTH / 2f, y + ARROW_HEIGHT / 2f, ARROW_WIDTH, ARROW_HEIGHT);
         speedVector = facingVector;
         speedVector.normalise();
         arrowImage.setRotation((float)speedVector.getTheta());
-        this.arrowList = arrowList;
         this.tiles = tiles;
         this.creatures = creatures;
 

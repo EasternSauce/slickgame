@@ -5,10 +5,10 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
 public class AttackAnimation {
-    private SpriteSheet spriteSheet;
+    private final SpriteSheet spriteSheet;
     private Animation attackAnimation;
-    private int frames;
-    private int frameDuration;
+    private final int frames;
+    private final int frameDuration;
 
     public AttackAnimation(SpriteSheet spriteSheet, int numberOfFrames, int frameDuration) {
         this.spriteSheet = spriteSheet;

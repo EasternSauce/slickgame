@@ -8,7 +8,6 @@ import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.*;
@@ -16,11 +15,11 @@ import java.util.*;
 // too many responsibilities
 public class InventoryWindow implements Renderable {
 
-    private Rectangle background = new Rectangle((int)(Globals.SCREEN_WIDTH * 0.1), (int)(Globals.SCREEN_HEIGHT * 0.1), (int)(Globals.SCREEN_WIDTH * 0.6), (int)(Globals.SCREEN_HEIGHT * 0.6));
+    private final Rectangle background = new Rectangle((int)(Globals.SCREEN_WIDTH * 0.1), (int)(Globals.SCREEN_HEIGHT * 0.1), (int)(Globals.SCREEN_WIDTH * 0.6), (int)(Globals.SCREEN_HEIGHT * 0.6));
 
-    private List<Rectangle> slotList;
-    private List<Rectangle> equipmentSlotList;
-    private List<Rectangle> traderInventorySlotList;
+    private final List<Rectangle> slotList;
+    private final List<Rectangle> equipmentSlotList;
+    private final List<Rectangle> traderInventorySlotList;
 
 
     private boolean inventoryOpen = false;
@@ -32,7 +31,7 @@ public class InventoryWindow implements Renderable {
     private int currentMoved = 0;
     private boolean movingInEquipment = false;
 
-    private Map<Integer, Item> inventoryItems;
+    private final Map<Integer, Item> inventoryItems;
 
 
     private Map<Integer, Item> equipmentItems;
@@ -40,7 +39,7 @@ public class InventoryWindow implements Renderable {
     private Map<Integer, Item> traderInventoryItems;
 
 
-    private List<String> equipmentSlotNameList;
+    private final List<String> equipmentSlotNameList;
 
     private boolean inEquipment = false;
 
@@ -48,25 +47,25 @@ public class InventoryWindow implements Renderable {
 
     private boolean trading = false;
 
-    private int inventoryRows = 4;
-    private int inventoryColumns = 5;
-    private int inventorySlots = inventoryRows * inventoryColumns;
+    private final int inventoryRows = 4;
+    private final int inventoryColumns = 5;
+    private final int inventorySlots = inventoryRows * inventoryColumns;
 
-    private int space = 10;
-    private int margin = 10;
-    private int slotWidth = 40;
-    private int slotHeight = 40;
+    private final int space = 10;
+    private final int margin = 10;
+    private final int slotWidth = 40;
+    private final int slotHeight = 40;
 
-    private int equipmentSlots = 6;
+    private final int equipmentSlots = 6;
 
-    private int tradeInventoryRows = 6;
-    private int tradeInventoryColumns = 2;
-    private int tradeInventorySlots = tradeInventoryRows * tradeInventoryColumns;
+    private final int tradeInventoryRows = 6;
+    private final int tradeInventoryColumns = 2;
+    private final int tradeInventorySlots = tradeInventoryRows * tradeInventoryColumns;
 
     private int gold = 0;
     private PlayerCharacter playerCharacter;
 
-    public InventoryWindow() throws SlickException {
+    public InventoryWindow() {
 
         slotList = new LinkedList<>();
         equipmentSlotList = new LinkedList<>();
@@ -452,7 +451,7 @@ public class InventoryWindow implements Renderable {
         return inventoryOpen;
     }
 
-    public boolean pickUpItem(Item item, List<Item> itemList) {
+    public void pickUpItem(Item item, List<Item> itemList) {
 
         for (int i = 0; i < inventorySlots; i++) {
             if (inventoryItems.get(i) == null) {
@@ -464,14 +463,9 @@ public class InventoryWindow implements Renderable {
                 item.removeFromLoot();
                 itemList.remove(item);
 
-
-                return true;
+                return;
             }
-
-
         }
-        return false;
-
     }
 
     public void openTradeWindow() {

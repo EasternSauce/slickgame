@@ -2,9 +2,6 @@ package com.kamilkurp.terrain;
 
 import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.AreaCreaturesHolder;
-import com.kamilkurp.creatures.PlayerCharacter;
-import com.kamilkurp.creatures.Creature;
-import com.kamilkurp.creatures.NonPlayerCharacter;
 import com.kamilkurp.items.LootPile;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
@@ -23,31 +20,29 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class Area implements Renderable {
 
-    private List<TerrainTile> tiles;
+    private final List<TerrainTile> tiles;
 
-    private TerrainTileset terrainTileset;
-    private TerrainLayout terrainLayout;
-    private SpawnLocationsContainer spawnLocationsContainer;
+    private final TerrainTileset terrainTileset;
+    private final TerrainLayout terrainLayout;
+    private final SpawnLocationsContainer spawnLocationsContainer;
 
-    private List<EnemyRespawnArea> enemyRespawnAreaList;
-    private List<EnemySpawnPoint> enemySpawnPointList;
+    private final List<EnemyRespawnArea> enemyRespawnAreaList;
+    private final List<EnemySpawnPoint> enemySpawnPointList;
 
-    private AreaCreaturesHolder areaCreaturesHolder;
+    private final AreaCreaturesHolder areaCreaturesHolder;
 
-    private LootSystem lootSystem;
+    private final LootSystem lootSystem;
 
-    private String id;
+    private final String id;
 
-    private List <PlayerRespawnPoint> respawnList;
+    private final List <PlayerRespawnPoint> respawnList;
 
-    private List<Arrow> arrowList;
+    private final List<Arrow> arrowList;
 
-    private List<LootPile> lootPileList;
+    private final List<LootPile> lootPileList;
 
     public Area(String id, TerrainTileset terrainTileset, TerrainLayout terrainLayout, SpawnLocationsContainer spawnsContainer, LootSystem lootSystem) throws SlickException {
         this.lootSystem = lootSystem;

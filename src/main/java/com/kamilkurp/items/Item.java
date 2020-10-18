@@ -3,7 +3,7 @@ package com.kamilkurp.items;
 import com.kamilkurp.Globals;
 
 public class Item {
-    private ItemType itemType;
+    private final ItemType itemType;
     private LootPile lootPileBackref;
 
     private Float damage;

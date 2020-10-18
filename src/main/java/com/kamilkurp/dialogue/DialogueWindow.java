@@ -28,7 +28,7 @@ public class DialogueWindow {
 
     private int currentSelected = 0;
 
-    private InventoryWindow inventoryWindow;
+    private final InventoryWindow inventoryWindow;
 
     public DialogueWindow(String filename, InventoryWindow inventoryWindow) {
         dialogueList = new ArrayList<>();
@@ -166,9 +166,9 @@ public class DialogueWindow {
     }
 
     private Dialogue findDialogueById(String dialogueId) {
-        for (int i = 0; i < dialogueList.size(); i++) {
-            if (dialogueList.get(i).getId().equals(dialogueId)) {
-                return dialogueList.get(i);
+        for (Dialogue dialogue : dialogueList) {
+            if (dialogue.getId().equals(dialogueId)) {
+                return dialogue;
             }
         }
         return null;

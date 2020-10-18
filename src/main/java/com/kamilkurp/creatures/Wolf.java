@@ -1,6 +1,5 @@
 package com.kamilkurp.creatures;
 
-import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.areagate.AreaGate;
@@ -15,9 +14,10 @@ import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Vector2f;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Wolf extends Mob {
 

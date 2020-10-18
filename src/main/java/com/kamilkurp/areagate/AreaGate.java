@@ -1,23 +1,20 @@
 package com.kamilkurp.areagate;
 
-import com.kamilkurp.creatures.PlayerCharacter;
-import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.CurrentAreaManager;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.Map;
 
 
 public class AreaGate {
-    private Area areaFrom;
-    private Area areaTo;
-    private Rectangle fromRect;
-    private Rectangle toRect;
+    private final Area areaFrom;
+    private final Area areaTo;
+    private final Rectangle fromRect;
+    private final Rectangle toRect;
 
     public AreaGate(Area areaFrom, int fromPosX, int fromPosY, Area areaTo, int toPosX, int toPosY) {
         this.areaFrom = areaFrom;
@@ -38,9 +35,7 @@ public class AreaGate {
         }
     }
 
-    public void update(Map<String, Area> areaMap, CurrentAreaManager currentAreaManager) throws SlickException {
-
-;
+    public void update(Map<String, Area> areaMap, CurrentAreaManager currentAreaManager) {
 
         for (Area area : areaMap.values()) {
             area.getAreaCreaturesHolder().updateGatesLogic(this, currentAreaManager);

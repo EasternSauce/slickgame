@@ -68,7 +68,7 @@ public class MapEditor extends BasicGame {
     }
 
     @Override
-    public void update(GameContainer gc, int i) throws SlickException {
+    public void update(GameContainer gc, int i) {
         Globals.updateTimers(i);
 
         keyInput.readKeyPresses(gc.getInput());
@@ -169,7 +169,7 @@ public class MapEditor extends BasicGame {
         }
     }
 
-    public void render(GameContainer gc, Graphics g) throws SlickException {
+    public void render(GameContainer gc, Graphics g) {
         if (!selectMode) {
             area.render(g, camera);
 

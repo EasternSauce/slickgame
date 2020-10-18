@@ -2,9 +2,9 @@ package com.kamilkurp;
 
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.NonPlayerCharacter;
+import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.dialogue.DialogueWindow;
 import com.kamilkurp.gui.Hud;
 import com.kamilkurp.gui.LootOptionWindow;
@@ -23,7 +23,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

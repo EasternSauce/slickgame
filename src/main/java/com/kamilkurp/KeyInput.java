@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 public class KeyInput {
 
-    private Map<Key, Boolean> keyPressed;
+    private final Map<Key, Boolean> keyPressed;
 
     public enum Key {
         W,S,A,D,E,SPACE,ESC,I,F5

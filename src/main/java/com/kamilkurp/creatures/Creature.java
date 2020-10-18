@@ -17,7 +17,9 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public abstract class Creature implements Renderable {
 
@@ -31,15 +33,15 @@ public abstract class Creature implements Renderable {
 
     protected boolean attacking = false;
 
-    private Sound gruntSound = Assets.gruntSound;
+    private final Sound gruntSound = Assets.gruntSound;
 
 
     protected int direction = 0;
 
     protected int attackingDirection = 0;
 
-    private Sound swordAttackSound = Assets.attackSound;
-    private Sound bowAttackSound = Assets.arrowWhizzSound;
+    private final Sound swordAttackSound = Assets.attackSound;
+    private final Sound bowAttackSound = Assets.arrowWhizzSound;
 
     protected Timer runningTimer;
     protected Timer attackingTimer;
@@ -75,7 +77,7 @@ public abstract class Creature implements Renderable {
 
 
     protected WalkAnimation walkAnimation;
-    protected AttackAnimation swordAttackAnmation;
+    protected AttackAnimation swordAttackAnimation;
 
 
     protected AttackType currentAttackType;
@@ -97,7 +99,7 @@ public abstract class Creature implements Renderable {
     protected Float pendingX;
     protected Float pendingY;
 
-    public Creature(String id, float posX, float posY, Area area, LootSystem lootSystem) throws SlickException {
+    public Creature(String id, float posX, float posY, Area area, LootSystem lootSystem) {
         this.id = id;
         this.lootSystem = lootSystem;
 
@@ -115,7 +117,7 @@ public abstract class Creature implements Renderable {
 
         swordAttackRect = new Rectangle(-999, -999, 1, 1);
 
-        swordAttackAnmation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
+        swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
 
         facingAngle = 0.0f;
         facingVector = new Vector2f(0f, 0f);
@@ -154,12 +156,12 @@ public abstract class Creature implements Renderable {
         if (attacking) {
             if (currentAttackType == AttackType.UNARMED) {
                 //change animation to fist attack or something
-                Image image = swordAttackAnmation.getAnimation().getCurrentFrame();
+                Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
                 image.setRotation((float) attackingAngle);
 
                 g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());
             } else if (currentAttackType == AttackType.SWORD) {
-                Image image = swordAttackAnmation.getAnimation().getCurrentFrame();
+                Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
                 image.setRotation((float) attackingAngle);
 
                 g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());
@@ -253,7 +255,7 @@ public abstract class Creature implements Renderable {
                 swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
 
 
-                swordAttackAnmation.getAnimation().update(i);
+                swordAttackAnimation.getAnimation().update(i);
             }
             else if (currentAttackType == AttackType.SWORD) {
                 for (Creature creature : creatures.values()) {
@@ -279,7 +281,7 @@ public abstract class Creature implements Renderable {
                 swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
 
 
-                swordAttackAnmation.getAnimation().update(i);
+                swordAttackAnimation.getAnimation().update(i);
             }
 
 
@@ -405,7 +407,7 @@ public abstract class Creature implements Renderable {
                 swordAttackSound.play(1.0f, 0.1f);
 
                 if (!attacking) { // on start attack
-                    swordAttackAnmation.restart();
+                    swordAttackAnimation.restart();
 
                     attacking = true;
                     attackingTimer.reset();
@@ -419,7 +421,7 @@ public abstract class Creature implements Renderable {
                 swordAttackSound.play(1.0f, 0.1f);
 
                 if (!attacking) { // on start attack
-                    swordAttackAnmation.restart();
+                    swordAttackAnimation.restart();
 
                     attacking = true;
                     attackingTimer.reset();
@@ -530,7 +532,7 @@ public abstract class Creature implements Renderable {
         }
     }
 
-    public enum AttackType {UNARMED, SWORD, BOW};
+    public enum AttackType {UNARMED, SWORD, BOW}
 
 
     public void updateAttackType() {
@@ -570,8 +572,7 @@ public abstract class Creature implements Renderable {
     }
 
     public boolean isAlive() {
-        if (healthPoints > 0f) return true;
-        return false;
+        return healthPoints > 0f;
     }
 
     public void setPassedGateRecently(boolean passedGateRecently) {

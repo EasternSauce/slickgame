@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SpawnLocationsContainer {
 
-    private List <SpawnLocation> spawnLocationList;
+    private final List <SpawnLocation> spawnLocationList;
 
 
     public SpawnLocationsContainer(String enemyFileLocation) {
@@ -43,7 +43,7 @@ public class SpawnLocationsContainer {
         return spawnLocationList;
     }
 
-    public class SpawnLocation {
+    public static class SpawnLocation {
         String spawnType;
         String creatureType;
         int posX;

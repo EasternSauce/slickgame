@@ -19,21 +19,21 @@ import org.newdawn.slick.SlickException;
 import java.util.*;
 
 public class NonPlayerCharacter extends Creature {
-    private Timer actionTimer;
+    private final Timer actionTimer;
 
     public Random random = new Random();
 
-    private DialogueWindow dialogueWindow;
-    private String dialogueStartId = null;
+    private final DialogueWindow dialogueWindow;
+    private String dialogueStartId;
 
-    private List<Item> traderInventory;
+    private final List<Item> traderInventory;
 
     private boolean trader = false;
 
-    private Map<String, Float> dropTable;
+    private final Map<String, Float> dropTable;
 
 
-    public NonPlayerCharacter(String id, int posX, int posY, Area area, LootSystem lootSystem, DialogueWindow dialogueWindow, String dialogueStartId, boolean trader) throws SlickException {
+    public NonPlayerCharacter(String id, int posX, int posY, Area area, LootSystem lootSystem, DialogueWindow dialogueWindow, String dialogueStartId, boolean trader) {
         super(id, posX, posY, area, lootSystem);
 
         this.dialogueWindow = dialogueWindow;

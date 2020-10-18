@@ -13,7 +13,7 @@ public class Globals {
     public static int SCREEN_HEIGHT = 600;
 
     public static Random random = new Random();
-    private static String assetsLocation = "assets/";
+    private static final String assetsLocation = "assets/";
 
     public static float distance(Rectangle rect1, Rectangle rect2) {
         float x1 = rect1.getCenterX();
@@ -34,7 +34,7 @@ public class Globals {
         return Math.abs(y2-y1);
     }
 
-    private static List<Timer> timerList = new LinkedList<>();
+    private static final List<Timer> timerList = new LinkedList<>();
 
     public static void addTimer(Timer timer) {
         timerList.add(timer);

@@ -6,7 +6,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
 public class TerrainTile implements Renderable {
-    private Rectangle rect;
+    private final Rectangle rect;
     private TerrainImage image;
 
 

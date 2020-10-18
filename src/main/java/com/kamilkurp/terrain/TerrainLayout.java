@@ -25,9 +25,7 @@ public class TerrainLayout {
             while (line != null) {
                 for (int i=0; i<layout.length; i++) {
                     String[] s1 = line.split(" ");
-                    for (int j = 0; j < s1.length; j++) {
-                        layout[i][j] = s1[j];
-                    }
+                    System.arraycopy(s1, 0, layout[i], 0, s1.length);
                     line = reader.readLine();
 
                 }

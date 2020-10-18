@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.util.*;
 
 public class AreaCreaturesHolder {
-    private Map<String, Creature> creaturesMap;
-    private Area area;
+    private final Map<String, Creature> creaturesMap;
+    private final Area area;
 
     private Queue<Creature> renderPriorityQueue;
 

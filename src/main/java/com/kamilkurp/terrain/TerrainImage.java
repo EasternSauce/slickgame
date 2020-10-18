@@ -3,12 +3,12 @@ package com.kamilkurp.terrain;
 import org.newdawn.slick.Image;
 
 public class TerrainImage {
-    private Image image;
+    private final Image image;
 
-    private boolean passable = true;
+    private boolean passable;
 
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
 
     public TerrainImage(Image image, int x, int y, boolean passable) {

@@ -17,18 +17,18 @@ import java.util.List;
 import java.util.Map;
 
 public class EnemyRespawnArea implements Renderable {
-    private int posX;
-    private int posY;
-    private List<Creature> spawnedList;
-    private int range;
+    private final int posX;
+    private final int posY;
+    private final List<Creature> spawnedList;
+    private final int range;
     private Map<String, Creature> creatures;
     private List<Creature> creaturesList;
-    private LootSystem lootSystem;
-    private int spawnedLimit;
-    private int spawnTimeout;
-    private Timer spawnTimer;
+    private final LootSystem lootSystem;
+    private final int spawnedLimit;
+    private final int spawnTimeout;
+    private final Timer spawnTimer;
     private boolean spawning;
-    private Area area;
+    private final Area area;
 
     public EnemyRespawnArea(int posX, int posY, int spawnedLimit, Area area, LootSystem lootSystem) throws SlickException {
         this.posX = posX;

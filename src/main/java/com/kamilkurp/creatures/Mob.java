@@ -37,7 +37,7 @@ public abstract class Mob extends Creature {
     protected float destinationY;
     protected boolean hasDestination;
 
-    public Mob(String id, float posX, float posY, Area area, LootSystem lootSystem) throws SlickException {
+    public Mob(String id, float posX, float posY, Area area, LootSystem lootSystem) {
         super(id, posX, posY, area, lootSystem);
     }
 

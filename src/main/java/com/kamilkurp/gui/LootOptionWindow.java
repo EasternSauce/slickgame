@@ -20,7 +20,7 @@ public class LootOptionWindow implements Renderable {
 
     private List<Item> itemList;
 
-    private InventoryWindow inventoryWindow;
+    private final InventoryWindow inventoryWindow;
 
     private int scroll = 0;
 

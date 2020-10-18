@@ -8,14 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ItemType {
-    private String id;
-    private String name;
-    private String description;
-    private Image image;
-    private String equipmentType;
-    private int worth;
-    private Float maxDamage;
-    private Float maxArmor;
+    private final String id;
+    private final String name;
+    private final String description;
+    private final Image image;
+    private final String equipmentType;
+    private final int worth;
+    private final Float maxDamage;
+    private final Float maxArmor;
 
 
 

@@ -20,20 +20,20 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayerCharacter extends Creature {
-    private Sound stepSound = Assets.stepSound;
+    private final Sound stepSound = Assets.stepSound;
 
     private boolean walking = false;
     private boolean sprint = false;
 
     private boolean respawning;
 
-    private Timer respawnTimer;
+    private final Timer respawnTimer;
 
-    private PlayerRespawnPoint currentRespawnPoint;
+    private final PlayerRespawnPoint currentRespawnPoint;
 
-    private CurrentAreaManager areaManager;
+    private final CurrentAreaManager areaManager;
 
-    public PlayerCharacter(String id, int posX, int posY, Area area, LootSystem lootSystem, CurrentAreaManager areaManager) throws SlickException {
+    public PlayerCharacter(String id, int posX, int posY, Area area, LootSystem lootSystem, CurrentAreaManager areaManager) {
         super(id, posX, posY, area, lootSystem);
 
         this.areaManager = areaManager;
@@ -70,12 +70,7 @@ public class PlayerCharacter extends Creature {
             movement = true;
         }
 
-        if (input.isKeyDown(Input.KEY_LSHIFT)) {
-            sprint = true;
-        }
-        else {
-            sprint = false;
-        }
+        sprint = input.isKeyDown(Input.KEY_LSHIFT);
 
         if (!walking) {
             if (movement) {

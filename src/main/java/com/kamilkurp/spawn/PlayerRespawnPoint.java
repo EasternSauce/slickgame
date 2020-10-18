@@ -7,13 +7,13 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 public class PlayerRespawnPoint implements Renderable {
-    private int posX;
-    private int posY;
+    private final int posX;
+    private final int posY;
 
     float width = 30f;
     float height = 30f;
 
-    private Area area;
+    private final Area area;
 
     public PlayerRespawnPoint(int posX, int posY, Area area) {
         this.posX = posX;

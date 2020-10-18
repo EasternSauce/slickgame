@@ -11,13 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TerrainTileset {
-    private int tileWidth;
-    private int tileHeight;
+    private final int tileWidth;
+    private final int tileHeight;
 
-    private int tilesetColumns;
-    private int tilesetRows;
+    private final int tilesetColumns;
+    private final int tilesetRows;
 
-    private int scale;
+    private final int scale;
 
     private SpriteSheet spriteSheet;
     private String[][] passable;
@@ -25,7 +25,7 @@ public class TerrainTileset {
     private int passableColumns;
     private int passableRows;
 
-    private Map<String, TerrainImage> terrainImages;
+    private final Map<String, TerrainImage> terrainImages;
 
 
     public TerrainTileset(int tileWidth, int tileHeight, int tilesetColumns, int tilesetRows, int scale, String spritesheetFileName, String passableFileName) throws SlickException {
@@ -74,9 +74,7 @@ public class TerrainTileset {
             while (line != null) {
                 for (int i=0; i<passable.length; i++) {
                     String[] s1 = line.split(" ");
-                    for (int j = 0; j < s1.length; j++) {
-                        passable[i][j] = s1[j];
-                    }
+                    System.arraycopy(s1, 0, passable[i], 0, s1.length);
                     line = reader.readLine();
 
                 }

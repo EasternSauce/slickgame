@@ -1,10 +1,10 @@
 package com.kamilkurp.dialogue;
 
 public class Dialogue {
-    private String id;
-    private String text;
-    private Action action;
-    private String actionArgument;
+    private final String id;
+    private final String text;
+    private final Action action;
+    private final String actionArgument;
 
     public Dialogue(String id, String text, Action action, String actionArgument) {
         this.id = id;

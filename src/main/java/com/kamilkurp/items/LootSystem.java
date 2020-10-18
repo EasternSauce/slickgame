@@ -11,14 +11,13 @@ import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class LootSystem implements Renderable {
-    private LootOptionWindow lootOptionWindow;
+    private final LootOptionWindow lootOptionWindow;
 
-    private CurrentAreaManager currentAreaManager;
+    private final CurrentAreaManager currentAreaManager;
 
     public LootSystem(LootOptionWindow lootOptionWindow, CurrentAreaManager currentAreaManager) {
         this.lootOptionWindow = lootOptionWindow;
@@ -35,7 +34,7 @@ public class LootSystem implements Renderable {
     }
 
     public void update(KeyInput keyInput, PlayerCharacter playerCharacter) {
-        List<LootPile> visibleLootPile = new LinkedList<>();
+//        List<LootPile> visibleLootPile = new LinkedList<>();
 
         List<Item> visibleItems = new ArrayList<>();
         for (LootPile lootPile : currentAreaManager.getCurrentArea().getLootPileList()) {
@@ -44,7 +43,7 @@ public class LootSystem implements Renderable {
                 if (Globals.distance(playerCharacter.getRect(), lootPile.getRect()) < 40f) {
                     lootOptionWindow.setVisible(true);
 
-                    visibleLootPile.add(lootPile);
+//                    visibleLootPile.add(lootPile);
                     visibleItems.addAll(lootPile.getItemList());
 
                 }
