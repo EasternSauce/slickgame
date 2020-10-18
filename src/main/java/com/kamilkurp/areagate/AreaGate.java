@@ -43,42 +43,7 @@ public class AreaGate {
 ;
 
         for (Area area : areaMap.values()) {
-            for (Creature creature : area.getCreaturesMap().values()) {
-                if (creature instanceof PlayerCharacter) {
-                    if (!creature.isPassedGateRecently()) {
-                        Rectangle gateRect = null;
-                        Area destinationArea = null;
-                        Area oldArea = null;
-                        Rectangle destinationRect = null;
-                        if (area == areaFrom) {
-                            gateRect = fromRect;
-                            oldArea = areaFrom;
-                            destinationArea = areaTo;
-                            destinationRect = toRect;
-                        }
-                        if (area == areaTo) {
-                            gateRect = toRect;
-                            oldArea = areaTo;
-                            destinationArea = areaFrom;
-                            destinationRect = fromRect;
-                        }
-
-                        if (creature.getRect().intersects(gateRect)) {
-                            creature.setPassedGateRecently(true);
-                            System.out.println("set passed gate = true");
-
-                            creature.transport(destinationArea, destinationRect.getX(), destinationRect.getY());
-
-                            currentAreaManager.setCurrentArea(destinationArea);
-
-
-                            oldArea.onLeave();
-                            destinationArea.onEntry();
-
-                        }
-                    }
-                }
-            }
+            area.getAreaCreaturesHolder().updateGatesLogic(this, currentAreaManager);
         }
 
     }

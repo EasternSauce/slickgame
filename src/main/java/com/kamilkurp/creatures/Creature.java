@@ -122,7 +122,7 @@ public abstract class Creature implements Renderable {
 
         this.area = area;
 
-        this.area.getCreaturesMap().put(this.getId(), this);
+        this.area.getAreaCreaturesHolder().insertCreature(this);
 
         currentAttackType = AttackType.UNARMED;
 
@@ -517,10 +517,10 @@ public abstract class Creature implements Renderable {
             Area newArea = getPendingArea();
 
             if (oldArea != null) {
-                oldArea.getCreaturesMap().remove(getId());
+                oldArea.getAreaCreaturesHolder().removeCreature(getId());
             }
 
-            newArea.getCreaturesMap().put(getId(), this);
+            newArea.getAreaCreaturesHolder().insertCreature(this);
 
             getRect().setX(getPendingX());
             getRect().setY(getPendingY());

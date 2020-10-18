@@ -1,6 +1,7 @@
 package com.kamilkurp.terrain;
 
 import com.kamilkurp.Renderable;
+import com.kamilkurp.creatures.AreaCreaturesHolder;
 import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.NonPlayerCharacter;
@@ -36,7 +37,7 @@ public class Area implements Renderable {
     private List<EnemyRespawnArea> enemyRespawnAreaList;
     private List<EnemySpawnPoint> enemySpawnPointList;
 
-    private Map<String, Creature> creaturesMap;
+    private AreaCreaturesHolder areaCreaturesHolder;
 
     private LootSystem lootSystem;
 
@@ -58,7 +59,7 @@ public class Area implements Renderable {
         this.id = id;
 
 
-        creaturesMap = new TreeMap<>();
+        areaCreaturesHolder = new AreaCreaturesHolder(this);
 
         tiles = new LinkedList<>();
 
@@ -70,7 +71,7 @@ public class Area implements Renderable {
 
         loadLayoutTiles();
 
-        if (creaturesMap != null && lootSystem != null) {
+        if (lootSystem != null) {
             loadSpawns();
 
         }
@@ -173,10 +174,6 @@ public class Area implements Renderable {
         }
     }
 
-    public Map<String, Creature> getCreaturesMap() {
-        return creaturesMap;
-    }
-
     public String getId() {
         return id;
     }
@@ -190,7 +187,7 @@ public class Area implements Renderable {
         return respawnList;
     }
 
-    public void onLeave() throws SlickException {
+    public void onLeave() {
         arrowList.clear();
 
         for (EnemySpawnPoint enemySpawnPoint : enemySpawnPointList) {
@@ -203,16 +200,7 @@ public class Area implements Renderable {
 
     public void onEntry() {
 
-        for (Creature creature : creaturesMap.values()) {
-            if (!(creature instanceof PlayerCharacter || creature instanceof NonPlayerCharacter)) {
-                if (!creature.isAlive()) {
-                    creature.markForDeletion();
-                }
-
-            }
-        }
-
-        getCreaturesMap().entrySet().removeIf(e -> e.getValue().isToBeRemoved());
+        areaCreaturesHolder.onAreaChange();
 
     }
 
@@ -222,6 +210,10 @@ public class Area implements Renderable {
 
     public List<LootPile> getLootPileList() {
         return lootPileList;
+    }
+
+    public AreaCreaturesHolder getAreaCreaturesHolder() {
+        return areaCreaturesHolder;
     }
 }
 

@@ -49,8 +49,6 @@ public class SimpleSlickGame extends BasicGame {
 
     private Music townMusic;
 
-    private Queue<Creature> renderPriorityQueue;
-
     private Map<String, Area> areaMap;
 
     private List<AreaGate> gateList;
@@ -137,36 +135,15 @@ public class SimpleSlickGame extends BasicGame {
         creaturesToMove.clear();
 
         // for current area
-        for (Creature creature : currentArea.getCreaturesMap().values()) {
-            if (creature instanceof PlayerCharacter) {
-                if (!inventoryWindow.isInventoryOpen() && !lootOptionWindow.isActivated() && !dialogueWindow.isActivated()) {
-                    creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesMap(), keyInput, currentArea.getArrowList(), gateList);
-
-                    creature.areaGateLogic(gateList);
-                }
-            }
-            else {
-                creature.update(gc, i, currentArea.getTiles(), currentArea.getCreaturesMap(), keyInput, currentArea.getArrowList(), gateList);
-            }
-
-        }
+        currentArea.getAreaCreaturesHolder().updateCreatures(inventoryWindow, lootOptionWindow, dialogueWindow, gc, i, keyInput, gateList);
 
         // for all areas
         for (Area area : areaMap.values()) {
-            for (Creature creature : area.getCreaturesMap().values()) {
-                if (creature.getPendingArea() != null) {
-                    creaturesToMove.add(creature);
-                }
-            }
-
-            area.updateSpawns();
-
+            area.getAreaCreaturesHolder().processAreaChanges(creaturesToMove);
         }
 
         for (Creature creature : creaturesToMove) {
-
             creature.transportLogic();
-
         }
 
 
@@ -186,16 +163,7 @@ public class SimpleSlickGame extends BasicGame {
             areaGate.update(areaMap, currentAreaManager);
         }
 
-        renderPriorityQueue = new PriorityQueue<>((o1, o2) -> {
-            if (o1.getHealthPoints() <= 0.0f) return -1;
-            if (o2.getHealthPoints() <= 0.0f) return 1;
-            if (o1.getRect().getY() == o2.getRect().getY()) return 0;
-            return (o1.getRect().getY() - o2.getRect().getY() > 0.0f) ? 1 : -1;
-        });
-
-        renderPriorityQueue.addAll(currentArea.getCreaturesMap().values());
-
-
+        currentArea.getAreaCreaturesHolder().updateRenderPriorityQueue();
     }
 
     public void render(GameContainer gc, Graphics g) {
@@ -215,20 +183,7 @@ public class SimpleSlickGame extends BasicGame {
                 areaGate.render(g, camera, currentArea);
             }
 
-            if (renderPriorityQueue != null) {
-                while (!renderPriorityQueue.isEmpty()) {
-                    Creature creature = renderPriorityQueue.poll();
-
-                    creature.render(g, camera);
-                }
-
-            }
-
-
-            for (Creature creature : currentArea.getCreaturesMap().values()) {
-                creature.renderAttackAnimation(g, camera);
-            }
-
+            currentArea.getAreaCreaturesHolder().renderCreatures(g, camera);
 
             for (Arrow arrow : currentArea.getArrowList()) {
                 arrow.render(g, camera);
@@ -278,30 +233,8 @@ public class SimpleSlickGame extends BasicGame {
         try {
             FileWriter writer = new FileWriter("saves/savegame.sav");
 
-            Map<String,Creature> allCreatures = new HashMap<>();
-
-            for (Map.Entry<String, Area> areaEntry : areaMap.entrySet()) {
-                allCreatures.putAll(areaEntry.getValue().getCreaturesMap());
-            }
-
-
-            for (Creature creature : allCreatures.values()) {
-                if (creature.getClass() != PlayerCharacter.class && creature.getClass() != NonPlayerCharacter.class) continue;
-                writer.write("creature " + creature.getId() + "\n");
-                writer.write("pos " + creature.getRect().getX() + " " + creature.getRect().getY() + "\n");
-                writer.write("area " + creature.getArea().getId() + "\n");
-                writer.write("health " + creature.getHealthPoints() + "\n");
-
-                Map<Integer, Item> equipmentItems = creature.getEquipmentItems();
-
-                for (Map.Entry<Integer, Item> equipmentItem : equipmentItems.entrySet()) {
-                    if (equipmentItem.getValue() != null) {
-                        String damage = equipmentItem.getValue().getDamage() == null ? "0" : "" + equipmentItem.getValue().getDamage().intValue();
-
-                        String armor = equipmentItem.getValue().getArmor() == null ? "0" : "" + equipmentItem.getValue().getArmor().intValue();
-                        writer.write("equipment_item " + equipmentItem.getKey() + " " + equipmentItem.getValue().getItemType().getId() + " " + damage + " " + armor + "\n");
-                    }
-                }
+            for (Area area : areaMap.values()) {
+                area.getAreaCreaturesHolder().saveToFile(writer);
             }
 
             writer.close();
@@ -342,11 +275,13 @@ public class SimpleSlickGame extends BasicGame {
 
                     Map<String,Creature> allCreatures = new HashMap<>();
 
-                    for (Map.Entry<String, Area> areaEntry : areaMap.entrySet()) {
-                        allCreatures.putAll(areaEntry.getValue().getCreaturesMap());
+                    Creature foundCreature = null;
+                    for (Area area : areaMap.values()) {
+                        foundCreature = area.getAreaCreaturesHolder().getCreatureById(s[1]);
+                        if (foundCreature != null) break;
                     }
 
-                    creature = allCreatures.get(s[1]);
+                    creature = foundCreature;
 
                 }
                 if(s[0].equals("pos")) {
@@ -360,7 +295,7 @@ public class SimpleSlickGame extends BasicGame {
                     if (creature != null) {
                         creature.setArea(areaMap.get(s[1]));
 
-                        areaMap.get(s[1]).getCreaturesMap().put(creature.getId(), creature);
+                        areaMap.get(s[1]).getAreaCreaturesHolder().insertCreature(creature);
 
                         if (creature instanceof PlayerCharacter) {
                             currentAreaManager.setCurrentArea(areaMap.get(s[1]));
@@ -424,10 +359,8 @@ public class SimpleSlickGame extends BasicGame {
             currentAreaManager.setCurrentArea(areaMap.get("area1"));
         }
 
+        currentAreaManager.getCurrentArea().getAreaCreaturesHolder().updateAttackTypes();
 
-        for (Creature creature1 : currentAreaManager.getCurrentArea().getCreaturesMap().values()) {
-            creature1.updateAttackType();
-        }
     }
 
 }
