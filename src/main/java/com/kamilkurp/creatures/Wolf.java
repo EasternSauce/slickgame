@@ -15,6 +15,7 @@ import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -25,7 +26,8 @@ import java.util.Map;
 public class Wolf extends Mob {
 
 
-
+    private final Sound dogBarkSound = Assets.dogBarkSound;
+    private final Sound dogWhimperSound = Assets.dogWhimperSound;
 
     public Wolf(GameSystem gameSystem, String id, float posX, float posY, Area area) throws SlickException {
         super(gameSystem, id, posX, posY, area);
@@ -152,7 +154,7 @@ public class Wolf extends Mob {
                 if (dashCooldownTimer.getTime() > 3000f) {
                     if (Globals.distance(aggroed.rect, rect) < dashDistance) {
                         //start dash, start dash cooldown
-                        System.out.println("start dash");
+                        dogBarkSound.play();
                         dashing = true;
 
                         dashVector = new Vector2f(destinationX - rect.getX(), destinationY - rect.getY()).normalise();
@@ -167,8 +169,6 @@ public class Wolf extends Mob {
             if (dashing) {
                 //end dash
                 if (dashTimer.getTime() > 1000f) {
-                    System.out.println("end dash");
-
                     dashing = false;
                 }
             }
@@ -221,4 +221,25 @@ public class Wolf extends Mob {
 
     }
 
+    @Override
+    public void takeDamage(float damage) {
+        if (!immune) {
+
+            float beforeHP = healthPoints;
+
+            float actualDamage = damage * 100f/(100f + getTotalArmor());
+
+            if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
+            else healthPoints = 0f;
+
+            if (beforeHP != healthPoints && healthPoints == 0f) {
+                onDeath();
+            }
+
+            immunityTimer.reset();
+            immune = true;
+            dogWhimperSound.play(1.0f, 0.1f);
+        }
+
+    }
 }

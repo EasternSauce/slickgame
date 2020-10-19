@@ -20,6 +20,8 @@ public class Assets {
     public static Sound stepSound;
     public static Sound gruntSound;
     public static Sound attackSound;
+    public static Sound dogBarkSound;
+    public static Sound dogWhimperSound;
     public static Music townMusic;
     public static SpriteSheet itemIcons;
     public static SpriteSheet male1SpriteSheet;
@@ -49,6 +51,8 @@ public class Assets {
         stepSound = new Sound(Globals.getAssetsLocation() + "sounds/running.wav");
         gruntSound = new Sound(Globals.getAssetsLocation() + "sounds/grunt.wav");
         attackSound = new Sound(Globals.getAssetsLocation() + "sounds/swoosh.wav");
+        dogBarkSound = new Sound(Globals.getAssetsLocation() + "sounds/dogbark.wav");
+        dogWhimperSound = new Sound(Globals.getAssetsLocation() + "sounds/dogwhine.wav");
         townMusic = new Music(Globals.getAssetsLocation() + "music/town_song.wav");
         itemIcons = new SpriteSheet(Globals.getAssetsLocation() + "items/item_icons.png", 40, 40);
         arrowWhizzSound = new Sound(Globals.getAssetsLocation() + "sounds/arrow-whizz.wav");
