@@ -7,7 +7,6 @@ import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.Item;
-import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
@@ -100,6 +99,12 @@ public abstract class Creature implements Renderable {
 
     protected GameSystem gameSystem;
 
+    protected float dashSpeed = 0.0f;
+    protected Timer dashCooldownTimer;
+    protected Timer dashTimer;
+    protected boolean dashing = false;
+    protected Vector2f dashVector;
+
     public Creature(GameSystem gameSystem, String id, float posX, float posY, Area area) {
         this.gameSystem = gameSystem;
         this.id = id;
@@ -132,7 +137,12 @@ public abstract class Creature implements Renderable {
 
         toBeRemoved = false;
 
+        dashCooldownTimer = new Timer();
+        dashTimer = new Timer();
+        dashVector = new Vector2f(0f, 0f);
 
+        pendingX = 0.0f;
+        pendingY = 0.0f;
     }
 
     @Override
@@ -182,7 +192,7 @@ public abstract class Creature implements Renderable {
             regenerateHealth();
         }
 
-        afterMovement(tiles);
+        performMovement(tiles);
 
         setFacingDirection(gc);
 
@@ -371,6 +381,8 @@ public abstract class Creature implements Renderable {
         dirY = 0;
 
         speed = 0.2f * i;
+
+        dashSpeed = 0.4f * i;
     }
 
     public void moveUp() {
@@ -456,26 +468,43 @@ public abstract class Creature implements Renderable {
 
     }
 
-    public void afterMovement(List<TerrainTile> tiles) {
-        if (totalDirections > 1) {
-            speed /= Math.sqrt(2);
+    public void performMovement(List<TerrainTile> tiles) {
+        if (!dashing) {
+            if (totalDirections > 1) {
+                speed /= Math.sqrt(2);
+            }
+
+            float newPosX = rect.getX() + speed * dirX;
+            float newPosY = rect.getY() + speed * dirY;
+
+            if (!isCollidingX(tiles, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
+                move(speed * dirX, 0);
+            }
+
+            if (!isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
+                move(0, speed * dirY);
+            }
+
+            if (moving) {
+                runningTimer.reset();
+                running = true;
+            }
+        }
+        else {
+            float newPosX = rect.getX() + dashSpeed * dashVector.getX();
+            float newPosY = rect.getY() + dashSpeed * dashVector.getY();
+
+            if (!isCollidingX(tiles, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
+                move(dashSpeed * dashVector.getX(), 0);
+            }
+
+            if (!isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
+                move(0, dashSpeed * dashVector.getY());
+            }
+
+
         }
 
-        float newPosX = rect.getX() + speed * dirX;
-        float newPosY = rect.getY() + speed * dirY;
-
-        if (!isCollidingX(tiles, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
-            move(speed * dirX, 0);
-        }
-
-        if (!isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
-            move(0, speed * dirY);
-        }
-
-        if (moving) {
-            runningTimer.reset();
-            running = true;
-        }
     }
 
     public abstract void performActions(GameContainer gc, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles);
@@ -523,6 +552,9 @@ public abstract class Creature implements Renderable {
             }
 
             newArea.getAreaCreaturesHolder().insertCreature(this);
+
+            System.out.println(getPendingX());
+            System.out.println(getRect().getX());
 
             getRect().setX(getPendingX());
             getRect().setY(getPendingY());

@@ -4,6 +4,7 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Skeleton;
+import com.kamilkurp.creatures.Wolf;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
@@ -58,7 +59,7 @@ public class EnemyRespawnArea implements Renderable {
         int randX = Globals.randInt(posX - range, posX + range);
         int randY = Globals.randInt(posY - range, posY + range);
 
-        Skeleton enemy = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()), randX, randY, area);
+        Wolf enemy = new Wolf(gameSystem, "wolfie"+Math.abs(Globals.random.nextInt()), randX, randY, area);
         enemy.updateAttackType();
 
         spawnedList.add(enemy);
