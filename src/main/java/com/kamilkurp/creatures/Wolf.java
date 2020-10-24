@@ -7,7 +7,6 @@ import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
-import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
@@ -67,8 +66,8 @@ public class Wolf extends Mob {
     }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) throws SlickException {
-        super.update(gc, i ,tiles, creatures, keyInput, arrowList, gatesList);
+    public void update(GameContainer gc, int i, KeyInput keyInput, Area area, Map<String, Creature> creaturesMap) {
+        super.update(gc, i, keyInput, area, creaturesMap);
     }
 
     @Override
@@ -80,77 +79,11 @@ public class Wolf extends Mob {
 
     @Override
     public void performActions(GameContainer gc, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
+        super.performActions(gc, creatures, keyInput, arrowList, tiles);
+        float dashDistance = 250f;
 
-        int aggroDistance = 400;
-        aggroed = null;
-        for (Creature creature : creatures.values()) {
-            if (creature instanceof Mob) continue;
-            if (Globals.distance(creature.rect, rect) < aggroDistance && creature.healthPoints > 0) {
-                aggroed = creature;
-                break;
-            }
-        }
-
-        if (actionTimer.getTime() > 1500) {
-            currentDirection = Math.abs(random.nextInt())%4;
-            stayInPlace = Math.abs(random.nextInt()) % 10 < 8;
-            actionTimer.reset();
-        }
-
-        if (aggroed == null) {
-            if (!stayInPlace) {
-                if (currentDirection == 0) {
-                    moveUp();
-                }
-                if (currentDirection == 1) {
-                    moveLeft();
-                }
-                if (currentDirection == 2) {
-                    moveDown();
-                }
-                if (currentDirection == 3) {
-                    moveRight();
-                }
-            }
-        }
-        else {
-            float walkUpDistance = 0f;
-
-            float attackDistance = 0f;
-            if (currentAttackType == AttackType.UNARMED) {
-                attackDistance = 100f;
-                walkUpDistance = 100f;
-            } else
-            if (currentAttackType == AttackType.SWORD) {
-                attackDistance = 100f;
-                walkUpDistance = 100f;
-            }
-            else if (currentAttackType == AttackType.BOW) {
-                attackDistance = 300f;
-                walkUpDistance = 300f;
-            }
-
-            float dashDistance = 250f;
-
-            if (findNewDestinationTimer.getTime() > 300f) {
-
-                float dist = Globals.distance(this.rect, aggroed.rect);
-
-                if (dist > walkUpDistance) {
-                    destinationX = aggroed.rect.getCenterX();
-                    destinationY = aggroed.rect.getCenterY();
-                    hasDestination = true;
-                }
-                else {
-                    hasDestination = false;
-                }
-
-                findNewDestinationTimer.reset();
-            }
-
+        if (aggroed != null) {
             if (hasDestination) {
-                goTo(destinationX, destinationY);
-
                 if (dashCooldownTimer.getTime() > 3000f) {
                     if (Globals.distance(aggroed.rect, rect) < dashDistance) {
                         //start dash, start dash cooldown
@@ -173,49 +106,7 @@ public class Wolf extends Mob {
                 }
             }
 
-            if (Globals.distance(aggroed.rect, rect) < attackDistance) {
-                float maxDist = 0.0f;
-                int dir = 0;
-                if (rect.getCenterX() < aggroed.rect.getCenterX()) {
-                    float dist = Math.abs(rect.getCenterX() - aggroed.rect.getCenterX());
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        dir = 3;
-                    }
-                }
-                if (rect.getCenterX() > aggroed.rect.getCenterX()) {
-                    float dist = Math.abs(rect.getCenterX() - aggroed.rect.getCenterX());
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        dir = 1;
-                    }
-                }
-
-                if (rect.getCenterY() < aggroed.rect.getCenterY()) {
-                    float dist = Math.abs(rect.getCenterY() - aggroed.rect.getCenterY());
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        dir = 2;
-                    }
-                }
-                if (rect.getCenterY() > aggroed.rect.getCenterY()) {
-                    float dist = Math.abs(rect.getCenterY() - aggroed.rect.getCenterY());
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        dir = 0;
-
-                    }
-                }
-                direction = dir;
-
-                attack(arrowList, tiles, creatures);
-            }
-
-
-
-
         }
-
 
 
 
@@ -227,9 +118,9 @@ public class Wolf extends Mob {
 
             float beforeHP = healthPoints;
 
-            float actualDamage = damage * 100f/(100f + getTotalArmor());
+            float postMitigationDamage = damage * 100f/(100f + getTotalArmor());
 
-            if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
+            if (healthPoints - postMitigationDamage > 0) healthPoints -= postMitigationDamage;
             else healthPoints = 0f;
 
             if (beforeHP != healthPoints && healthPoints == 0f) {

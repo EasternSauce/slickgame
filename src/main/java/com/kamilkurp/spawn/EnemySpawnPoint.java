@@ -4,10 +4,8 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Skeleton;
 import com.kamilkurp.creatures.Wolf;
-import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
-import org.newdawn.slick.Game;
 import org.newdawn.slick.SlickException;
 
 import java.util.List;
@@ -58,7 +56,7 @@ public class EnemySpawnPoint {
             }
 
             spawnedCreature.updateAttackType();
-            spawnedCreature.transport(area, posX, posY);
+            spawnedCreature.moveToArea(area, posX, posY);
 
             isToBeRespawned = false;
         }

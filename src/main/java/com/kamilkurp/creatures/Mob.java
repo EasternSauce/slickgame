@@ -43,8 +43,8 @@ public abstract class Mob extends Creature {
     }
 
     @Override
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) throws SlickException {
-        super.update(gc, i ,tiles, creatures, keyInput, arrowList, gatesList);
+    public void update(GameContainer gc, int i, KeyInput keyInput, Area area, Map<String, Creature> creaturesMap) {
+        super.update(gc, i , keyInput, area, creaturesMap);
 
         if (runningTimer.getTime() > 200) {
             running = false;

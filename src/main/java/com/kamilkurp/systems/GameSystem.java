@@ -195,7 +195,21 @@ public class GameSystem {
         }
 
         for (Creature creature : creaturesToMove) {
-            creature.transportLogic();
+            if (creature.getPendingArea() != null) {
+                Area oldArea = creature.getArea();
+                Area newArea = creature.getPendingArea();
+
+                if (oldArea != null) {
+                    oldArea.getAreaCreaturesHolder().removeCreature(creature.getId());
+                }
+
+                newArea.getAreaCreaturesHolder().insertCreature(creature);
+
+                creature.getRect().setX(creature.getPendingX());
+                creature.getRect().setY(creature.getPendingY());
+
+                creature.setArea(newArea);
+            }
         }
 
 

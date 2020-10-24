@@ -183,21 +183,20 @@ public abstract class Creature implements Renderable {
         }
     }
 
-    public void update(GameContainer gc, int i, List<TerrainTile> tiles, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<AreaGate> gatesList) throws SlickException {
-
-        beforeMovement(i);
+    public void update(GameContainer gc, int i, KeyInput keyInput, Area area, Map<String, Creature> creaturesMap) {
 
         if (isAlive()) {
-            performActions(gc, creatures, keyInput, arrowList, tiles);
+            beforeMovement(i);
+
+            performActions(gc, creaturesMap, keyInput, area.getArrowList(), area.getTiles());
             regenerateHealth();
+
+            performMovement(area.getTiles());
+
+            setFacingDirection(gc);
+
+            meleeAttackLogic(i, creaturesMap);
         }
-
-        performMovement(tiles);
-
-        setFacingDirection(gc);
-
-        swordAttackLogic(i, creatures);
-
 
 
     }
@@ -238,7 +237,7 @@ public abstract class Creature implements Renderable {
 
     protected abstract void setFacingDirection(GameContainer gc);
 
-    private void swordAttackLogic(int i, Map<String, Creature> creatures) {
+    private void meleeAttackLogic(int i, Map<String, Creature> creatures) {
         if (attacking) {
             if (currentAttackType == AttackType.UNARMED) {
                 for (Creature creature : creatures.values()) {
@@ -536,32 +535,10 @@ public abstract class Creature implements Renderable {
         healthPoints = 0f;
     }
 
-    public void transport(Area area, float posX, float posY) {
+    public void moveToArea(Area area, float posX, float posY) {
         pendingArea = area;
         pendingX = posX;
         pendingY = posY;
-    }
-
-    public void transportLogic() {
-        if (getPendingArea() != null) {
-            Area oldArea = getArea();
-            Area newArea = getPendingArea();
-
-            if (oldArea != null) {
-                oldArea.getAreaCreaturesHolder().removeCreature(getId());
-            }
-
-            newArea.getAreaCreaturesHolder().insertCreature(this);
-
-            System.out.println(getPendingX());
-            System.out.println(getRect().getX());
-
-            getRect().setX(getPendingX());
-            getRect().setY(getPendingY());
-
-            setArea(newArea);
-
-        }
     }
 
     public enum AttackType {UNARMED, SWORD, BOW}

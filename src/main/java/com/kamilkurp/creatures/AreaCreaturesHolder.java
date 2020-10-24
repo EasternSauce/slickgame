@@ -142,7 +142,7 @@ public class AreaCreaturesHolder {
                     if (creature.getRect().intersects(gateRect)) {
                         creature.setPassedGateRecently(true);
 
-                        creature.transport(destinationArea, destinationRect.getX(), destinationRect.getY());
+                        creature.moveToArea(destinationArea, destinationRect.getX(), destinationRect.getY());
 
                         currentAreaHolder.setCurrentArea(destinationArea);
 
@@ -156,17 +156,17 @@ public class AreaCreaturesHolder {
         }
     }
 
-    public void updateCreatures(GameSystem gameSystem, GameContainer gc, int i, KeyInput keyInput) throws SlickException {
+    public void updateCreatures(GameSystem gameSystem, GameContainer gc, int i, KeyInput keyInput) {
         for (Creature creature : creaturesMap.values()) {
             if (creature instanceof PlayerCharacter) {
                 if (!gameSystem.getInventoryWindow().isInventoryOpen() && !gameSystem.getLootOptionWindow().isActivated() && !gameSystem.getDialogueWindow().isActivated()) {
-                    creature.update(gc, i, area.getTiles(), creaturesMap, keyInput, area.getArrowList(), gameSystem.getGateList());
+                    creature.update(gc, i, keyInput, area, creaturesMap);
 
                     creature.areaGateLogic(gameSystem.getGateList());
                 }
             }
             else {
-                creature.update(gc, i, area.getTiles(), creaturesMap, keyInput, area.getArrowList(), gameSystem.getGateList());
+                creature.update(gc, i, keyInput, area, creaturesMap);
             }
 
         }
