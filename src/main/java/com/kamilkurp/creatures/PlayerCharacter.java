@@ -3,6 +3,7 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.behavior.DashAbility;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.systems.GameSystem;
@@ -30,8 +31,12 @@ public class PlayerCharacter extends Creature {
 
     private PlayerRespawnPoint currentRespawnPoint;
 
+    private DashAbility dashAbility;
+
     public PlayerCharacter(GameSystem gameSystem, String id) {
         super(gameSystem, id);
+
+        dashAbility = new DashAbility(this);
     }
 
 
@@ -59,6 +64,11 @@ public class PlayerCharacter extends Creature {
             movement = true;
         }
 
+        if (input.isKeyDown(Input.KEY_SPACE)) {
+            dashAbility.setDashVector(facingVector.normalise());
+            dashAbility.tryPerforming();
+        }
+
         sprint = input.isKeyDown(Input.KEY_LSHIFT);
 
         if (!walking) {
@@ -82,6 +92,8 @@ public class PlayerCharacter extends Creature {
         if (keyInput.isKeyPressed(KeyInput.Key.E)) {
             interact();
         }
+
+        dashAbility.update();
     }
 
     @Override
@@ -187,16 +199,18 @@ public class PlayerCharacter extends Creature {
         else {
             speed = 0.2f * i;
         }
+
+        performAbilityOnUpdateStart(i);
     }
 
     @Override
     protected void performAbilityOnUpdateStart(int i) {
-
+        dashAbility.performOnUpdateStart(i);
     }
 
     @Override
     public void performAbilityMovement() {
-
+        dashAbility.performMovement();
     }
 
     @Override

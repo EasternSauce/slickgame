@@ -8,19 +8,20 @@ import org.newdawn.slick.geom.Vector2f;
 
 import java.util.List;
 
-public class DashAbility implements Ability {
+public class DashAbility extends Ability {
 
     private Creature creature;
     private boolean isActive = false;
     protected float dashSpeed = 0.0f;
-    protected Timer cooldownTimer;
+
     protected Timer dashTimer;
     protected Vector2f dashVector;
 
     public DashAbility(Creature creature) {
+        super();
+
         this.creature = creature;
 
-        cooldownTimer = new Timer();
         dashTimer = new Timer();
         dashVector = new Vector2f(0f, 0f);
 
@@ -30,7 +31,7 @@ public class DashAbility implements Ability {
     public void update() {
         if (isActive) {
             //end dash
-            if (dashTimer.getTime() > 1000f) {
+            if (dashTimer.getTime() > 200f) {
                 creature.setImmobilized(false);
                 isActive = false;
             }
@@ -52,17 +53,17 @@ public class DashAbility implements Ability {
 
             if (!creature.isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
                 creature.move(0, dashSpeed * dashVector.getY());
+
             }
 
         }
     }
 
-    public void perform(Vector2f dashVector) {
-        this.dashVector = dashVector;
+    @Override
+     protected void perform() {
         isActive = true;
 
         creature.setImmobilized(true);
-
 
         cooldownTimer.reset();
         dashTimer.reset();
@@ -75,10 +76,14 @@ public class DashAbility implements Ability {
 
     @Override
     public void performOnUpdateStart(int i) {
-        dashSpeed = 0.4f * i;
+        dashSpeed = 0.7f * i;
     }
 
     public Timer getCooldownTimer() {
         return cooldownTimer;
+    }
+
+    public void setDashVector(Vector2f dashVector) {
+        this.dashVector = dashVector;
     }
 }

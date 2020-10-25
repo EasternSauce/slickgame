@@ -57,6 +57,7 @@ public class Wolf extends Mob {
         equipmentItems.put(0, new Item(ItemType.getItemType("woodenSword"), null));
 
         dashAbility = new DashAbility(this);
+        dashAbility.onPerform(() -> { dogBarkSound.play(1.0f, 0.1f); });
 
         updateAttackType();
 
@@ -88,16 +89,11 @@ public class Wolf extends Mob {
 
         if (aggroed != null) {
             if (hasDestination) {
-                if (dashAbility.getCooldownTimer().getTime() > 3000f) {
-                    if (Globals.distance(aggroed.rect, rect) < dashDistance) {
-                        //start dash, start dash cooldown
-                        dogBarkSound.play(1.0f, 0.1f);
-                        dashAbility.perform(new Vector2f(destinationX - rect.getX(), destinationY - rect.getY()).normalise());
-                    }
-
+                if (Globals.distance(aggroed.rect, rect) < dashDistance) {
+                    dashAbility.setDashVector(new Vector2f(destinationX - rect.getX(), destinationY - rect.getY()).normalise());
+                    dashAbility.tryPerforming();
                 }
             }
-
         }
 
         dashAbility.update();
