@@ -35,8 +35,8 @@ public class AreaGate {
 
     public void update(GameSystem gameSystem) {
 
-        for (Area area : gameSystem.getAreaMap().values()) {
-            area.getAreaCreaturesHolder().updateGatesLogic(this, gameSystem.getCurrentAreaHolder());
+        for (Area area : gameSystem.getAreas().values()) {
+            area.getCreaturesManager().updateGatesLogic(this, gameSystem.getCurrentAreaHolder());
         }
 
     }

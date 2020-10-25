@@ -3,19 +3,13 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
-import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.dialogue.DialogueWindow;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
-import com.kamilkurp.items.LootSystem;
-import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
-import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
 
 import java.util.*;
 
@@ -67,7 +61,7 @@ public class NonPlayerCharacter extends Creature {
     }
 
     @Override
-    public void performActions(GameContainer gc, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
+    public void performActions(GameContainer gc, KeyInput keyInput) {
 
         if (actionTimer.getTime() > 4000) {
             direction = Math.abs(random.nextInt()%4);
@@ -83,8 +77,8 @@ public class NonPlayerCharacter extends Creature {
     }
 
     @Override
-    public void update(GameContainer gc, int i, KeyInput keyInput, Area area, Map<String, Creature> creaturesMap) {
-        super.update(gc, i, keyInput, area, creaturesMap);
+    public void update(GameContainer gc, int i, KeyInput keyInput) {
+        super.update(gc, i, keyInput);
 
         // CHANGE THESE to only update once...
 

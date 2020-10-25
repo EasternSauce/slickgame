@@ -3,14 +3,11 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
-import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
-import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
-import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
@@ -19,8 +16,6 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Wolf extends Mob {
 
@@ -66,8 +61,8 @@ public class Wolf extends Mob {
     }
 
     @Override
-    public void update(GameContainer gc, int i, KeyInput keyInput, Area area, Map<String, Creature> creaturesMap) {
-        super.update(gc, i, keyInput, area, creaturesMap);
+    public void update(GameContainer gc, int i, KeyInput keyInput) {
+        super.update(gc, i, keyInput);
     }
 
     @Override
@@ -78,8 +73,8 @@ public class Wolf extends Mob {
 
 
     @Override
-    public void performActions(GameContainer gc, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
-        super.performActions(gc, creatures, keyInput, arrowList, tiles);
+    public void performActions(GameContainer gc, KeyInput keyInput) {
+        super.performActions(gc, keyInput);
         float dashDistance = 250f;
 
         if (aggroed != null) {
@@ -87,7 +82,7 @@ public class Wolf extends Mob {
                 if (dashCooldownTimer.getTime() > 3000f) {
                     if (Globals.distance(aggroed.rect, rect) < dashDistance) {
                         //start dash, start dash cooldown
-                        dogBarkSound.play();
+                        dogBarkSound.play(1.0f, 0.1f);
                         dashing = true;
 
                         dashVector = new Vector2f(destinationX - rect.getX(), destinationY - rect.getY()).normalise();

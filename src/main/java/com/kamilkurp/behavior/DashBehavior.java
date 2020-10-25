@@ -33,7 +33,7 @@ public class DashBehavior implements Behavior{
                 if (dashCooldownTimer.getTime() > 3000f) {
                     if (Globals.distance(aggroed.getRect(), creature.getRect()) < dashDistance) {
                         //start dash, start dash cooldown
-                        dogBarkSound.play(1.0f, 0.1f);
+                        dogBarkSound.play(1.0f, 0.0001f);
 
                         dashing = true;
 

@@ -129,7 +129,7 @@ public abstract class Creature implements Renderable {
 
         this.area = area;
 
-        this.area.getAreaCreaturesHolder().insertCreature(this);
+        this.area.addCreature(this);
 
         currentAttackType = AttackType.UNARMED;
 
@@ -183,19 +183,20 @@ public abstract class Creature implements Renderable {
         }
     }
 
-    public void update(GameContainer gc, int i, KeyInput keyInput, Area area, Map<String, Creature> creaturesMap) {
+    public void update(GameContainer gc, int i, KeyInput keyInput) {
 
         if (isAlive()) {
             beforeMovement(i);
 
-            performActions(gc, creaturesMap, keyInput, area.getArrowList(), area.getTiles());
+            performActions(gc, keyInput);
+
             regenerateHealth();
 
-            performMovement(area.getTiles());
+            executeMovementLogic();
 
             setFacingDirection(gc);
 
-            meleeAttackLogic(i, creaturesMap);
+            meleeAttackLogic(i);
         }
 
 
@@ -237,7 +238,10 @@ public abstract class Creature implements Renderable {
 
     protected abstract void setFacingDirection(GameContainer gc);
 
-    private void meleeAttackLogic(int i, Map<String, Creature> creatures) {
+    private void meleeAttackLogic(int i) {
+
+        Map<String, Creature> creatures = area.getCreatures();
+
         if (attacking) {
             if (currentAttackType == AttackType.UNARMED) {
                 for (Creature creature : creatures.values()) {
@@ -412,7 +416,11 @@ public abstract class Creature implements Renderable {
         totalDirections++;
     }
 
-    public void attack(List<Arrow> arrowList, List<TerrainTile> tiles, Map<String, Creature> creatures) {
+    public void attack() {
+        List<Arrow> arrowList = area.getArrowList();
+        List<TerrainTile> tiles = area.getTiles();
+        Map<String, Creature> areaCreatures = area.getCreatures();
+
         if (currentAttackType == AttackType.UNARMED) {
             if (swordAttackCooldownTimer.getTime() > 800f) {
                 swordAttackSound.play(1.0f, 0.1f);
@@ -453,7 +461,7 @@ public abstract class Creature implements Renderable {
                     attackingVector = facingVector;
 
                     if (!facingVector.equals(new Vector2f(0.f, 0f))) {
-                        Arrow arrow = new Arrow(rect.getX(), rect.getY(), facingVector, arrowList, tiles, creatures, this);
+                        Arrow arrow = new Arrow(rect.getX(), rect.getY(), facingVector, arrowList, tiles, areaCreatures, this);
                         arrowList.add(arrow);
                     }
 
@@ -467,7 +475,9 @@ public abstract class Creature implements Renderable {
 
     }
 
-    public void performMovement(List<TerrainTile> tiles) {
+    public void executeMovementLogic() {
+        List<TerrainTile> tiles = area.getTiles();
+
         if (!dashing) {
             if (totalDirections > 1) {
                 speed /= Math.sqrt(2);
@@ -506,7 +516,7 @@ public abstract class Creature implements Renderable {
 
     }
 
-    public abstract void performActions(GameContainer gc, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles);
+    public abstract void performActions(GameContainer gc, KeyInput keyInput);
 
 
     public String getId() {

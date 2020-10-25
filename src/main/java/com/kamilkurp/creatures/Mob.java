@@ -2,18 +2,12 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.areagate.AreaGate;
-import com.kamilkurp.items.LootSystem;
-import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
-import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Vector2f;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -43,8 +37,8 @@ public abstract class Mob extends Creature {
     }
 
     @Override
-    public void update(GameContainer gc, int i, KeyInput keyInput, Area area, Map<String, Creature> creaturesMap) {
-        super.update(gc, i , keyInput, area, creaturesMap);
+    public void update(GameContainer gc, int i, KeyInput keyInput) {
+        super.update(gc, i , keyInput);
 
         if (runningTimer.getTime() > 200) {
             running = false;
@@ -75,11 +69,13 @@ public abstract class Mob extends Creature {
     }
 
     @Override
-    public void performActions(GameContainer gc, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
+    public void performActions(GameContainer gc, KeyInput keyInput) {
+
+        Map<String, Creature> areaCreatures = area.getCreatures();
 
         int aggroDistance = 400;
         aggroed = null;
-        for (Creature creature : creatures.values()) {
+        for (Creature creature : areaCreatures.values()) {
             if (creature instanceof Mob) continue;
             if (Globals.distance(creature.rect, rect) < aggroDistance && creature.healthPoints > 0) {
                 aggroed = creature;
@@ -181,7 +177,7 @@ public abstract class Mob extends Creature {
                 }
                 direction = dir;
 
-                attack(arrowList, tiles, creatures);
+                attack();
             }
 
         }

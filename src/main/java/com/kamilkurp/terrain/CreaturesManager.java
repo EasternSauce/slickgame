@@ -1,13 +1,11 @@
-package com.kamilkurp.creatures;
+package com.kamilkurp.terrain;
 
-import com.kamilkurp.KeyInput;
 import com.kamilkurp.areagate.AreaGate;
+import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.creatures.NonPlayerCharacter;
+import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.items.Item;
-import com.kamilkurp.systems.GameSystem;
-import com.kamilkurp.terrain.Area;
-import com.kamilkurp.terrain.CurrentAreaHolder;
 import com.kamilkurp.utils.Camera;
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
@@ -16,20 +14,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class AreaCreaturesHolder {
-    private final Map<String, Creature> creaturesMap;
+public class CreaturesManager {
+    private final Map<String, Creature> creatures;
     private final Area area;
 
     private Queue<Creature> renderPriorityQueue;
 
 
-    public AreaCreaturesHolder(Area area) {
+    public CreaturesManager(Area area) {
         this.area = area;
-        creaturesMap = new HashMap<>();
+        creatures = new HashMap<>();
     }
 
     public void onAreaChange() {
-        for (Creature creature : creaturesMap.values()) {
+        for (Creature creature : creatures.values()) {
             if (!(creature instanceof PlayerCharacter || creature instanceof NonPlayerCharacter)) {
                 if (!creature.isAlive()) {
                     creature.markForDeletion();
@@ -38,11 +36,11 @@ public class AreaCreaturesHolder {
             }
         }
 
-        creaturesMap.entrySet().removeIf(e -> e.getValue().isToBeRemoved());
+        creatures.entrySet().removeIf(e -> e.getValue().isToBeRemoved());
     }
 
     public void processAreaChanges(List<Creature> creaturesToMove) throws SlickException {
-        for (Creature creature : creaturesMap.values()) {
+        for (Creature creature : creatures.values()) {
             if (creature.getPendingArea() != null) {
                 creaturesToMove.add(creature);
             }
@@ -59,7 +57,7 @@ public class AreaCreaturesHolder {
             return (o1.getRect().getY() - o2.getRect().getY() > 0.0f) ? 1 : -1;
         });
 
-        renderPriorityQueue.addAll(creaturesMap.values());
+        renderPriorityQueue.addAll(creatures.values());
     }
 
     public void renderCreatures(Graphics g, Camera camera) {
@@ -73,13 +71,13 @@ public class AreaCreaturesHolder {
         }
 
 
-        for (Creature creature : creaturesMap.values()) {
+        for (Creature creature : creatures.values()) {
             creature.renderAttackAnimation(g, camera);
         }
     }
 
     public void saveToFile(FileWriter writer) throws IOException {
-        for (Creature creature : creaturesMap.values()) {
+        for (Creature creature : creatures.values()) {
             if (creature.getClass() != PlayerCharacter.class && creature.getClass() != NonPlayerCharacter.class) continue;
             writer.write("creature " + creature.getId() + "\n");
             writer.write("pos " + creature.getRect().getX() + " " + creature.getRect().getY() + "\n");
@@ -100,26 +98,26 @@ public class AreaCreaturesHolder {
     }
 
     public Creature getCreatureById(String id) {
-        return creaturesMap.get(id);
+        return creatures.get(id);
     }
 
-    public void insertCreature(Creature creature) {
-        creaturesMap.put(creature.getId(), creature);
+    public void addCreature(Creature creature) {
+        creatures.put(creature.getId(), creature);
     }
 
     public void updateAttackTypes() {
-        for (Creature creature : creaturesMap.values()) {
+        for (Creature creature : creatures.values()) {
             creature.updateAttackType();
         }
     }
 
     public void removeCreature(String id) {
-        creaturesMap.remove(id);
+        creatures.remove(id);
 
     }
 
     public void updateGatesLogic(AreaGate areaGate, CurrentAreaHolder currentAreaHolder) {
-        for (Creature creature : creaturesMap.values()) {
+        for (Creature creature : creatures.values()) {
             if (creature instanceof PlayerCharacter) {
                 if (!creature.isPassedGateRecently()) {
                     Rectangle gateRect = null;
@@ -156,19 +154,8 @@ public class AreaCreaturesHolder {
         }
     }
 
-    public void updateCreatures(GameSystem gameSystem, GameContainer gc, int i, KeyInput keyInput) {
-        for (Creature creature : creaturesMap.values()) {
-            if (creature instanceof PlayerCharacter) {
-                if (!gameSystem.getInventoryWindow().isInventoryOpen() && !gameSystem.getLootOptionWindow().isActivated() && !gameSystem.getDialogueWindow().isActivated()) {
-                    creature.update(gc, i, keyInput, area, creaturesMap);
 
-                    creature.areaGateLogic(gameSystem.getGateList());
-                }
-            }
-            else {
-                creature.update(gc, i, keyInput, area, creaturesMap);
-            }
-
-        }
+    public Map<String, Creature> getCreatures() {
+        return creatures;
     }
 }

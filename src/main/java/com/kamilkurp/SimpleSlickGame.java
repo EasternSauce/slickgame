@@ -86,8 +86,8 @@ public class SimpleSlickGame extends BasicGame {
         try {
             FileWriter writer = new FileWriter("saves/savegame.sav");
 
-            for (Area area : gameSystem.getAreaMap().values()) {
-                area.getAreaCreaturesHolder().saveToFile(writer);
+            for (Area area : gameSystem.getAreas().values()) {
+                area.getCreaturesManager().saveToFile(writer);
             }
 
             writer.close();
@@ -128,8 +128,8 @@ public class SimpleSlickGame extends BasicGame {
                 String[] s = line.split(" ");
                 if(s[0].equals("creature")) {
                     Creature foundCreature = null;
-                    for (Area area : gameSystem.getAreaMap().values()) {
-                        foundCreature = area.getAreaCreaturesHolder().getCreatureById(s[1]);
+                    for (Area area : gameSystem.getAreas().values()) {
+                        foundCreature = area.getCreaturesManager().getCreatureById(s[1]);
                         if (foundCreature != null) break;
                     }
 
@@ -145,12 +145,12 @@ public class SimpleSlickGame extends BasicGame {
                 }
                 if(s[0].equals("area")) {
                     if (creature != null) {
-                        creature.setArea(gameSystem.getAreaMap().get(s[1]));
+                        creature.setArea(gameSystem.getAreas().get(s[1]));
 
-                        gameSystem.getAreaMap().get(s[1]).getAreaCreaturesHolder().insertCreature(creature);
+                        gameSystem.getAreas().get(s[1]).addCreature(creature);
 
                         if (creature instanceof PlayerCharacter) {
-                            gameSystem.getCurrentAreaHolder().setCurrentArea(gameSystem.getAreaMap().get(s[1]));
+                            gameSystem.getCurrentAreaHolder().setCurrentArea(gameSystem.getAreas().get(s[1]));
                         }
                     }
 
@@ -211,10 +211,10 @@ public class SimpleSlickGame extends BasicGame {
 
 
         if(gameSystem.getCurrentArea() == null) {
-            gameSystem.getCurrentAreaHolder().setCurrentArea(gameSystem.getAreaMap().get("area1"));
+            gameSystem.getCurrentAreaHolder().setCurrentArea(gameSystem.getAreas().get("area1"));
         }
 
-        gameSystem.getCurrentArea().getAreaCreaturesHolder().updateAttackTypes();
+        gameSystem.getCurrentArea().getCreaturesManager().updateAttackTypes();
 
     }
 

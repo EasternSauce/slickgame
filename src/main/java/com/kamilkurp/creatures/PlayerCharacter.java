@@ -2,24 +2,22 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
-import com.kamilkurp.terrain.CurrentAreaHolder;
-import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
 import org.lwjgl.input.Mouse;
-import org.newdawn.slick.*;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class PlayerCharacter extends Creature {
     private final Sound stepSound = Assets.stepSound;
@@ -46,7 +44,7 @@ public class PlayerCharacter extends Creature {
 
 
     @Override
-    public void performActions(GameContainer gc, Map<String, Creature> creatures, KeyInput keyInput, List<Arrow> arrowList, List<TerrainTile> tiles) {
+    public void performActions(GameContainer gc, KeyInput keyInput) {
         Input input = gc.getInput();
 
         boolean movement = false;
@@ -85,11 +83,11 @@ public class PlayerCharacter extends Creature {
 
 
         if (Mouse.isButtonDown(0)) {
-            attack(arrowList, tiles, creatures);
+            attack();
         }
         //rewrite
         if (keyInput.isKeyPressed(KeyInput.Key.E)) {
-            interact(creatures);
+            interact();
         }
     }
 
@@ -106,8 +104,8 @@ public class PlayerCharacter extends Creature {
 }
 
     @Override
-    public void update(GameContainer gc, int i, KeyInput keyInput, Area area, Map<String, Creature> creaturesMap) {
-        super.update(gc, i, keyInput, area, creaturesMap);
+    public void update(GameContainer gc, int i, KeyInput keyInput) {
+        super.update(gc, i, keyInput);
 
         if (!isAlive()) {
             stepSound.stop();
@@ -163,8 +161,9 @@ public class PlayerCharacter extends Creature {
     }
 
 
-    private void interact(Map<String, Creature> creatures) {
-        for (Creature creature : creatures.values()) {
+    private void interact() {
+
+        for (Creature creature : area.getCreatures().values()) {
             if (creature == this) continue;
             if (rect.intersects(creature.rect) && creature instanceof NonPlayerCharacter && creature.healthPoints > 0) {
                 ((NonPlayerCharacter)creature).triggerDialogue();

@@ -3,7 +3,6 @@ package com.kamilkurp.dialogue;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.creatures.NonPlayerCharacter;
-import com.kamilkurp.items.InventoryWindow;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.systems.GameSystem;
 import org.newdawn.slick.Color;

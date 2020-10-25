@@ -3,7 +3,6 @@ package com.kamilkurp.gui;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
-import com.kamilkurp.items.InventoryWindow;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Camera;

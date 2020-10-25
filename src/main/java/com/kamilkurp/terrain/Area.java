@@ -1,9 +1,8 @@
 package com.kamilkurp.terrain;
 
 import com.kamilkurp.Renderable;
-import com.kamilkurp.creatures.AreaCreaturesHolder;
+import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.items.LootPile;
-import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.EnemyRespawnArea;
 import com.kamilkurp.spawn.EnemySpawnPoint;
@@ -21,6 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Area implements Renderable {
 
@@ -33,7 +33,7 @@ public class Area implements Renderable {
     private final List<EnemyRespawnArea> enemyRespawnAreaList;
     private final List<EnemySpawnPoint> enemySpawnPointList;
 
-    private final AreaCreaturesHolder areaCreaturesHolder;
+    private final CreaturesManager creaturesManager;
 
 
     private final String id;
@@ -55,7 +55,7 @@ public class Area implements Renderable {
         this.id = id;
 
 
-        areaCreaturesHolder = new AreaCreaturesHolder(this);
+        creaturesManager = new CreaturesManager(this);
 
         tiles = new LinkedList<>();
 
@@ -197,7 +197,7 @@ public class Area implements Renderable {
 
     public void onEntry() {
 
-        areaCreaturesHolder.onAreaChange();
+        creaturesManager.onAreaChange();
 
     }
 
@@ -209,8 +209,20 @@ public class Area implements Renderable {
         return lootPileList;
     }
 
-    public AreaCreaturesHolder getAreaCreaturesHolder() {
-        return areaCreaturesHolder;
+    public CreaturesManager getCreaturesManager() {
+        return creaturesManager;
+    }
+
+    public void addCreature(Creature creature) {
+        creaturesManager.addCreature(creature);
+    }
+
+    public void removeCreature(String id) {
+        creaturesManager.removeCreature(id);
+    }
+
+    public Map<String, Creature> getCreatures() {
+        return creaturesManager.getCreatures();
     }
 }
 

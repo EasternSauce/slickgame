@@ -33,7 +33,7 @@ public class GameSystem {
     private DialogueWindow dialogueWindow;
     private LootSystem lootSystem;
     private LootOptionWindow lootOptionWindow;
-    private Map<String, Area> areaMap;
+    private Map<String, Area> areas;
     private List<AreaGate> gateList;
     private List<Creature> creaturesToMove;
     private Camera camera;
@@ -52,17 +52,17 @@ public class GameSystem {
 
         lootSystem = new LootSystem(this);
 
-        areaMap = new HashMap<>();
-        areaMap.put("area1", new Area(this, "area1", Assets.grassyTileset, Assets.area1Layout, Assets.area1Enemies));
-        areaMap.put("area2", new Area(this,"area2", Assets.dungeonTileset, Assets.area2Layout, Assets.area2Enemies));
+        areas = new HashMap<>();
+        areas.put("area1", new Area(this, "area1", Assets.grassyTileset, Assets.area1Layout, Assets.area1Enemies));
+        areas.put("area2", new Area(this,"area2", Assets.dungeonTileset, Assets.area2Layout, Assets.area2Enemies));
 
-        areaMap.get("area1").addRespawnPoint(new PlayerRespawnPoint(this, 500, 500, areaMap.get("area1")));
+        areas.get("area1").addRespawnPoint(new PlayerRespawnPoint(this, 500, 500, areas.get("area1")));
 
-        playerCharacter = new PlayerCharacter(this, "protagonist", 400, 400, areaMap.get("area1"));
+        playerCharacter = new PlayerCharacter(this, "protagonist", 400, 400, areas.get("area1"));
 
         cameraFocusedCreature = playerCharacter;
 
-        NonPlayerCharacter nonPlayerCharacter = new NonPlayerCharacter(this, "johnny", 600, 600, areaMap.get("area1"), "a1", true);
+        NonPlayerCharacter nonPlayerCharacter = new NonPlayerCharacter(this, "johnny", 600, 600, areas.get("area1"), "a1", true);
 
         inventoryWindow.setPlayerCharacter(playerCharacter);
 
@@ -72,7 +72,7 @@ public class GameSystem {
 
         gateList = new LinkedList<>();
 
-        gateList.add(new AreaGate(areaMap.get("area1"), 1855, 2300, areaMap.get("area2"), 150, 150));
+        gateList.add(new AreaGate(areas.get("area1"), 1855, 2300, areas.get("area2"), 150, 150));
 
         creaturesToMove = new LinkedList<>();
     }
@@ -117,12 +117,12 @@ public class GameSystem {
         this.lootOptionWindow = lootOptionWindow;
     }
 
-    public Map<String, Area> getAreaMap() {
-        return areaMap;
+    public Map<String, Area> getAreas() {
+        return areas;
     }
 
-    public void setAreaMap(Map<String, Area> areaMap) {
-        this.areaMap = areaMap;
+    public void setAreas(Map<String, Area> areas) {
+        this.areas = areas;
     }
 
     public List<AreaGate> getGateList() {
@@ -187,11 +187,11 @@ public class GameSystem {
         creaturesToMove.clear();
 
         // for current area
-        currentArea.getAreaCreaturesHolder().updateCreatures(this, gc, i, keyInput);
+        updateCreatures(gc, i, keyInput);
 
         // for all areas
-        for (Area area : areaMap.values()) {
-            area.getAreaCreaturesHolder().processAreaChanges(creaturesToMove);
+        for (Area area : areas.values()) {
+            area.getCreaturesManager().processAreaChanges(creaturesToMove);
         }
 
         for (Creature creature : creaturesToMove) {
@@ -200,10 +200,10 @@ public class GameSystem {
                 Area newArea = creature.getPendingArea();
 
                 if (oldArea != null) {
-                    oldArea.getAreaCreaturesHolder().removeCreature(creature.getId());
+                    oldArea.removeCreature(creature.getId());
                 }
 
-                newArea.getAreaCreaturesHolder().insertCreature(creature);
+                newArea.addCreature(creature);
 
                 creature.getRect().setX(creature.getPendingX());
                 creature.getRect().setY(creature.getPendingY());
@@ -229,7 +229,7 @@ public class GameSystem {
             areaGate.update(this);
         }
 
-        currentArea.getAreaCreaturesHolder().updateRenderPriorityQueue();
+        currentArea.getCreaturesManager().updateRenderPriorityQueue();
     }
 
     public void render(Graphics g) {
@@ -249,7 +249,7 @@ public class GameSystem {
                 areaGate.render(g, camera, currentArea);
             }
 
-            currentArea.getAreaCreaturesHolder().renderCreatures(g, camera);
+            currentArea.getCreaturesManager().renderCreatures(g, camera);
 
             for (Arrow arrow : currentArea.getArrowList()) {
                 arrow.render(g, camera);
@@ -269,5 +269,23 @@ public class GameSystem {
         dialogueWindow.render(g);
 
         lootOptionWindow.render(g, camera);
+    }
+
+    public void updateCreatures(GameContainer gc, int i, KeyInput keyInput) {
+        Map<String, Creature> areaCreatures = getCurrentArea().getCreatures();
+
+        for (Creature creature : areaCreatures.values()) {
+            if (creature instanceof PlayerCharacter) {
+                if (!getInventoryWindow().isInventoryOpen() && !getLootOptionWindow().isActivated() && !getDialogueWindow().isActivated()) {
+                    creature.update(gc, i, keyInput);
+
+                    creature.areaGateLogic(getGateList());
+                }
+            }
+            else {
+                creature.update(gc, i, keyInput);
+            }
+
+        }
     }
 }
