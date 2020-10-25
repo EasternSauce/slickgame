@@ -64,6 +64,16 @@ public class Skeleton extends Mob {
     }
 
     @Override
+    protected void performAbilityOnUpdateStart(int i) {
+
+    }
+
+    @Override
+    public void performAbilityMovement() {
+
+    }
+
+    @Override
     public String getCreatureType() {
         return "skeleton";
     }

@@ -111,6 +111,16 @@ public class NonPlayerCharacter extends Creature {
 
     }
 
+    @Override
+    protected void performAbilityOnUpdateStart(int i) {
+
+    }
+
+    @Override
+    public void performAbilityMovement() {
+
+    }
+
     public void triggerDialogue() {
         if (!gameSystem.getDialogueWindow().isActivated()) {
             gameSystem.getDialogueWindow().setDialogueNonPlayerCharacter(this);

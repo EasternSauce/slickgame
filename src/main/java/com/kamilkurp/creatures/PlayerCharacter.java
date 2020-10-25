@@ -173,7 +173,7 @@ public class PlayerCharacter extends Creature {
     }
 
     @Override
-    public void beforeMovement(int i) {
+    public void onUpdateStart(int i) {
         moving = false;
 
         totalDirections = 0;
@@ -187,6 +187,16 @@ public class PlayerCharacter extends Creature {
         else {
             speed = 0.2f * i;
         }
+    }
+
+    @Override
+    protected void performAbilityOnUpdateStart(int i) {
+
+    }
+
+    @Override
+    public void performAbilityMovement() {
+
     }
 
     @Override

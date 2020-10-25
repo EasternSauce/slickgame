@@ -99,11 +99,8 @@ public abstract class Creature implements Renderable {
 
     protected GameSystem gameSystem;
 
-    protected float dashSpeed = 0.0f;
-    protected Timer dashCooldownTimer;
-    protected Timer dashTimer;
-    protected boolean dashing = false;
-    protected Vector2f dashVector;
+
+    protected boolean immobilized = false;
 
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
@@ -132,10 +129,6 @@ public abstract class Creature implements Renderable {
         equipmentItems = new TreeMap<>();
 
         toBeRemoved = false;
-
-        dashCooldownTimer = new Timer();
-        dashTimer = new Timer();
-        dashVector = new Vector2f(0f, 0f);
 
         pendingX = 0.0f;
         pendingY = 0.0f;
@@ -184,7 +177,7 @@ public abstract class Creature implements Renderable {
     public void update(GameContainer gc, int i, KeyInput keyInput) {
 
         if (isAlive()) {
-            beforeMovement(i);
+            onUpdateStart(i);
 
             performActions(gc, keyInput);
 
@@ -373,7 +366,7 @@ public abstract class Creature implements Renderable {
 
 
 
-    public void beforeMovement(int i) {
+    public void onUpdateStart(int i) {
         moving = false;
 
         totalDirections = 0;
@@ -383,8 +376,10 @@ public abstract class Creature implements Renderable {
 
         speed = 0.2f * i;
 
-        dashSpeed = 0.4f * i;
+        performAbilityOnUpdateStart(i);
     }
+
+    protected abstract void performAbilityOnUpdateStart(int i);
 
     public void moveUp() {
         dirY = -1;
@@ -476,7 +471,7 @@ public abstract class Creature implements Renderable {
     public void executeMovementLogic() {
         List<TerrainTile> tiles = area.getTiles();
 
-        if (!dashing) {
+        if (!immobilized) {
             if (totalDirections > 1) {
                 speed /= Math.sqrt(2);
             }
@@ -497,22 +492,12 @@ public abstract class Creature implements Renderable {
                 running = true;
             }
         }
-        else {
-            float newPosX = rect.getX() + dashSpeed * dashVector.getX();
-            float newPosY = rect.getY() + dashSpeed * dashVector.getY();
 
-            if (!isCollidingX(tiles, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
-                move(dashSpeed * dashVector.getX(), 0);
-            }
-
-            if (!isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
-                move(0, dashSpeed * dashVector.getY());
-            }
-
-
-        }
+        performAbilityMovement();
 
     }
+
+    public abstract void performAbilityMovement();
 
     public abstract void performActions(GameContainer gc, KeyInput keyInput);
 
@@ -534,11 +519,6 @@ public abstract class Creature implements Renderable {
         return maxHealthPoints;
     }
 
-    public void setPosition(float posX, float posY) {
-        this.rect.setX(posX);
-        this.rect.setY(posY);
-    }
-
     public void kill() {
         healthPoints = 0f;
     }
@@ -547,6 +527,10 @@ public abstract class Creature implements Renderable {
         pendingArea = area;
         pendingX = posX;
         pendingY = posY;
+    }
+
+    public void setImmobilized(boolean immobilized) {
+        this.immobilized = immobilized;
     }
 
     public enum AttackType {UNARMED, SWORD, BOW}

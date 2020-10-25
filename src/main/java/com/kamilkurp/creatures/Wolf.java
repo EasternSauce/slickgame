@@ -4,6 +4,7 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.behavior.DashAbility;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.systems.GameSystem;
@@ -21,6 +22,8 @@ public class Wolf extends Mob {
 
     private final Sound dogBarkSound = Assets.dogBarkSound;
     private final Sound dogWhimperSound = Assets.dogWhimperSound;
+
+    private DashAbility dashAbility;
 
     public Wolf(GameSystem gameSystem, String id) throws SlickException {
         super(gameSystem, id);
@@ -53,6 +56,8 @@ public class Wolf extends Mob {
 
         equipmentItems.put(0, new Item(ItemType.getItemType("woodenSword"), null));
 
+        dashAbility = new DashAbility(this);
+
         updateAttackType();
 
 
@@ -83,29 +88,19 @@ public class Wolf extends Mob {
 
         if (aggroed != null) {
             if (hasDestination) {
-                if (dashCooldownTimer.getTime() > 3000f) {
+                if (dashAbility.getCooldownTimer().getTime() > 3000f) {
                     if (Globals.distance(aggroed.rect, rect) < dashDistance) {
                         //start dash, start dash cooldown
                         dogBarkSound.play(1.0f, 0.1f);
-                        dashing = true;
-
-                        dashVector = new Vector2f(destinationX - rect.getX(), destinationY - rect.getY()).normalise();
-
-                        dashCooldownTimer.reset();
-                        dashTimer.reset();
+                        dashAbility.perform(new Vector2f(destinationX - rect.getX(), destinationY - rect.getY()).normalise());
                     }
 
                 }
             }
 
-            if (dashing) {
-                //end dash
-                if (dashTimer.getTime() > 1000f) {
-                    dashing = false;
-                }
-            }
-
         }
+
+        dashAbility.update();
 
 
 
@@ -131,5 +126,15 @@ public class Wolf extends Mob {
             dogWhimperSound.play(1.0f, 0.1f);
         }
 
+    }
+
+    @Override
+    protected void performAbilityOnUpdateStart(int i) {
+        dashAbility.performOnUpdateStart(i);
+    }
+
+    @Override
+    public void performAbilityMovement() {
+        dashAbility.performMovement();
     }
 }
