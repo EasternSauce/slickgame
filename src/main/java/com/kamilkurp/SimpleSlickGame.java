@@ -138,6 +138,9 @@ public class SimpleSlickGame extends BasicGame {
                 }
                 if(s[0].equals("pos")) {
                     if (creature != null) {
+                        if (creature.getArea() == null) {
+                            throw new RuntimeException("position cannot be set before creature is spawned in area");
+                        }
                         creature.getRect().setX(Float.parseFloat(s[1]));
                         creature.getRect().setY(Float.parseFloat(s[2]));
                     }
@@ -147,7 +150,7 @@ public class SimpleSlickGame extends BasicGame {
                     if (creature != null) {
                         creature.setArea(gameSystem.getAreas().get(s[1]));
 
-                        gameSystem.getAreas().get(s[1]).addCreature(creature);
+                        gameSystem.getAreas().get(s[1]).moveInCreature(creature, 0f, 0f);
 
                         if (creature instanceof PlayerCharacter) {
                             gameSystem.getCurrentAreaHolder().setCurrentArea(gameSystem.getAreas().get(s[1]));

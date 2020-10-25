@@ -80,8 +80,8 @@ public class CreaturesManager {
         for (Creature creature : creatures.values()) {
             if (creature.getClass() != PlayerCharacter.class && creature.getClass() != NonPlayerCharacter.class) continue;
             writer.write("creature " + creature.getId() + "\n");
-            writer.write("pos " + creature.getRect().getX() + " " + creature.getRect().getY() + "\n");
             writer.write("area " + creature.getArea().getId() + "\n");
+            writer.write("pos " + creature.getRect().getX() + " " + creature.getRect().getY() + "\n");
             writer.write("health " + creature.getHealthPoints() + "\n");
 
             Map<Integer, Item> equipmentItems = creature.getEquipmentItems();

@@ -7,7 +7,6 @@ import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.systems.GameSystem;
-import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
 
@@ -27,8 +26,8 @@ public class NonPlayerCharacter extends Creature {
     private final Map<String, Float> dropTable;
 
 
-    public NonPlayerCharacter(GameSystem gameSystem, String id, int posX, int posY, Area area, String dialogueStartId, boolean trader) {
-        super(gameSystem, id, posX, posY, area);
+    public NonPlayerCharacter(GameSystem gameSystem, String id, String dialogueStartId, boolean trader) {
+        super(gameSystem, id);
 
         this.dialogueStartId = dialogueStartId;
 
@@ -74,6 +73,11 @@ public class NonPlayerCharacter extends Creature {
     @Override
     public String getCreatureType() {
         return "nonPlayerCharacter";
+    }
+
+    @Override
+    public void onInit() {
+
     }
 
     @Override

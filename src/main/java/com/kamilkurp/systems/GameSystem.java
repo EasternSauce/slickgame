@@ -58,11 +58,13 @@ public class GameSystem {
 
         areas.get("area1").addRespawnPoint(new PlayerRespawnPoint(this, 500, 500, areas.get("area1")));
 
-        playerCharacter = new PlayerCharacter(this, "protagonist", 400, 400, areas.get("area1"));
+        playerCharacter = new PlayerCharacter(this, "protagonist");
+        areas.get("area1").addNewCreature(playerCharacter, 400f, 400f);
 
         cameraFocusedCreature = playerCharacter;
 
-        NonPlayerCharacter nonPlayerCharacter = new NonPlayerCharacter(this, "johnny", 600, 600, areas.get("area1"), "a1", true);
+        NonPlayerCharacter nonPlayerCharacter = new NonPlayerCharacter(this, "johnny", "a1", true);
+        areas.get("area1").addNewCreature(nonPlayerCharacter, 600f, 600f);
 
         inventoryWindow.setPlayerCharacter(playerCharacter);
 
@@ -203,10 +205,8 @@ public class GameSystem {
                     oldArea.removeCreature(creature.getId());
                 }
 
-                newArea.addCreature(creature);
+                newArea.moveInCreature(creature, creature.getPendingX(), creature.getPendingY());
 
-                creature.getRect().setX(creature.getPendingX());
-                creature.getRect().setY(creature.getPendingY());
 
                 creature.setArea(newArea);
             }

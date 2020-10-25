@@ -7,7 +7,6 @@ import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.systems.GameSystem;
-import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
@@ -23,8 +22,8 @@ public class Wolf extends Mob {
     private final Sound dogBarkSound = Assets.dogBarkSound;
     private final Sound dogWhimperSound = Assets.dogWhimperSound;
 
-    public Wolf(GameSystem gameSystem, String id, float posX, float posY, Area area) throws SlickException {
-        super(gameSystem, id, posX, posY, area);
+    public Wolf(GameSystem gameSystem, String id) throws SlickException {
+        super(gameSystem, id);
 
         actionTimer = new Timer();
 
@@ -57,6 +56,11 @@ public class Wolf extends Mob {
         updateAttackType();
 
 
+
+    }
+
+    @Override
+    public void onInit() {
 
     }
 

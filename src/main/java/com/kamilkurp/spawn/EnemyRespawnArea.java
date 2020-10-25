@@ -57,7 +57,8 @@ public class EnemyRespawnArea implements Renderable {
         int randX = Globals.randInt(posX - range, posX + range);
         int randY = Globals.randInt(posY - range, posY + range);
 
-        Wolf enemy = new Wolf(gameSystem, "wolfie"+Math.abs(Globals.random.nextInt()), randX, randY, area);
+        Wolf enemy = new Wolf(gameSystem, "wolfie"+Math.abs(Globals.random.nextInt()));
+        area.moveInCreature(enemy, randX, randY);
         enemy.updateAttackType();
 
         spawnedList.add(enemy);

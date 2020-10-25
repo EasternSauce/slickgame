@@ -213,8 +213,12 @@ public class Area implements Renderable {
         return creaturesManager;
     }
 
-    public void addCreature(Creature creature) {
+    public void moveInCreature(Creature creature, float x, float y) {
         creaturesManager.addCreature(creature);
+        creature.setArea(this);
+
+        creature.getRect().setX(x);
+        creature.getRect().setY(y);
     }
 
     public void removeCreature(String id) {
@@ -223,6 +227,16 @@ public class Area implements Renderable {
 
     public Map<String, Creature> getCreatures() {
         return creaturesManager.getCreatures();
+    }
+
+    public void addNewCreature(Creature creature, float x, float y) {
+        creaturesManager.addCreature(creature);
+        creature.setArea(this);
+
+        creature.getRect().setX(x);
+        creature.getRect().setY(y);
+
+        creature.onInit();
     }
 }
 

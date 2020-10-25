@@ -105,10 +105,10 @@ public abstract class Creature implements Renderable {
     protected boolean dashing = false;
     protected Vector2f dashVector;
 
-    public Creature(GameSystem gameSystem, String id, float posX, float posY, Area area) {
+    public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
         this.id = id;
-        rect = new Rectangle(posX, posY, 64, 64);
+        rect = new Rectangle(0, 0, 64, 64);
         hitbox = new Rectangle(2, 2, 60, 60);
 
         walkAnimation = new WalkAnimation(Assets.male1SpriteSheet, 3, 100, new int [] {3,1,0,2}, 1);
@@ -127,10 +127,6 @@ public abstract class Creature implements Renderable {
         facingAngle = 0.0f;
         facingVector = new Vector2f(0f, 0f);
 
-        this.area = area;
-
-        this.area.addCreature(this);
-
         currentAttackType = AttackType.UNARMED;
 
         equipmentItems = new TreeMap<>();
@@ -144,6 +140,8 @@ public abstract class Creature implements Renderable {
         pendingX = 0.0f;
         pendingY = 0.0f;
     }
+
+    public abstract void onInit();
 
     @Override
     public void render(Graphics g, Camera camera) {

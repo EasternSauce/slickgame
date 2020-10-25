@@ -3,7 +3,6 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.systems.GameSystem;
-import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Vector2f;
@@ -32,8 +31,8 @@ public abstract class Mob extends Creature {
     protected float destinationY;
     protected boolean hasDestination;
 
-    public Mob(GameSystem gameSystem, String id, float posX, float posY, Area area) {
-        super(gameSystem, id, posX, posY, area);
+    public Mob(GameSystem gameSystem, String id) {
+        super(gameSystem, id);
     }
 
     @Override

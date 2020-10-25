@@ -6,7 +6,6 @@ import com.kamilkurp.assets.Assets;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.systems.GameSystem;
-import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
 import org.lwjgl.input.Mouse;
@@ -27,18 +26,12 @@ public class PlayerCharacter extends Creature {
 
     private boolean respawning;
 
-    private final Timer respawnTimer;
+    private Timer respawnTimer;
 
-    private final PlayerRespawnPoint currentRespawnPoint;
+    private PlayerRespawnPoint currentRespawnPoint;
 
-    public PlayerCharacter(GameSystem gameSystem, String id, int posX, int posY, Area area) {
-        super(gameSystem, id, posX, posY, area);
-
-        respawning = false;
-        respawnTimer = new Timer();
-        setMaxHealthPoints(300f);
-
-        currentRespawnPoint = area.getRespawnList().get(0);
+    public PlayerCharacter(GameSystem gameSystem, String id) {
+        super(gameSystem, id);
     }
 
 
@@ -94,6 +87,14 @@ public class PlayerCharacter extends Creature {
     @Override
     public String getCreatureType() {
         return "playerCharacter";
+    }
+
+    @Override
+    public void onInit() {
+        currentRespawnPoint = area.getRespawnList().get(0);
+        respawning = false;
+        respawnTimer = new Timer();
+        setMaxHealthPoints(300f);
     }
 
     @Override

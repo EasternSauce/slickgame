@@ -48,11 +48,13 @@ public class EnemySpawnPoint {
             }
 
             if (creatureType.equals("skeleton")) {
-                spawnedCreature = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()), posX, posY, area);
+                spawnedCreature = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()));
+                area.moveInCreature(spawnedCreature, posX, posY);
             }
 
             if (creatureType.equals("wolf")) {
-                spawnedCreature = new Wolf(gameSystem, "wolfie"+Math.abs(Globals.random.nextInt()), posX, posY, area);
+                spawnedCreature = new Wolf(gameSystem, "wolfie"+Math.abs(Globals.random.nextInt()));
+                area.moveInCreature(spawnedCreature, posX, posY);
             }
 
             spawnedCreature.updateAttackType();
