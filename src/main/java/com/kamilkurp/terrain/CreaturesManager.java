@@ -72,7 +72,7 @@ public class CreaturesManager {
 
 
         for (Creature creature : creatures.values()) {
-            creature.renderAttackAnimation(g, camera);
+            creature.renderAbilities(g, camera);
         }
     }
 

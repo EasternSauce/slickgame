@@ -54,7 +54,9 @@ public class Wolf extends Mob {
         setHealthPoints(getMaxHealthPoints());
 
 
-        equipmentItems.put(0, new Item(ItemType.getItemType("woodenSword"), null));
+//        equipmentItems.put(0, new Item(ItemType.getItemType("woodenSword"), null));
+
+        unarmedDamage = 30f;
 
         dashAbility = new DashAbility(this);
         dashAbility.onPerform(() -> { dogBarkSound.play(1.0f, 0.1f); });
@@ -74,7 +76,7 @@ public class Wolf extends Mob {
     public void update(GameContainer gc, int i, KeyInput keyInput) {
         super.update(gc, i, keyInput);
 
-        dashAbility.update();
+        dashAbility.update(i);
 
     }
 

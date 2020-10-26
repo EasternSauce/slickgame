@@ -2,12 +2,11 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.Renderable;
-import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.behavior.BowAttackAbility;
-import com.kamilkurp.behavior.FistAttackAbility;
+import com.kamilkurp.behavior.UnarmedAttackAbility;
 import com.kamilkurp.behavior.SwordAttackAbility;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.projectile.Arrow;
@@ -34,21 +33,14 @@ public abstract class Creature implements Renderable {
 
     protected boolean running = false;
 
-    protected boolean attacking = false;
+//    protected boolean attacking = false;
 
     private final Sound gruntSound = Assets.gruntSound;
 
-
     protected int direction = 0;
 
-    protected int attackingDirection = 0;
-
-    private final Sound swordAttackSound = Assets.attackSound;
-    private final Sound bowAttackSound = Assets.arrowWhizzSound;
 
     protected Timer runningTimer;
-    protected Timer attackingTimer;
-    protected Timer bowAttackCooldownTimer;
 
     protected boolean moving;
 
@@ -62,22 +54,16 @@ public abstract class Creature implements Renderable {
     protected float maxHealthPoints = 100f;
     protected float healthPoints = maxHealthPoints;
 
-    protected Rectangle swordAttackRect;
 
     protected Timer immunityTimer;
 
     protected boolean immune;
 
     protected Vector2f facingVector;
-    protected double facingAngle;
     protected Vector2f attackingVector;
-    protected double attackingAngle;
-
-
 
 
     protected WalkAnimation walkAnimation;
-    protected AttackAnimation swordAttackAnimation;
 
 
     protected AttackType currentAttackType;
@@ -105,8 +91,10 @@ public abstract class Creature implements Renderable {
     protected boolean immobilized = false;
 
     protected BowAttackAbility bowAttackAbility;
-    protected FistAttackAbility fistAttackAbility;
+    protected UnarmedAttackAbility unarmedAttackAbility;
     protected SwordAttackAbility swordAttackAbility;
+
+    protected float unarmedDamage;
 
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
@@ -114,19 +102,12 @@ public abstract class Creature implements Renderable {
         rect = new Rectangle(0, 0, 64, 64);
         hitbox = new Rectangle(2, 2, 60, 60);
 
-        walkAnimation = new WalkAnimation(Assets.male1SpriteSheet, 3, 100, new int [] {3,1,0,2}, 1);
+        walkAnimation = new WalkAnimation(Assets.male1SpriteSheet, 3, 100, new int[]{3, 1, 0, 2}, 1);
 
         runningTimer = new Timer();
-        attackingTimer = new Timer();
         immunityTimer = new Timer();
-        bowAttackCooldownTimer = new Timer();
         healthRegenTimer = new Timer();
 
-        swordAttackRect = new Rectangle(-999, -999, 1, 1);
-
-        swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
-
-        facingAngle = 0.0f;
         facingVector = new Vector2f(0f, 0f);
 
         currentAttackType = AttackType.UNARMED;
@@ -139,18 +120,11 @@ public abstract class Creature implements Renderable {
         pendingY = 0.0f;
 
         bowAttackAbility = new BowAttackAbility(this);
-        fistAttackAbility = new FistAttackAbility(this);
+        unarmedAttackAbility = new UnarmedAttackAbility(this);
         swordAttackAbility = new SwordAttackAbility(this);
 
-        swordAttackAbility.onPerform(() -> {
-            swordAttackSound.play(1.0f, 0.1f);
-            swordAttackAnimation.restart();
-            attackingAngle = facingAngle;
-            attackingVector = facingVector;
-            attacking = true;
-        });
-        fistAttackAbility.onPerform(() -> {swordAttackSound.play(1.0f, 0.1f);});
-        bowAttackAbility.onPerform(() -> {bowAttackSound.play(1.0f, 0.1f);});
+        unarmedDamage = 5f;
+
     }
 
     public abstract void onInit();
@@ -163,39 +137,18 @@ public abstract class Creature implements Renderable {
             if (!isAlive()) {
                 sprite.rotate(90f);
             }
-            sprite.draw((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY(), rect.getWidth(), rect.getHeight());
-        }
-        else {
-            walkAnimation.getAnimation(direction).draw((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY(), rect.getWidth(), rect.getHeight());
+            sprite.draw((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight());
+        } else {
+            walkAnimation.getAnimation(direction).draw((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight());
         }
 
-        Assets.verdanaTtf.drawString((int)rect.getX() - (int)camera.getPosX(), (int)rect.getY() - (int)camera.getPosY() - 30f, (int)healthPoints + "/" + (int)getMaxHealthPoints(), Color.red);
+        Assets.verdanaTtf.drawString((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY() - 30f, (int) healthPoints + "/" + (int) getMaxHealthPoints(), Color.red);
     }
 
-    public void renderAttackAnimation(Graphics g, Camera camera) {
-        if (attacking) {
-            if (currentAttackType == AttackType.UNARMED) {
-                //change animation to fist attack or something
-                Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
-                image.setRotation((float) attackingAngle);
-
-                g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());
-
-            } else if (currentAttackType == AttackType.BOW) {
-                // shooting bow animation?
-            }
-
-
-        }
-
-        if (swordAttackAbility.isActive()) {
-//            if (currentAttackType == AttackType.SWORD) {
-            Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
-            image.setRotation((float) attackingAngle);
-
-            g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());
-        }
-//        }
+    public void renderAbilities(Graphics g, Camera camera) {
+        swordAttackAbility.render(g, camera);
+        unarmedAttackAbility.render(g, camera);
+        bowAttackAbility.render(g, camera);
 
     }
 
@@ -212,10 +165,12 @@ public abstract class Creature implements Renderable {
 
             setFacingDirection(gc);
 
-            meleeAttackLogic(i);
+//            meleeAttackLogic(i);
         }
 
-        swordAttackAbility.update();
+        swordAttackAbility.update(i);
+        unarmedAttackAbility.update(i);
+        bowAttackAbility.update(i);
 
 
     }
@@ -256,73 +211,6 @@ public abstract class Creature implements Renderable {
 
     protected abstract void setFacingDirection(GameContainer gc);
 
-    private void meleeAttackLogic(int i) {
-
-        Map<String, Creature> creatures = area.getCreatures();
-
-        if (attacking) {
-            if (currentAttackType == AttackType.UNARMED) {
-                for (Creature creature : creatures.values()) {
-                    if (creature == this) continue;
-                    if (swordAttackRect.intersects(creature.rect)) {
-                        if (!(this instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
-                            float unarmedDamage = 5f;
-                            creature.takeDamage(unarmedDamage);
-                        }
-                    }
-                }
-
-                float attackRange = 60f;
-
-                float attackShiftX = attackingVector.getNormal().getX() * attackRange;
-                float attackShiftY = attackingVector.getNormal().getY() * attackRange;
-
-                int attackWidth = 40;
-                int attackHeight = 40;
-
-                float attackRectX = attackShiftX + rect.getCenterX() - attackWidth / 2f;
-                float attackRectY = attackShiftY + rect.getCenterY() - attackHeight / 2f;
-
-                swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
-
-
-                swordAttackAnimation.getAnimation().update(i);
-            }
-            else if (currentAttackType == AttackType.SWORD) {
-
-            }
-
-
-        }
-
-        if (swordAttackAbility.isActive()) {
-            for (Creature creature : creatures.values()) {
-                if (creature == this) continue;
-                if (swordAttackRect.intersects(creature.rect)) {
-                    if (!(this instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
-                        creature.takeDamage(equipmentItems.get(0).getDamage());
-                    }
-                }
-            }
-
-            float attackRange = 60f;
-
-            float attackShiftX = attackingVector.getNormal().getX() * attackRange;
-            float attackShiftY = attackingVector.getNormal().getY() * attackRange;
-
-            int attackWidth = 40;
-            int attackHeight = 40;
-
-            float attackRectX = attackShiftX + rect.getCenterX() - attackWidth / 2f;
-            float attackRectY = attackShiftY + rect.getCenterY() - attackHeight / 2f;
-
-            swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
-
-
-            swordAttackAnimation.getAnimation().update(i);
-        }
-
-    }
 
     public void takeDamage(float damage) {
         if (!immune && isAlive()) {
@@ -348,7 +236,7 @@ public abstract class Creature implements Renderable {
     public float getTotalArmor() {
         float totalArmor = 0.0f;
         for (Map.Entry<Integer, Item> equipmentItem : equipmentItems.entrySet()) {
-            if (equipmentItem.getValue().getItemType().getMaxArmor() != null) {
+            if (equipmentItem.getValue() != null && equipmentItem.getValue().getItemType().getMaxArmor() != null) {
                 totalArmor += equipmentItem.getValue().getItemType().getMaxArmor();
             }
         }
@@ -441,47 +329,13 @@ public abstract class Creature implements Renderable {
     }
 
     public void attack() {
-        List<Arrow> arrowList = area.getArrowList();
-        List<TerrainTile> tiles = area.getTiles();
-        Map<String, Creature> areaCreatures = area.getCreatures();
 
         if (currentAttackType == AttackType.UNARMED) {
-//            if (swordAttackCooldownTimer.getTime() > 800f) {
-//                swordAttackSound.play(1.0f, 0.1f);
-//
-//                if (!attacking) { // on start attack
-//                    swordAttackAnimation.restart();
-//
-//                    attacking = true;
-//                    attackingTimer.reset();
-//                    attackingAngle = facingAngle;
-//                    attackingVector = facingVector;
-//                }
-//                swordAttackCooldownTimer.reset();
-//            }
+            unarmedAttackAbility.tryPerforming();
         } else if (currentAttackType == AttackType.SWORD) {
             swordAttackAbility.tryPerforming();
         } else if (currentAttackType == AttackType.BOW) {
-
-            if (bowAttackCooldownTimer.getTime() > 1200f) {
-                if (!attacking) { // on start attack
-                    bowAttackSound.play(1.0f, 0.1f);
-
-                    attacking = true;
-                    attackingTimer.reset();
-                    attackingAngle = facingAngle;
-                    attackingVector = facingVector;
-
-                    if (!facingVector.equals(new Vector2f(0.f, 0f))) {
-                        Arrow arrow = new Arrow(rect.getX(), rect.getY(), facingVector, arrowList, tiles, areaCreatures, this);
-                        arrowList.add(arrow);
-                    }
-
-
-                }
-                bowAttackCooldownTimer.reset();
-
-            }
+            bowAttackAbility.tryPerforming();
         }
 
 
@@ -518,10 +372,14 @@ public abstract class Creature implements Renderable {
 
     public void performAbilityMovement() {
         swordAttackAbility.performMovement();
+        unarmedAttackAbility.performMovement();
+        bowAttackAbility.performMovement();
     }
 
     protected void performAbilityOnUpdateStart(int i) {
         swordAttackAbility.performOnUpdateStart(i);
+        unarmedAttackAbility.performOnUpdateStart(i);
+        bowAttackAbility.performOnUpdateStart(i);
     }
 
     public abstract void performActions(GameContainer gc, KeyInput keyInput);
@@ -562,12 +420,13 @@ public abstract class Creature implements Renderable {
 
 
     public void updateAttackType() {
-        if (equipmentItems.get(0) == null) return;
+        if (equipmentItems.get(0) == null) {
+            currentAttackType = AttackType.UNARMED;
+            return;
+        };
 
         String currentWeaponName = equipmentItems.get(0).getItemType().getId();
-        if (currentWeaponName == null) {
-            currentAttackType = AttackType.UNARMED;
-        } else if (currentWeaponName.equals("woodenSword") || currentWeaponName.equals("ironSword")) {
+        if (currentWeaponName.equals("woodenSword") || currentWeaponName.equals("ironSword")) {
             currentAttackType = AttackType.SWORD;
         } else if (currentWeaponName.equals("crossbow")) {
             currentAttackType = AttackType.BOW;
@@ -631,4 +490,24 @@ public abstract class Creature implements Renderable {
         return pendingY;
     }
 
+
+    public Vector2f getFacingVector() {
+        return facingVector;
+    }
+
+    public void setFacingVector(Vector2f facingVector) {
+        this.facingVector = facingVector;
+    }
+
+    public Vector2f getAttackingVector() {
+        return attackingVector;
+    }
+
+    public void setAttackingVector(Vector2f attackingVector) {
+        this.attackingVector = attackingVector;
+    }
+
+    public float getUnarmedDamage() {
+        return unarmedDamage;
+    }
 }

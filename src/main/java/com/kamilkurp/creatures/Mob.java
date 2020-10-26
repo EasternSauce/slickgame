@@ -43,9 +43,9 @@ public abstract class Mob extends Creature {
             running = false;
         }
 
-        if (attackingTimer.getTime() > 300) {
-            attacking = false;
-        }
+//        if (attackingTimer.getTime() > 300) {
+//            attacking = false;
+//        }
 
         if (immunityTimer.getTime() > 500) {
             immune = false;
@@ -56,7 +56,6 @@ public abstract class Mob extends Creature {
     protected void setFacingDirection(GameContainer gc) {
         if (aggroed != null) {
             facingVector = new Vector2f(aggroed.getRect().getCenterX() - rect.getCenterX(), aggroed.getRect().getCenterY() - rect.getCenterY());
-            facingAngle = facingVector.getTheta();
         }
     }
 

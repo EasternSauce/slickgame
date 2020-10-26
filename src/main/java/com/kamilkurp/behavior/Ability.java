@@ -1,9 +1,11 @@
 package com.kamilkurp.behavior;
 
+import com.kamilkurp.Renderable;
 import com.kamilkurp.utils.Action;
 import com.kamilkurp.utils.Timer;
+import org.newdawn.slick.geom.Rectangle;
 
-public abstract class Ability {
+public abstract class Ability implements Renderable {
     protected Action onPerformAction;
 
     protected Timer cooldownTimer;
@@ -11,7 +13,9 @@ public abstract class Ability {
 
     protected int cooldown;
     protected int abilityTime;
-    protected boolean isActive;
+    protected boolean active;
+
+    protected Rectangle swordAttackRect;
 
     public Ability() {
         cooldownTimer = new Timer();
@@ -19,14 +23,14 @@ public abstract class Ability {
         cooldown = 3000;
         abilityTime = 200;
 
-        isActive = false;
+        active = false;
 
         onPerformAction = () -> {};
         cooldownTimer.setTime(cooldown); // ability immediately available
         abilityTimer.setTime(abilityTime);
     }
 
-    public abstract void update();
+    public abstract void update(int i);
     public abstract void performMovement();
     public abstract void performOnUpdateStart(int i);
 
@@ -44,7 +48,7 @@ public abstract class Ability {
     protected abstract void perform();
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 }
 

@@ -12,12 +12,12 @@ import org.newdawn.slick.geom.Rectangle;
 
 import java.util.Collection;
 
-public class SwordAttackAbility extends Ability {
+public class UnarmedAttackAbility extends Ability {
     Creature creature;
     protected AttackAnimation swordAttackAnimation;
-    private final Sound swordAttackSound = Assets.attackSound;
+    private final Sound punchSound = Assets.punchSound;
 
-    public SwordAttackAbility(Creature creature) {
+    public UnarmedAttackAbility(Creature creature) {
         super();
 
         this.creature = creature;
@@ -60,7 +60,7 @@ public class SwordAttackAbility extends Ability {
                 if (creature == this.creature) continue;
                 if (swordAttackRect.intersects(creature.getRect())) {
                     if (!(this.creature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
-                        creature.takeDamage(this.creature.getEquipmentItems().get(0).getDamage());
+                        creature.takeDamage(this.creature.getUnarmedDamage());
                     }
                 }
             }
@@ -84,7 +84,7 @@ public class SwordAttackAbility extends Ability {
         cooldownTimer.reset();
         swordAttackAnimation.restart();
 
-        swordAttackSound.play(1.0f, 0.1f);
+        punchSound.play(1.0f, 0.1f);
 
         creature.setAttackingVector(creature.getFacingVector());
     }

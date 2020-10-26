@@ -93,7 +93,6 @@ public class PlayerCharacter extends Creature {
             interact();
         }
 
-        dashAbility.update();
     }
 
     @Override
@@ -154,6 +153,9 @@ public class PlayerCharacter extends Creature {
             gameSystem.getCurrentAreaHolder().setCurrentArea(currentRespawnPoint.getArea());
         }
 
+        dashAbility.update(i);
+
+
     }
 
     @Override
@@ -165,8 +167,6 @@ public class PlayerCharacter extends Creature {
         float centerY = Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION / 2;
 
         facingVector = new Vector2f(mouseX - centerX, mouseY - centerY);
-
-        facingAngle = facingVector.getTheta();
     }
 
 

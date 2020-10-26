@@ -375,6 +375,8 @@ public class InventoryWindow implements Renderable {
                                 inventoryItems.put(currentMoved, to);
                                 inventoryItems.put(currentSelected, from);
                                 moving = false;
+
+                                playerCharacter.updateAttackType();
                             }
 
                         }

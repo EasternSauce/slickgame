@@ -2,7 +2,9 @@ package com.kamilkurp.behavior;
 
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.terrain.TerrainTile;
+import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -27,19 +29,19 @@ public class DashAbility extends Ability {
 
     }
 
-    public void update() {
-        if (isActive) {
+    public void update(int i) {
+        if (active) {
             //end dash
             if (dashTimer.getTime() > abilityTime) {
                 creature.setImmobilized(false);
-                isActive = false;
+                active = false;
             }
         }
     }
 
     @Override
     public void performMovement() {
-         if (isActive) {
+         if (active) {
              Rectangle rect = creature.getRect();
              List<TerrainTile> tiles = creature.getArea().getTiles();
 
@@ -60,7 +62,7 @@ public class DashAbility extends Ability {
 
     @Override
      protected void perform() {
-        isActive = true;
+        active = true;
 
         creature.setImmobilized(true);
 
@@ -70,7 +72,7 @@ public class DashAbility extends Ability {
 
     @Override
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     @Override
@@ -84,5 +86,10 @@ public class DashAbility extends Ability {
 
     public void setDashVector(Vector2f dashVector) {
         this.dashVector = dashVector;
+    }
+
+    @Override
+    public void render(Graphics g, Camera camera) {
+
     }
 }
