@@ -7,19 +7,27 @@ public abstract class Ability {
     protected Action onPerformAction;
 
     protected Timer cooldownTimer;
+    protected Timer abilityTimer;
 
-    protected float cooldown;
+    protected int cooldown;
+    protected int abilityTime;
+    protected boolean isActive;
 
     public Ability() {
         cooldownTimer = new Timer();
-        cooldown = 3000f;
+        abilityTimer = new Timer();
+        cooldown = 3000;
+        abilityTime = 200;
+
+        isActive = false;
 
         onPerformAction = () -> {};
+        cooldownTimer.setTime(cooldown); // ability immediately available
+        abilityTimer.setTime(abilityTime);
     }
 
     public abstract void update();
     public abstract void performMovement();
-    public abstract boolean isActive();
     public abstract void performOnUpdateStart(int i);
 
     public void onPerform(Action action) {
@@ -34,5 +42,9 @@ public abstract class Ability {
     }
 
     protected abstract void perform();
+
+    public boolean isActive() {
+        return isActive;
+    }
 }
 

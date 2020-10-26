@@ -128,10 +128,6 @@ public class PlayerCharacter extends Creature {
             running = false;
         }
 
-        if (attackingTimer.getTime() > 300) {
-            attacking = false;
-        }
-
         if (immunityTimer.getTime() > 500) {
             immune = false;
         }

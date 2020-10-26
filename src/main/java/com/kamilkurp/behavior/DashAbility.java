@@ -11,7 +11,6 @@ import java.util.List;
 public class DashAbility extends Ability {
 
     private Creature creature;
-    private boolean isActive = false;
     protected float dashSpeed = 0.0f;
 
     protected Timer dashTimer;
@@ -31,7 +30,7 @@ public class DashAbility extends Ability {
     public void update() {
         if (isActive) {
             //end dash
-            if (dashTimer.getTime() > 200f) {
+            if (dashTimer.getTime() > abilityTime) {
                 creature.setImmobilized(false);
                 isActive = false;
             }

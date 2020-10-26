@@ -73,6 +73,9 @@ public class Wolf extends Mob {
     @Override
     public void update(GameContainer gc, int i, KeyInput keyInput) {
         super.update(gc, i, keyInput);
+
+        dashAbility.update();
+
     }
 
     @Override
@@ -96,7 +99,6 @@ public class Wolf extends Mob {
             }
         }
 
-        dashAbility.update();
 
 
 
@@ -104,7 +106,7 @@ public class Wolf extends Mob {
 
     @Override
     public void takeDamage(float damage) {
-        if (!immune) {
+        if (!immune && isAlive()) {
 
             float beforeHP = healthPoints;
 
@@ -126,11 +128,13 @@ public class Wolf extends Mob {
 
     @Override
     protected void performAbilityOnUpdateStart(int i) {
+        super.performAbilityOnUpdateStart(i);
         dashAbility.performOnUpdateStart(i);
     }
 
     @Override
     public void performAbilityMovement() {
+        super.performAbilityMovement();
         dashAbility.performMovement();
     }
 }

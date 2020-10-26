@@ -6,6 +6,9 @@ import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.behavior.BowAttackAbility;
+import com.kamilkurp.behavior.FistAttackAbility;
+import com.kamilkurp.behavior.SwordAttackAbility;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.systems.GameSystem;
@@ -45,7 +48,6 @@ public abstract class Creature implements Renderable {
 
     protected Timer runningTimer;
     protected Timer attackingTimer;
-    protected Timer swordAttackCooldownTimer;
     protected Timer bowAttackCooldownTimer;
 
     protected boolean moving;
@@ -102,6 +104,10 @@ public abstract class Creature implements Renderable {
 
     protected boolean immobilized = false;
 
+    protected BowAttackAbility bowAttackAbility;
+    protected FistAttackAbility fistAttackAbility;
+    protected SwordAttackAbility swordAttackAbility;
+
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
         this.id = id;
@@ -113,7 +119,6 @@ public abstract class Creature implements Renderable {
         runningTimer = new Timer();
         attackingTimer = new Timer();
         immunityTimer = new Timer();
-        swordAttackCooldownTimer = new Timer();
         bowAttackCooldownTimer = new Timer();
         healthRegenTimer = new Timer();
 
@@ -132,6 +137,20 @@ public abstract class Creature implements Renderable {
 
         pendingX = 0.0f;
         pendingY = 0.0f;
+
+        bowAttackAbility = new BowAttackAbility(this);
+        fistAttackAbility = new FistAttackAbility(this);
+        swordAttackAbility = new SwordAttackAbility(this);
+
+        swordAttackAbility.onPerform(() -> {
+            swordAttackSound.play(1.0f, 0.1f);
+            swordAttackAnimation.restart();
+            attackingAngle = facingAngle;
+            attackingVector = facingVector;
+            attacking = true;
+        });
+        fistAttackAbility.onPerform(() -> {swordAttackSound.play(1.0f, 0.1f);});
+        bowAttackAbility.onPerform(() -> {bowAttackSound.play(1.0f, 0.1f);});
     }
 
     public abstract void onInit();
@@ -161,17 +180,23 @@ public abstract class Creature implements Renderable {
                 image.setRotation((float) attackingAngle);
 
                 g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());
-            } else if (currentAttackType == AttackType.SWORD) {
-                Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
-                image.setRotation((float) attackingAngle);
 
-                g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());
             } else if (currentAttackType == AttackType.BOW) {
                 // shooting bow animation?
             }
 
 
         }
+
+        if (swordAttackAbility.isActive()) {
+//            if (currentAttackType == AttackType.SWORD) {
+            Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
+            image.setRotation((float) attackingAngle);
+
+            g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());
+        }
+//        }
+
     }
 
     public void update(GameContainer gc, int i, KeyInput keyInput) {
@@ -189,6 +214,8 @@ public abstract class Creature implements Renderable {
 
             meleeAttackLogic(i);
         }
+
+        swordAttackAbility.update();
 
 
     }
@@ -262,39 +289,43 @@ public abstract class Creature implements Renderable {
                 swordAttackAnimation.getAnimation().update(i);
             }
             else if (currentAttackType == AttackType.SWORD) {
-                for (Creature creature : creatures.values()) {
-                    if (creature == this) continue;
-                    if (swordAttackRect.intersects(creature.rect)) {
-                        if (!(this instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
-                            creature.takeDamage(equipmentItems.get(0).getDamage());
-                        }
-                    }
-                }
 
-                float attackRange = 60f;
-
-                float attackShiftX = attackingVector.getNormal().getX() * attackRange;
-                float attackShiftY = attackingVector.getNormal().getY() * attackRange;
-
-                int attackWidth = 40;
-                int attackHeight = 40;
-
-                float attackRectX = attackShiftX + rect.getCenterX() - attackWidth / 2f;
-                float attackRectY = attackShiftY + rect.getCenterY() - attackHeight / 2f;
-
-                swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
-
-
-                swordAttackAnimation.getAnimation().update(i);
             }
 
 
         }
 
+        if (swordAttackAbility.isActive()) {
+            for (Creature creature : creatures.values()) {
+                if (creature == this) continue;
+                if (swordAttackRect.intersects(creature.rect)) {
+                    if (!(this instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
+                        creature.takeDamage(equipmentItems.get(0).getDamage());
+                    }
+                }
+            }
+
+            float attackRange = 60f;
+
+            float attackShiftX = attackingVector.getNormal().getX() * attackRange;
+            float attackShiftY = attackingVector.getNormal().getY() * attackRange;
+
+            int attackWidth = 40;
+            int attackHeight = 40;
+
+            float attackRectX = attackShiftX + rect.getCenterX() - attackWidth / 2f;
+            float attackRectY = attackShiftY + rect.getCenterY() - attackHeight / 2f;
+
+            swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
+
+
+            swordAttackAnimation.getAnimation().update(i);
+        }
+
     }
 
     public void takeDamage(float damage) {
-        if (!immune) {
+        if (!immune && isAlive()) {
 
             float beforeHP = healthPoints;
 
@@ -379,7 +410,7 @@ public abstract class Creature implements Renderable {
         performAbilityOnUpdateStart(i);
     }
 
-    protected abstract void performAbilityOnUpdateStart(int i);
+
 
     public void moveUp() {
         dirY = -1;
@@ -415,33 +446,21 @@ public abstract class Creature implements Renderable {
         Map<String, Creature> areaCreatures = area.getCreatures();
 
         if (currentAttackType == AttackType.UNARMED) {
-            if (swordAttackCooldownTimer.getTime() > 800f) {
-                swordAttackSound.play(1.0f, 0.1f);
-
-                if (!attacking) { // on start attack
-                    swordAttackAnimation.restart();
-
-                    attacking = true;
-                    attackingTimer.reset();
-                    attackingAngle = facingAngle;
-                    attackingVector = facingVector;
-                }
-                swordAttackCooldownTimer.reset();
-            }
+//            if (swordAttackCooldownTimer.getTime() > 800f) {
+//                swordAttackSound.play(1.0f, 0.1f);
+//
+//                if (!attacking) { // on start attack
+//                    swordAttackAnimation.restart();
+//
+//                    attacking = true;
+//                    attackingTimer.reset();
+//                    attackingAngle = facingAngle;
+//                    attackingVector = facingVector;
+//                }
+//                swordAttackCooldownTimer.reset();
+//            }
         } else if (currentAttackType == AttackType.SWORD) {
-            if (swordAttackCooldownTimer.getTime() > 800f) {
-                swordAttackSound.play(1.0f, 0.1f);
-
-                if (!attacking) { // on start attack
-                    swordAttackAnimation.restart();
-
-                    attacking = true;
-                    attackingTimer.reset();
-                    attackingAngle = facingAngle;
-                    attackingVector = facingVector;
-                }
-                swordAttackCooldownTimer.reset();
-            }
+            swordAttackAbility.tryPerforming();
         } else if (currentAttackType == AttackType.BOW) {
 
             if (bowAttackCooldownTimer.getTime() > 1200f) {
@@ -497,7 +516,13 @@ public abstract class Creature implements Renderable {
 
     }
 
-    public abstract void performAbilityMovement();
+    public void performAbilityMovement() {
+        swordAttackAbility.performMovement();
+    }
+
+    protected void performAbilityOnUpdateStart(int i) {
+        swordAttackAbility.performOnUpdateStart(i);
+    }
 
     public abstract void performActions(GameContainer gc, KeyInput keyInput);
 
