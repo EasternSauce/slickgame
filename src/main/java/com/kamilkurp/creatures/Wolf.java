@@ -60,6 +60,7 @@ public class Wolf extends Mob {
 
         dashAbility = new DashAbility(this);
         dashAbility.onPerform(() -> { dogBarkSound.play(1.0f, 0.1f); });
+        abilityList.add(dashAbility);
 
         updateAttackType();
 
@@ -75,8 +76,6 @@ public class Wolf extends Mob {
     @Override
     public void update(GameContainer gc, int i, KeyInput keyInput) {
         super.update(gc, i, keyInput);
-
-        dashAbility.update(i);
 
     }
 
@@ -126,17 +125,5 @@ public class Wolf extends Mob {
             dogWhimperSound.play(1.0f, 0.1f);
         }
 
-    }
-
-    @Override
-    protected void performAbilityOnUpdateStart(int i) {
-        super.performAbilityOnUpdateStart(i);
-        dashAbility.performOnUpdateStart(i);
-    }
-
-    @Override
-    public void performAbilityMovement() {
-        super.performAbilityMovement();
-        dashAbility.performMovement();
     }
 }

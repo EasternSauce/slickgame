@@ -37,6 +37,7 @@ public class PlayerCharacter extends Creature {
         super(gameSystem, id);
 
         dashAbility = new DashAbility(this);
+        abilityList.add(dashAbility);
     }
 
 
@@ -81,6 +82,7 @@ public class PlayerCharacter extends Creature {
             if (!movement) {
                 stepSound.stop();
                 walking = false;
+                System.out.println("stop walking");
             }
         }
 
@@ -153,9 +155,6 @@ public class PlayerCharacter extends Creature {
             gameSystem.getCurrentAreaHolder().setCurrentArea(currentRespawnPoint.getArea());
         }
 
-        dashAbility.update(i);
-
-
     }
 
     @Override
@@ -196,17 +195,6 @@ public class PlayerCharacter extends Creature {
             speed = 0.2f * i;
         }
 
-        performAbilityOnUpdateStart(i);
-    }
-
-    @Override
-    protected void performAbilityOnUpdateStart(int i) {
-        dashAbility.performOnUpdateStart(i);
-    }
-
-    @Override
-    public void performAbilityMovement() {
-        dashAbility.performMovement();
     }
 
     @Override

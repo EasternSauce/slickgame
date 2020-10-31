@@ -5,6 +5,7 @@ import com.kamilkurp.Renderable;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.behavior.Ability;
 import com.kamilkurp.behavior.BowAttackAbility;
 import com.kamilkurp.behavior.UnarmedAttackAbility;
 import com.kamilkurp.behavior.SwordAttackAbility;
@@ -19,6 +20,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -90,6 +92,8 @@ public abstract class Creature implements Renderable {
 
     protected boolean immobilized = false;
 
+    protected List<Ability> abilityList;
+
     protected BowAttackAbility bowAttackAbility;
     protected UnarmedAttackAbility unarmedAttackAbility;
     protected SwordAttackAbility swordAttackAbility;
@@ -119,9 +123,13 @@ public abstract class Creature implements Renderable {
         pendingX = 0.0f;
         pendingY = 0.0f;
 
+        abilityList = new LinkedList<>();
         bowAttackAbility = new BowAttackAbility(this);
         unarmedAttackAbility = new UnarmedAttackAbility(this);
         swordAttackAbility = new SwordAttackAbility(this);
+        abilityList.add(bowAttackAbility);
+        abilityList.add(unarmedAttackAbility);
+        abilityList.add(swordAttackAbility);
 
         unarmedDamage = 5f;
 
@@ -146,16 +154,19 @@ public abstract class Creature implements Renderable {
     }
 
     public void renderAbilities(Graphics g, Camera camera) {
-        swordAttackAbility.render(g, camera);
-        unarmedAttackAbility.render(g, camera);
-        bowAttackAbility.render(g, camera);
-
+        for (Ability ability : abilityList) {
+            ability.render(g, camera);
+        }
     }
 
     public void update(GameContainer gc, int i, KeyInput keyInput) {
 
         if (isAlive()) {
             onUpdateStart(i);
+
+            for (Ability ability : abilityList) {
+                ability.performOnUpdateStart(i);
+            }
 
             performActions(gc, keyInput);
 
@@ -165,14 +176,11 @@ public abstract class Creature implements Renderable {
 
             setFacingDirection(gc);
 
-//            meleeAttackLogic(i);
         }
 
-        swordAttackAbility.update(i);
-        unarmedAttackAbility.update(i);
-        bowAttackAbility.update(i);
-
-
+        for (Ability ability : abilityList) {
+            ability.update(i);
+        }
     }
 
     public void areaGateLogic(List<AreaGate> gatesList) {
@@ -295,7 +303,6 @@ public abstract class Creature implements Renderable {
 
         speed = 0.2f * i;
 
-        performAbilityOnUpdateStart(i);
     }
 
 
@@ -366,20 +373,10 @@ public abstract class Creature implements Renderable {
             }
         }
 
-        performAbilityMovement();
+        for (Ability ability : abilityList) {
+            ability.performMovement();
+        }
 
-    }
-
-    public void performAbilityMovement() {
-        swordAttackAbility.performMovement();
-        unarmedAttackAbility.performMovement();
-        bowAttackAbility.performMovement();
-    }
-
-    protected void performAbilityOnUpdateStart(int i) {
-        swordAttackAbility.performOnUpdateStart(i);
-        unarmedAttackAbility.performOnUpdateStart(i);
-        bowAttackAbility.performOnUpdateStart(i);
     }
 
     public abstract void performActions(GameContainer gc, KeyInput keyInput);
