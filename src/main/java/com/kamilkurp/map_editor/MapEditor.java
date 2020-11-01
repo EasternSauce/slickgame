@@ -55,7 +55,7 @@ public class MapEditor extends BasicGame {
 
         camera = new Camera();
 
-        HUD = new Hud();
+        HUD = new Hud(null);
 
         keyInput = new KeyInput();
 

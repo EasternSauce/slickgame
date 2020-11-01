@@ -12,16 +12,16 @@ import java.util.List;
 
 public class DashAbility extends Ability {
 
-    private Creature creature;
+    private Creature abilityCreature;
     protected float dashSpeed = 0.0f;
 
     protected Timer dashTimer;
     protected Vector2f dashVector;
 
-    public DashAbility(Creature creature) {
+    public DashAbility(Creature abilityCreature) {
         super();
 
-        this.creature = creature;
+        this.abilityCreature = abilityCreature;
 
         dashTimer = new Timer();
         dashVector = new Vector2f(0f, 0f);
@@ -33,7 +33,7 @@ public class DashAbility extends Ability {
         if (active) {
             //end dash
             if (dashTimer.getTime() > abilityTime) {
-                creature.setImmobilized(false);
+                abilityCreature.setImmobilized(false);
                 active = false;
             }
         }
@@ -42,18 +42,18 @@ public class DashAbility extends Ability {
     @Override
     public void performMovement() {
          if (active) {
-             Rectangle rect = creature.getRect();
-             List<TerrainTile> tiles = creature.getArea().getTiles();
+             Rectangle rect = abilityCreature.getRect();
+             List<TerrainTile> tiles = abilityCreature.getArea().getTiles();
 
              float newPosX = rect.getX() + dashSpeed * dashVector.getX();
              float newPosY = rect.getY() + dashSpeed * dashVector.getY();
 
-             if (!creature.isCollidingX(tiles, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
-                 creature.move(dashSpeed * dashVector.getX(), 0);
+             if (!abilityCreature.isCollidingX(tiles, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
+                 abilityCreature.move(dashSpeed * dashVector.getX(), 0);
              }
 
-            if (!creature.isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
-                creature.move(0, dashSpeed * dashVector.getY());
+            if (!abilityCreature.isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
+                abilityCreature.move(0, dashSpeed * dashVector.getY());
 
             }
 
@@ -64,10 +64,12 @@ public class DashAbility extends Ability {
      protected void perform() {
         active = true;
 
-        creature.setImmobilized(true);
+        abilityCreature.setImmobilized(true);
 
         cooldownTimer.reset();
         dashTimer.reset();
+
+        abilityCreature.takeStaminaDamage(20f);
     }
 
     @Override

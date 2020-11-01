@@ -26,7 +26,6 @@ public class SwordAttackAbility extends Ability {
 
         swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
         swordAttackRect = new Rectangle(-999, -999, 1, 1);
-
     }
 
     @Override
@@ -87,6 +86,9 @@ public class SwordAttackAbility extends Ability {
         swordAttackSound.play(1.0f, 0.1f);
 
         abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
+
+        abilityCreature.takeStaminaDamage(10f);
+
     }
 
     @Override

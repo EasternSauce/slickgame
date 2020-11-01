@@ -24,7 +24,6 @@ public class PlayerCharacter extends Creature {
     private final Sound stepSound = Assets.stepSound;
 
     private boolean walking = false;
-    private boolean sprint = false;
 
     private boolean respawning;
 
@@ -33,6 +32,9 @@ public class PlayerCharacter extends Creature {
     private PlayerRespawnPoint currentRespawnPoint;
 
     private DashAbility dashAbility;
+
+
+    private float staminaDrain = 0.0f;
 
     public PlayerCharacter(GameSystem gameSystem, String id) {
         super(gameSystem, id);
@@ -71,7 +73,7 @@ public class PlayerCharacter extends Creature {
             dashAbility.tryPerforming();
         }
 
-        sprint = input.isKeyDown(Input.KEY_LSHIFT);
+        sprinting = input.isKeyDown(Input.KEY_LSHIFT);
 
         if (!walking) {
             if (movement) {
@@ -127,7 +129,7 @@ public class PlayerCharacter extends Creature {
             }
 
 
-            regenerateHealth();
+            regenerate();
 
             if (!gameSystem.getDialogueWindow().isActivated()) {
                 performActions(gc, keyInput);
@@ -179,6 +181,13 @@ public class PlayerCharacter extends Creature {
             onPassedGate(gameSystem.getGateList());
         }
 
+        if (staminaDrain >= 300f) {
+
+            takeStaminaDamage(5f);
+
+            staminaDrain = 0.0f;
+        }
+
     }
 
     @Override
@@ -212,8 +221,9 @@ public class PlayerCharacter extends Creature {
         dirX = 0;
         dirY = 0;
 
-        if (sprint) {
+        if (sprinting && staminaPoints > 0) {
             speed = 0.4f * i;
+            staminaDrain += i;
         }
         else {
             speed = 0.2f * i;

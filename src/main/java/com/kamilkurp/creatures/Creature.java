@@ -10,7 +10,6 @@ import com.kamilkurp.behavior.BowAttackAbility;
 import com.kamilkurp.behavior.UnarmedAttackAbility;
 import com.kamilkurp.behavior.SwordAttackAbility;
 import com.kamilkurp.items.Item;
-import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainTile;
@@ -56,6 +55,8 @@ public abstract class Creature implements Renderable {
     protected float maxHealthPoints = 100f;
     protected float healthPoints = maxHealthPoints;
 
+    protected float maxStaminaPoints = 100f;
+    protected float staminaPoints = maxStaminaPoints;
 
     protected Timer immunityTimer;
 
@@ -73,8 +74,10 @@ public abstract class Creature implements Renderable {
     protected Map<Integer, Item> equipmentItems;
 
     protected float healthRegen = 0.3f;
+    protected float staminaRegen = 10f;
 
     protected Timer healthRegenTimer;
+    protected Timer staminaRegenTimer;
 
     protected Area area;
 
@@ -100,6 +103,10 @@ public abstract class Creature implements Renderable {
 
     protected float unarmedDamage;
 
+    protected boolean sprinting;
+
+
+
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
         this.id = id;
@@ -111,6 +118,7 @@ public abstract class Creature implements Renderable {
         runningTimer = new Timer();
         immunityTimer = new Timer();
         healthRegenTimer = new Timer();
+        staminaRegenTimer = new Timer();
 
         facingVector = new Vector2f(0f, 0f);
 
@@ -132,6 +140,8 @@ public abstract class Creature implements Renderable {
         abilityList.add(swordAttackAbility);
 
         unarmedDamage = 5f;
+
+        sprinting = false;
 
     }
 
@@ -170,7 +180,7 @@ public abstract class Creature implements Renderable {
 
             performActions(gc, keyInput);
 
-            regenerateHealth();
+            regenerate();
 
             executeMovementLogic();
 
@@ -203,13 +213,21 @@ public abstract class Creature implements Renderable {
         passedGateRecently = !leftGate;
     }
 
-    public void regenerateHealth() {
+    public void regenerate() {
         if (healthRegenTimer.getTime() > 500f) {
             if (getHealthPoints() < getMaxHealthPoints()) {
                 float afterRegen = getHealthPoints() + healthRegen;
                 healthPoints = Math.min(afterRegen, getMaxHealthPoints());
             }
             healthRegenTimer.reset();
+        }
+
+        if (staminaRegenTimer.getTime() > 500f && !sprinting) {
+            if (getStaminaPoints() < getMaxStaminaPoints()) {
+                float afterRegen = getStaminaPoints() + staminaRegen;
+                staminaPoints = Math.min(afterRegen, getMaxStaminaPoints());
+            }
+            staminaRegenTimer.reset();
         }
     }
 
@@ -395,6 +413,14 @@ public abstract class Creature implements Renderable {
         return maxHealthPoints;
     }
 
+    public float getMaxStaminaPoints() {
+        return maxStaminaPoints;
+    }
+
+    public float getStaminaPoints() {
+        return staminaPoints;
+    }
+
     public void kill() {
         healthPoints = 0f;
     }
@@ -407,6 +433,12 @@ public abstract class Creature implements Renderable {
 
     public void setImmobilized(boolean immobilized) {
         this.immobilized = immobilized;
+    }
+
+    public void takeStaminaDamage(float staminaDamage) {
+        if (staminaPoints - staminaDamage > 0) staminaPoints -= staminaDamage;
+        else staminaPoints = 0f;
+
     }
 
     public enum AttackType {UNARMED, SWORD, BOW}

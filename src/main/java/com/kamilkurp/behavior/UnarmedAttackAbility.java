@@ -87,6 +87,9 @@ public class UnarmedAttackAbility extends Ability {
         punchSound.play(1.0f, 0.1f);
 
         abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
+
+        abilityCreature.takeStaminaDamage(10f);
+
     }
 
     @Override

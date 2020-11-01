@@ -70,7 +70,7 @@ public class GameSystem {
 
         camera = new Camera();
 
-        hud = new Hud();
+        hud = new Hud(this);
 
         gateList = new LinkedList<>();
 
@@ -230,6 +230,8 @@ public class GameSystem {
         }
 
         currentArea.getCreaturesManager().updateRenderPriorityQueue();
+
+        hud.update();
     }
 
     public void render(Graphics g) {
