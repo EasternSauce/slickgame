@@ -3,6 +3,7 @@ package com.kamilkurp.spawn;
 import com.kamilkurp.Globals;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.creatures.Skeleton;
 import com.kamilkurp.creatures.Wolf;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
@@ -31,10 +32,13 @@ public class EnemyRespawnArea implements Renderable {
 
     private GameSystem gameSystem;
 
-    public EnemyRespawnArea(GameSystem gameSystem, int posX, int posY, int spawnedLimit, Area area) throws SlickException {
+    private String creatureType;
+
+    public EnemyRespawnArea(GameSystem gameSystem, int posX, int posY, int spawnedLimit, Area area, String creatureType) throws SlickException {
         this.posX = posX;
         this.posY = posY;
         this.gameSystem = gameSystem;
+        this.creatureType = creatureType;
 
         range = 150;
 
@@ -57,11 +61,23 @@ public class EnemyRespawnArea implements Renderable {
         int randX = Globals.randInt(posX - range, posX + range);
         int randY = Globals.randInt(posY - range, posY + range);
 
-        Wolf enemy = new Wolf(gameSystem, "wolfie"+Math.abs(Globals.random.nextInt()));
-        area.moveInCreature(enemy, randX, randY);
-        enemy.updateAttackType();
+        Creature spawnedCreature = null;
+        if (creatureType.equals("skeletonSword")) {
+            spawnedCreature = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()), "woodenSword");
+        }
 
-        spawnedList.add(enemy);
+        if (creatureType.equals("skeletonCrossbow")) {
+            spawnedCreature = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()), "crossbow");
+        }
+
+        if (creatureType.equals("wolf")) {
+            spawnedCreature = new Wolf(gameSystem, "wolfie"+Math.abs(Globals.random.nextInt()));
+        }
+
+        area.moveInCreature(spawnedCreature, randX, randY);
+        spawnedCreature.updateAttackType();
+
+        spawnedList.add(spawnedCreature);
     }
 
     public void update() throws SlickException {

@@ -65,7 +65,7 @@ public class BowAttackAbility extends Ability {
             arrowList.add(arrow);
         }
 
-        abilityCreature.takeStaminaDamage(20f);
+        abilityCreature.takeStaminaDamage(15f);
 
     }
 

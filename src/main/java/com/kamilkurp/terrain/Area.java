@@ -80,9 +80,9 @@ public class Area implements Renderable {
             int posY = spawnLocation.getPosY();
 
             if (spawnLocation.getSpawnType().equals("respawnArea")) {
-                if (spawnLocation.getCreatureType().equals("skeleton")) {
-                    enemyRespawnAreaList.add(new EnemyRespawnArea(gameSystem, posX, posY, 3, this));
-                }
+                enemyRespawnAreaList.add(new EnemyRespawnArea(gameSystem, posX, posY, 3, this, spawnLocation.getCreatureType()));
+
+
             } else if (spawnLocation.getSpawnType().equals("spawnPoint")) {
                 enemySpawnPointList.add(new EnemySpawnPoint(gameSystem, posX, posY, this, spawnLocation.getCreatureType()));
             }
@@ -165,6 +165,7 @@ public class Area implements Renderable {
     }
 
     public void renderSpawns(Graphics g, Camera camera) {
+
         for (EnemyRespawnArea enemyRespawnArea : enemyRespawnAreaList) {
             enemyRespawnArea.render(g, camera);
         }

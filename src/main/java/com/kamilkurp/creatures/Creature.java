@@ -105,6 +105,9 @@ public abstract class Creature implements Renderable {
 
     protected boolean sprinting;
 
+    protected Timer staminaOveruseTimer;
+
+    protected boolean staminaOveruse;
 
 
     public Creature(GameSystem gameSystem, String id) {
@@ -142,6 +145,10 @@ public abstract class Creature implements Renderable {
         unarmedDamage = 5f;
 
         sprinting = false;
+
+        staminaOveruseTimer = new Timer();
+
+        staminaOveruse = false;
 
     }
 
@@ -222,12 +229,27 @@ public abstract class Creature implements Renderable {
             healthRegenTimer.reset();
         }
 
-        if (staminaRegenTimer.getTime() > 500f && !sprinting) {
+        boolean abilityActive = false;
+
+        for (Ability ability : abilityList) {
+            if (ability.isActive()) {
+                abilityActive = true;
+                break;
+            }
+        }
+
+        if (staminaRegenTimer.getTime() > 500f && !sprinting && !abilityActive && !staminaOveruse) {
             if (getStaminaPoints() < getMaxStaminaPoints()) {
                 float afterRegen = getStaminaPoints() + staminaRegen;
                 staminaPoints = Math.min(afterRegen, getMaxStaminaPoints());
             }
             staminaRegenTimer.reset();
+        }
+
+        if (staminaOveruse) {
+            if (staminaOveruseTimer.getTime() > 1500f) {
+                staminaOveruse = false;
+            }
         }
     }
 
@@ -351,15 +373,15 @@ public abstract class Creature implements Renderable {
 
     public void attack() {
 
-        if (currentAttackType == AttackType.UNARMED) {
-            unarmedAttackAbility.tryPerforming();
-        } else if (currentAttackType == AttackType.SWORD) {
-            swordAttackAbility.tryPerforming();
-        } else if (currentAttackType == AttackType.BOW) {
-            bowAttackAbility.tryPerforming();
+        if (staminaPoints > 0f) {
+            if (currentAttackType == AttackType.UNARMED) {
+                unarmedAttackAbility.tryPerforming();
+            } else if (currentAttackType == AttackType.SWORD) {
+                swordAttackAbility.tryPerforming();
+            } else if (currentAttackType == AttackType.BOW) {
+                bowAttackAbility.tryPerforming();
+            }
         }
-
-
     }
 
     public void executeMovementLogic() {
@@ -437,7 +459,11 @@ public abstract class Creature implements Renderable {
 
     public void takeStaminaDamage(float staminaDamage) {
         if (staminaPoints - staminaDamage > 0) staminaPoints -= staminaDamage;
-        else staminaPoints = 0f;
+        else {
+            staminaPoints = 0f;
+            staminaOveruse = true;
+            staminaOveruseTimer.reset();
+        }
 
     }
 

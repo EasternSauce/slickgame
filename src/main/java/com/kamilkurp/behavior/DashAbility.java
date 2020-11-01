@@ -26,7 +26,7 @@ public class DashAbility extends Ability {
         dashTimer = new Timer();
         dashVector = new Vector2f(0f, 0f);
 
-
+        cooldown = 1000;
     }
 
     public void update(int i) {
