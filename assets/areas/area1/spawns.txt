@@ -1,2 +1,2 @@
-spawnPoint skeleton 1600 2200
+spawnPoint skeletonCrossbow 1600 2200
 spawnPoint wolf 1600 2400

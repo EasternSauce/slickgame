@@ -13,14 +13,14 @@ import org.newdawn.slick.geom.Rectangle;
 import java.util.Collection;
 
 public class SwordAttackAbility extends Ability {
-    Creature creature;
+    Creature abilityCreature;
     protected AttackAnimation swordAttackAnimation;
     private final Sound swordAttackSound = Assets.attackSound;
 
-    public SwordAttackAbility(Creature creature) {
+    public SwordAttackAbility(Creature abilityCreature) {
         super();
 
-        this.creature = creature;
+        this.abilityCreature = abilityCreature;
         cooldown = 800;
         abilityTime = 300;
 
@@ -40,14 +40,14 @@ public class SwordAttackAbility extends Ability {
 
             float attackRange = 60f;
 
-            float attackShiftX = creature.getAttackingVector().getNormal().getX() * attackRange;
-            float attackShiftY = creature.getAttackingVector().getNormal().getY() * attackRange;
+            float attackShiftX = abilityCreature.getAttackingVector().getNormal().getX() * attackRange;
+            float attackShiftY = abilityCreature.getAttackingVector().getNormal().getY() * attackRange;
 
             int attackWidth = 40;
             int attackHeight = 40;
 
-            float attackRectX = attackShiftX + creature.getRect().getCenterX() - attackWidth / 2f;
-            float attackRectY = attackShiftY + creature.getRect().getCenterY() - attackHeight / 2f;
+            float attackRectX = attackShiftX + abilityCreature.getRect().getCenterX() - attackWidth / 2f;
+            float attackRectY = attackShiftY + abilityCreature.getRect().getCenterY() - attackHeight / 2f;
 
             swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
 
@@ -55,12 +55,12 @@ public class SwordAttackAbility extends Ability {
             swordAttackAnimation.getAnimation().update(i);
 
 
-            Collection<Creature> creatures = creature.getArea().getCreatures().values();
+            Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
             for (Creature creature : creatures) {
-                if (creature == this.creature) continue;
+                if (creature == this.abilityCreature) continue;
                 if (swordAttackRect.intersects(creature.getRect())) {
-                    if (!(this.creature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
-                        creature.takeDamage(this.creature.getEquipmentItems().get(0).getDamage());
+                    if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
+                        creature.takeDamage(this.abilityCreature.getEquipmentItems().get(0).getDamage());
                     }
                 }
             }
@@ -86,7 +86,7 @@ public class SwordAttackAbility extends Ability {
 
         swordAttackSound.play(1.0f, 0.1f);
 
-        creature.setAttackingVector(creature.getFacingVector());
+        abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
     }
 
     @Override
@@ -95,7 +95,7 @@ public class SwordAttackAbility extends Ability {
 
 //            if (currentAttackType == AttackType.SWORD) {
             Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
-            image.setRotation((float) creature.getAttackingVector().getTheta());
+            image.setRotation((float) abilityCreature.getAttackingVector().getTheta());
 
             g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());
         }

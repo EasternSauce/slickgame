@@ -8,7 +8,6 @@ import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
@@ -18,19 +17,19 @@ import java.util.List;
 import java.util.Map;
 
 public class BowAttackAbility extends Ability {
-    Creature creature;
+    Creature abilityCreature;
     protected AttackAnimation swordAttackAnimation;
     private final Sound bowAttackSound = Assets.arrowWhizzSound;
 
-    public BowAttackAbility(Creature creature) {
+    public BowAttackAbility(Creature abilityCreature) {
         super();
 
-        this.creature = creature;
+        this.abilityCreature = abilityCreature;
         cooldown = 800;
         abilityTime = 300;
 
-        swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
-        swordAttackRect = new Rectangle(-999, -999, 1, 1);
+//        swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
+//        swordAttackRect = new Rectangle(-999, -999, 1, 1);
 
     }
 
@@ -40,36 +39,37 @@ public class BowAttackAbility extends Ability {
             active = false;
         }
 
-        if (active) {
-
-
-            float attackRange = 60f;
-
-            float attackShiftX = creature.getAttackingVector().getNormal().getX() * attackRange;
-            float attackShiftY = creature.getAttackingVector().getNormal().getY() * attackRange;
-
-            int attackWidth = 40;
-            int attackHeight = 40;
-
-            float attackRectX = attackShiftX + creature.getRect().getCenterX() - attackWidth / 2f;
-            float attackRectY = attackShiftY + creature.getRect().getCenterY() - attackHeight / 2f;
-
-            swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
-
-
-            swordAttackAnimation.getAnimation().update(i);
-
-
-            Collection<Creature> creatures = creature.getArea().getCreatures().values();
-            for (Creature creature : creatures) {
-                if (creature == this.creature) continue;
-                if (swordAttackRect.intersects(creature.getRect())) {
-                    if (!(this.creature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
-                        creature.takeDamage(this.creature.getEquipmentItems().get(0).getDamage());
-                    }
-                }
-            }
-        }
+//        if (active) {
+//
+//
+//            float attackRange = 60f;
+//
+//            float attackShiftX = abilityCreature.getAttackingVector().getNormal().getX() * attackRange;
+//            float attackShiftY = abilityCreature.getAttackingVector().getNormal().getY() * attackRange;
+//
+//            int attackWidth = 40;
+//            int attackHeight = 40;
+//
+//            float attackRectX = attackShiftX + abilityCreature.getRect().getCenterX() - attackWidth / 2f;
+//            float attackRectY = attackShiftY + abilityCreature.getRect().getCenterY() - attackHeight / 2f;
+//
+//            swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
+//
+//
+//            swordAttackAnimation.getAnimation().update(i);
+//
+//
+//            Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
+//            for (Creature creature : creatures) {
+//                if (creature == this.abilityCreature) continue;
+//                if (swordAttackRect.intersects(creature.getRect())) {
+//                    if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
+//                        System.out.println(this.abilityCreature.getId() + " shoots " + creature.getId());
+//                        creature.takeDamage(this.abilityCreature.getEquipmentItems().get(0).getDamage());
+//                    }
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -90,14 +90,14 @@ public class BowAttackAbility extends Ability {
 
         bowAttackSound.play(1.0f, 0.1f);
 
-        creature.setAttackingVector(creature.getFacingVector());
+        abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
 
-        List<Arrow> arrowList = creature.getArea().getArrowList();
-        List<TerrainTile> tiles = creature.getArea().getTiles();
-        Map<String, Creature> areaCreatures = creature.getArea().getCreatures();
+        List<Arrow> arrowList = abilityCreature.getArea().getArrowList();
+        List<TerrainTile> tiles = abilityCreature.getArea().getTiles();
+        Map<String, Creature> areaCreatures = abilityCreature.getArea().getCreatures();
 
-        if (!creature.getFacingVector().equals(new Vector2f(0.f, 0f))) {
-            Arrow arrow = new Arrow(creature.getRect().getX(), creature.getRect().getY(), creature.getFacingVector(), arrowList, tiles, areaCreatures, this.creature);
+        if (!abilityCreature.getFacingVector().equals(new Vector2f(0.f, 0f))) {
+            Arrow arrow = new Arrow(abilityCreature.getRect().getX(), abilityCreature.getRect().getY(), abilityCreature.getFacingVector(), arrowList, tiles, areaCreatures, this.abilityCreature);
             arrowList.add(arrow);
         }
 

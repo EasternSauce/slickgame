@@ -73,7 +73,6 @@ public class PlayerCharacter extends Creature {
 
         sprint = input.isKeyDown(Input.KEY_LSHIFT);
 
-        System.out.println("checking if walking");
         if (!walking) {
             if (movement) {
                 stepSound.loop(1.0f, 0.1f);
@@ -84,7 +83,6 @@ public class PlayerCharacter extends Creature {
             if (!movement) {
                 stepSound.stop();
                 walking = false;
-                System.out.println("stop walking");
             }
         }
 
@@ -133,7 +131,7 @@ public class PlayerCharacter extends Creature {
 
             if (!gameSystem.getDialogueWindow().isActivated()) {
                 performActions(gc, keyInput);
-                
+
                 executeMovementLogic();
 
                 setFacingDirection(gc);
@@ -177,11 +175,14 @@ public class PlayerCharacter extends Creature {
             gameSystem.getCurrentAreaHolder().setCurrentArea(currentRespawnPoint.getArea());
         }
 
+        if (passedGateRecently) {
+            onPassedGate(gameSystem.getGateList());
+        }
+
     }
 
     @Override
     protected void setFacingDirection(GameContainer gc) {
-        System.out.println("setting facing dir");
         int mouseX = gc.getInput().getMouseX();
         int mouseY = gc.getInput().getMouseY();
 

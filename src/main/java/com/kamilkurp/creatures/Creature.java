@@ -183,28 +183,24 @@ public abstract class Creature implements Renderable {
         }
     }
 
-    public void areaGateLogic(List<AreaGate> gatesList) {
-        if (passedGateRecently) {
-
-            boolean leftGate = true;
-            for (AreaGate areaGate : gatesList) {
-                if (areaGate.getAreaFrom() == area) {
-                    if (rect.intersects(areaGate.getFromRect())) {
-                        leftGate = false;
-                        break;
-                    }
-                }
-                if (areaGate.getAreaTo() == area) {
-                    if (rect.intersects(areaGate.getToRect())) {
-                        leftGate = false;
-                        break;
-                    }
+    public void onPassedGate(List<AreaGate> gatesList) {
+        boolean leftGate = true;
+        for (AreaGate areaGate : gatesList) {
+            if (areaGate.getAreaFrom() == area) {
+                if (rect.intersects(areaGate.getFromRect())) {
+                    leftGate = false;
+                    break;
                 }
             }
-
-            passedGateRecently = !leftGate;
-
+            if (areaGate.getAreaTo() == area) {
+                if (rect.intersects(areaGate.getToRect())) {
+                    leftGate = false;
+                    break;
+                }
+            }
         }
+
+        passedGateRecently = !leftGate;
     }
 
     public void regenerateHealth() {

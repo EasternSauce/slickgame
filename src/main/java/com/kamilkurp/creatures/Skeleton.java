@@ -16,7 +16,7 @@ import java.util.HashMap;
 public class Skeleton extends Mob {
 
 
-    public Skeleton(GameSystem gameSystem, String id) throws SlickException {
+    public Skeleton(GameSystem gameSystem, String id, String weapon) throws SlickException {
         super(gameSystem, id);
 
         actionTimer = new Timer();
@@ -44,8 +44,7 @@ public class Skeleton extends Mob {
         setMaxHealthPoints(1f);
         setHealthPoints(getMaxHealthPoints());
 
-
-        equipmentItems.put(0, new Item(ItemType.getItemType("woodenSword"), null));
+        equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));
 
         updateAttackType();
 

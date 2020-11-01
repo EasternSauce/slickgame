@@ -47,8 +47,13 @@ public class EnemySpawnPoint {
                 spawnedCreature.kill();
             }
 
-            if (creatureType.equals("skeleton")) {
-                spawnedCreature = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()));
+            if (creatureType.equals("skeletonSword")) {
+                spawnedCreature = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()), "woodenSword");
+                area.moveInCreature(spawnedCreature, posX, posY);
+            }
+
+            if (creatureType.equals("skeletonCrossbow")) {
+                spawnedCreature = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()), "crossbow");
                 area.moveInCreature(spawnedCreature, posX, posY);
             }
 
