@@ -27,10 +27,6 @@ public class BowAttackAbility extends Ability {
         this.abilityCreature = abilityCreature;
         cooldown = 800;
         abilityTime = 300;
-
-//        swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
-//        swordAttackRect = new Rectangle(-999, -999, 1, 1);
-
     }
 
     @Override
@@ -38,38 +34,6 @@ public class BowAttackAbility extends Ability {
         if (cooldownTimer.getTime() > abilityTime) {
             active = false;
         }
-
-//        if (active) {
-//
-//
-//            float attackRange = 60f;
-//
-//            float attackShiftX = abilityCreature.getAttackingVector().getNormal().getX() * attackRange;
-//            float attackShiftY = abilityCreature.getAttackingVector().getNormal().getY() * attackRange;
-//
-//            int attackWidth = 40;
-//            int attackHeight = 40;
-//
-//            float attackRectX = attackShiftX + abilityCreature.getRect().getCenterX() - attackWidth / 2f;
-//            float attackRectY = attackShiftY + abilityCreature.getRect().getCenterY() - attackHeight / 2f;
-//
-//            swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
-//
-//
-//            swordAttackAnimation.getAnimation().update(i);
-//
-//
-//            Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
-//            for (Creature creature : creatures) {
-//                if (creature == this.abilityCreature) continue;
-//                if (swordAttackRect.intersects(creature.getRect())) {
-//                    if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
-//                        System.out.println(this.abilityCreature.getId() + " shoots " + creature.getId());
-//                        creature.takeDamage(this.abilityCreature.getEquipmentItems().get(0).getDamage());
-//                    }
-//                }
-//            }
-//        }
     }
 
     @Override

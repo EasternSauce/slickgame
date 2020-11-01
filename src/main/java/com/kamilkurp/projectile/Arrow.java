@@ -3,6 +3,7 @@ package com.kamilkurp.projectile;
 import com.kamilkurp.Renderable;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.creatures.Mob;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
@@ -103,10 +104,13 @@ public class Arrow implements Renderable {
 
             Rectangle arrowRect = new Rectangle(newPosX + hitbox.getX(), newPosY + hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
 
-            if(creatureRect.intersects(arrowRect)) {
-                if (speedVector.equals(new Vector2f(0f, 0f)) || creature.getHealthPoints() <= 0.0f) return false;
-                creature.takeDamage(shooter.getEquipmentItems().get(0).getItemType().getMaxDamage());
-                return true;
+            if (!(shooter instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
+
+                if (creatureRect.intersects(arrowRect)) {
+                    if (speedVector.equals(new Vector2f(0f, 0f)) || creature.getHealthPoints() <= 0.0f) return false;
+                    creature.takeDamage(shooter.getEquipmentItems().get(0).getItemType().getMaxDamage());
+                    return true;
+                }
             }
         }
         return false;
