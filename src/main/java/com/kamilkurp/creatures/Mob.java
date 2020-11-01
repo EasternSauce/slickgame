@@ -36,8 +36,8 @@ public abstract class Mob extends Creature {
     }
 
     @Override
-    public void update(GameContainer gc, int i, KeyInput keyInput) {
-        super.update(gc, i , keyInput);
+    public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
+        super.update(gc, i , keyInput, gameSystem);
 
         if (runningTimer.getTime() > 200) {
             running = false;

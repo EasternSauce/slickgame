@@ -8,6 +8,7 @@ import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
+import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
 
 import java.util.*;
@@ -81,8 +82,8 @@ public class NonPlayerCharacter extends Creature {
     }
 
     @Override
-    public void update(GameContainer gc, int i, KeyInput keyInput) {
-        super.update(gc, i, keyInput);
+    public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
+        super.update(gc, i, keyInput, gameSystem);
 
         // CHANGE THESE to only update once...
 
@@ -108,16 +109,6 @@ public class NonPlayerCharacter extends Creature {
 
     @Override
     public void onDeath() {
-
-    }
-
-    @Override
-    protected void performAbilityOnUpdateStart(int i) {
-
-    }
-
-    @Override
-    public void performAbilityMovement() {
 
     }
 

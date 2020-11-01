@@ -3,6 +3,7 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.behavior.Ability;
 import com.kamilkurp.behavior.DashAbility;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
@@ -72,6 +73,7 @@ public class PlayerCharacter extends Creature {
 
         sprint = input.isKeyDown(Input.KEY_LSHIFT);
 
+        System.out.println("checking if walking");
         if (!walking) {
             if (movement) {
                 stepSound.loop(1.0f, 0.1f);
@@ -118,11 +120,31 @@ public class PlayerCharacter extends Creature {
 }
 
     @Override
-    public void update(GameContainer gc, int i, KeyInput keyInput) {
-        super.update(gc, i, keyInput);
+    public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
+        if (isAlive()) {
+            onUpdateStart(i);
 
-        if (!isAlive()) {
+            for (Ability ability : abilityList) {
+                ability.performOnUpdateStart(i);
+            }
+
+
+            regenerateHealth();
+
+            if (!gameSystem.getDialogueWindow().isActivated()) {
+                performActions(gc, keyInput);
+                
+                executeMovementLogic();
+
+                setFacingDirection(gc);
+            }
+
+        } else {
             stepSound.stop();
+        }
+
+        for (Ability ability : abilityList) {
+            ability.update(i);
         }
 
         if (runningTimer.getTime() > 200) {
@@ -159,6 +181,7 @@ public class PlayerCharacter extends Creature {
 
     @Override
     protected void setFacingDirection(GameContainer gc) {
+        System.out.println("setting facing dir");
         int mouseX = gc.getInput().getMouseX();
         int mouseY = gc.getInput().getMouseY();
 

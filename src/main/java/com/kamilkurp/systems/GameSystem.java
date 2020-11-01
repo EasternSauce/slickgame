@@ -275,16 +275,15 @@ public class GameSystem {
         Map<String, Creature> areaCreatures = getCurrentArea().getCreatures();
 
         for (Creature creature : areaCreatures.values()) {
-            if (creature instanceof PlayerCharacter) {
-                if (!getInventoryWindow().isInventoryOpen() && !getLootOptionWindow().isActivated() && !getDialogueWindow().isActivated()) {
-                    creature.update(gc, i, keyInput);
+//            if (creature instanceof PlayerCharacter) {
+//                if (!getInventoryWindow().isInventoryOpen() && !getLootOptionWindow().isActivated() && !getDialogueWindow().isActivated()) {
+//                    creature.update(gc, i, keyInput);
+//
+//                    creature.areaGateLogic(getGateList());
+//                }
+//            }
 
-                    creature.areaGateLogic(getGateList());
-                }
-            }
-            else {
-                creature.update(gc, i, keyInput);
-            }
+            creature.update(gc, i, keyInput, this);
 
         }
     }

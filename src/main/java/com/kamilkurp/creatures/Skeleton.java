@@ -59,19 +59,10 @@ public class Skeleton extends Mob {
     }
 
     @Override
-    public void update(GameContainer gc, int i, KeyInput keyInput) {
-        super.update(gc, i, keyInput);
+    public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
+        super.update(gc, i, keyInput, gameSystem);
     }
 
-    @Override
-    protected void performAbilityOnUpdateStart(int i) {
-
-    }
-
-    @Override
-    public void performAbilityMovement() {
-
-    }
 
     @Override
     public String getCreatureType() {

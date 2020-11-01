@@ -159,7 +159,7 @@ public abstract class Creature implements Renderable {
         }
     }
 
-    public void update(GameContainer gc, int i, KeyInput keyInput) {
+    public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
 
         if (isAlive()) {
             onUpdateStart(i);
