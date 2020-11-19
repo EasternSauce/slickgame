@@ -47,6 +47,8 @@ public class PlayerCharacter extends Creature {
 
     @Override
     public void performActions(GameContainer gc, KeyInput keyInput) {
+        if (gameSystem.getInventoryWindow().isInventoryOpen()) return;
+
         Input input = gc.getInput();
 
         boolean movement = false;
@@ -183,7 +185,7 @@ public class PlayerCharacter extends Creature {
 
         if (staminaDrain >= 300f) {
 
-            takeStaminaDamage(5f);
+            takeStaminaDamage(8f);
 
             staminaDrain = 0.0f;
         }

@@ -74,7 +74,7 @@ public abstract class Creature implements Renderable {
     protected Map<Integer, Item> equipmentItems;
 
     protected float healthRegen = 0.3f;
-    protected float staminaRegen = 10f;
+    protected float staminaRegen = 8f;
 
     protected Timer healthRegenTimer;
     protected Timer staminaRegenTimer;
@@ -247,7 +247,7 @@ public abstract class Creature implements Renderable {
         }
 
         if (staminaOveruse) {
-            if (staminaOveruseTimer.getTime() > 1500f) {
+            if (staminaOveruseTimer.getTime() > 1750f) {
                 staminaOveruse = false;
             }
         }

@@ -4,7 +4,9 @@ import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
+import com.kamilkurp.utils.Action;
 import com.kamilkurp.utils.Camera;
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Sound;
@@ -15,6 +17,7 @@ import java.util.Collection;
 public class SwordAttackAbility extends Ability {
     Creature abilityCreature;
     protected AttackAnimation swordAttackAnimation;
+    protected AttackAnimation swordWindupAnimation;
     private final Sound swordAttackSound = Assets.attackSound;
 
     public SwordAttackAbility(Creature abilityCreature) {
@@ -25,16 +28,27 @@ public class SwordAttackAbility extends Ability {
         abilityTime = 300;
 
         swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
+        swordWindupAnimation = new AttackAnimation(Assets.slashWindupSpriteSheet, 6, 90);
         swordAttackRect = new Rectangle(-999, -999, 1, 1);
     }
 
     @Override
     public void update(int i) {
+        if (abilityCreature.getStaminaPoints() != 0 && windup && windupTimer.getTime() > windupTime) {
+            windup = false;
+            perform();
+            onPerformAction.execute();
+        }
+
         if (cooldownTimer.getTime() > abilityTime) {
             active = false;
         }
 
-        if (active) {
+        if (windup) {
+            swordWindupAnimation.getAnimation().update(i);
+        }
+
+        if (active || windup) {
 
 
             float attackRange = 60f;
@@ -51,8 +65,11 @@ public class SwordAttackAbility extends Ability {
             swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
 
 
-            swordAttackAnimation.getAnimation().update(i);
 
+        }
+
+        if (active) {
+            swordAttackAnimation.getAnimation().update(i);
 
             Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
             for (Creature creature : creatures) {
@@ -79,16 +96,20 @@ public class SwordAttackAbility extends Ability {
     @Override
     protected void perform() {
         active = true;
-        abilityTimer.reset();
         cooldownTimer.reset();
         swordAttackAnimation.restart();
 
         swordAttackSound.play(1.0f, 0.1f);
 
-        abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
-
         abilityCreature.takeStaminaDamage(10f);
 
+    }
+
+    @Override
+    public void onWindup() {
+        abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
+
+        swordWindupAnimation.restart();
     }
 
     @Override
@@ -97,6 +118,12 @@ public class SwordAttackAbility extends Ability {
 
 //            if (currentAttackType == AttackType.SWORD) {
             Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
+            image.setRotation((float) abilityCreature.getAttackingVector().getTheta());
+
+            g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());
+        }
+        if (windup) {
+            Image image = swordWindupAnimation.getAnimation().getCurrentFrame();
             image.setRotation((float) abilityCreature.getAttackingVector().getTheta());
 
             g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());

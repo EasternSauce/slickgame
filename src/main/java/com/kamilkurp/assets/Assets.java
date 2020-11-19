@@ -17,6 +17,7 @@ public class Assets {
     public static SpriteSheet wolfSpriteSheet;
     public static SpriteSheet slashSpriteSheet;
     public static SpriteSheet betterSlashSpriteSheet;
+    public static SpriteSheet slashWindupSpriteSheet;
     public static Sound stepSound;
     public static Sound gruntSound;
     public static Sound attackSound;
@@ -49,6 +50,7 @@ public class Assets {
         wolfSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/wolf.png", 50, 35);
         slashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash.png", 40, 40);
         betterSlashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash_hd.png", 40, 40);
+        slashWindupSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash_windup.png", 40, 40);
         stepSound = new Sound(Globals.getAssetsLocation() + "sounds/running.wav");
         gruntSound = new Sound(Globals.getAssetsLocation() + "sounds/grunt.wav");
         attackSound = new Sound(Globals.getAssetsLocation() + "sounds/swoosh.wav");

@@ -31,6 +31,11 @@ public class BowAttackAbility extends Ability {
 
     @Override
     public void update(int i) {
+        if (abilityCreature.getStaminaPoints() != 0 && windup && windupTimer.getTime() > windupTime) {
+            windup = false;
+            perform();
+            onPerformAction.execute();
+        }
         if (cooldownTimer.getTime() > abilityTime) {
             active = false;
         }
@@ -49,7 +54,6 @@ public class BowAttackAbility extends Ability {
     @Override
     protected void perform() {
         active = true;
-        abilityTimer.reset();
         cooldownTimer.reset();
 
         bowAttackSound.play(1.0f, 0.1f);

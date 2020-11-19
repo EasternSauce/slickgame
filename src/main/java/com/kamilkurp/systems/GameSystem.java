@@ -58,12 +58,12 @@ public class GameSystem {
 
         areas.get("area1").addRespawnPoint(new PlayerRespawnPoint(this, 500, 500, areas.get("area1")));
 
-        playerCharacter = new PlayerCharacter(this, "protagonist");
+        playerCharacter = new PlayerCharacter(this, "Protagonist");
         areas.get("area1").addNewCreature(playerCharacter, 400f, 400f);
 
         cameraFocusedCreature = playerCharacter;
 
-        NonPlayerCharacter nonPlayerCharacter = new NonPlayerCharacter(this, "johnny", "a1", true);
+        NonPlayerCharacter nonPlayerCharacter = new NonPlayerCharacter(this, "Johnny", "a1", true);
         areas.get("area1").addNewCreature(nonPlayerCharacter, 600f, 600f);
 
         inventoryWindow.setPlayerCharacter(playerCharacter);

@@ -7,27 +7,34 @@ import org.newdawn.slick.geom.Rectangle;
 
 public abstract class Ability implements Renderable {
     protected Action onPerformAction;
+    protected Action onWindupAction;
 
     protected Timer cooldownTimer;
-    protected Timer abilityTimer;
+    protected Timer windupTimer;
 
     protected int cooldown;
     protected int abilityTime;
+    protected int windupTime;
+
+    protected boolean windup;
+
     protected boolean active;
 
     protected Rectangle swordAttackRect;
 
     public Ability() {
         cooldownTimer = new Timer();
-        abilityTimer = new Timer();
+        windupTimer = new Timer();
         cooldown = 3000;
         abilityTime = 200;
+        windupTime = 500;
 
         active = false;
+        windup = false;
 
         onPerformAction = () -> {};
         cooldownTimer.setTime(cooldown); // ability immediately available
-        abilityTimer.setTime(abilityTime);
+        windupTimer.setTime(windupTime);
     }
 
     public abstract void update(int i);
@@ -38,10 +45,15 @@ public abstract class Ability implements Renderable {
         onPerformAction = action;
     }
 
+    public void onWindup() {
+
+    }
+
     public void tryPerforming() {
-        if (cooldownTimer.getTime() > cooldown) {
-            perform();
-            onPerformAction.execute();
+        if (!windup && cooldownTimer.getTime() > cooldown) {
+            windupTimer.reset();
+            windup = true;
+            onWindup();
         }
     }
 
