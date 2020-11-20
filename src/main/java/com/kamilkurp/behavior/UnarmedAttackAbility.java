@@ -33,10 +33,12 @@ public class UnarmedAttackAbility extends Ability {
 
     @Override
     public void update(int i) {
-        if (abilityCreature.getStaminaPoints() != 0 && windup && windupTimer.getTime() > windupTime) {
+        if (windup && windupTimer.getTime() > windupTime) {
             windup = false;
-            perform();
-            onPerformAction.execute();
+            if (abilityCreature.getStaminaPoints() != 0) {
+                perform();
+                onPerformAction.execute();
+            }
         }
 
         if (cooldownTimer.getTime() > abilityTime) {
@@ -99,7 +101,7 @@ public class UnarmedAttackAbility extends Ability {
 
         punchSound.play(1.0f, 0.1f);
 
-        abilityCreature.takeStaminaDamage(10f);
+        abilityCreature.takeStaminaDamage(25f);
 
     }
 

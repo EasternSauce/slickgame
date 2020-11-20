@@ -29,12 +29,14 @@ public class Hud {
         rightRect = new Rectangle(w * proportion, 0, w - w * proportion, h);
         color = new Color(20,15,20);
 
-        PlayerCharacter pc = gameSystem.getPlayerCharacter();
-        maxHealthRect = new Rectangle(10, h * proportion - 40, 100, 10);
-        healthRect = new Rectangle(10, h * proportion - 40, 100 * pc.getHealthPoints()/pc.getMaxHealthPoints(), 10);
+        if (gameSystem != null) {
+            PlayerCharacter pc = gameSystem.getPlayerCharacter();
+            maxHealthRect = new Rectangle(10, h * proportion - 40, 100, 10);
+            healthRect = new Rectangle(10, h * proportion - 40, 100 * pc.getHealthPoints()/pc.getMaxHealthPoints(), 10);
 
-        maxStaminaRect = new Rectangle(10, h * proportion - 25, 100, 10);
-        staminaRect = new Rectangle(10, h * proportion - 25, 100 * pc.getHealthPoints()/pc.getMaxHealthPoints(), 10);
+            maxStaminaRect = new Rectangle(10, h * proportion - 25, 100, 10);
+            staminaRect = new Rectangle(10, h * proportion - 25, 100 * pc.getHealthPoints()/pc.getMaxHealthPoints(), 10);
+        }
     }
 
     public void render(Graphics g) {
@@ -42,7 +44,7 @@ public class Hud {
         g.fill(bottomRect);
         g.fill(rightRect);
 
-        if (gameSystem.getPlayerCharacter() != null) {
+        if (gameSystem != null && gameSystem.getPlayerCharacter() != null) {
             g.setColor(Color.orange);
             g.fill(maxHealthRect);
 

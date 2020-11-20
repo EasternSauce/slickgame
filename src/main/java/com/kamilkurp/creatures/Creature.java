@@ -74,7 +74,7 @@ public abstract class Creature implements Renderable {
     protected Map<Integer, Item> equipmentItems;
 
     protected float healthRegen = 0.3f;
-    protected float staminaRegen = 8f;
+    protected float staminaRegen = 16f;
 
     protected Timer healthRegenTimer;
     protected Timer staminaRegenTimer;

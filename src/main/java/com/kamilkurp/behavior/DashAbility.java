@@ -30,10 +30,12 @@ public class DashAbility extends Ability {
     }
 
     public void update(int i) {
-        if (abilityCreature.getStaminaPoints() != 0 && windup && windupTimer.getTime() > windupTime) {
+        if (windup && windupTimer.getTime() > windupTime) {
             windup = false;
-            perform();
-            onPerformAction.execute();
+            if (abilityCreature.getStaminaPoints() != 0) {
+                perform();
+                onPerformAction.execute();
+            }
         }
         if (active) {
             //end dash
@@ -74,7 +76,7 @@ public class DashAbility extends Ability {
         cooldownTimer.reset();
         dashTimer.reset();
 
-        abilityCreature.takeStaminaDamage(20f);
+        abilityCreature.takeStaminaDamage(35f);
 
         windupTime = 150;
     }

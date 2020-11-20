@@ -31,10 +31,12 @@ public class BowAttackAbility extends Ability {
 
     @Override
     public void update(int i) {
-        if (abilityCreature.getStaminaPoints() != 0 && windup && windupTimer.getTime() > windupTime) {
+        if (windup && windupTimer.getTime() > windupTime) {
             windup = false;
-            perform();
-            onPerformAction.execute();
+            if (abilityCreature.getStaminaPoints() != 0) {
+                perform();
+                onPerformAction.execute();
+            }
         }
         if (cooldownTimer.getTime() > abilityTime) {
             active = false;
@@ -69,7 +71,7 @@ public class BowAttackAbility extends Ability {
             arrowList.add(arrow);
         }
 
-        abilityCreature.takeStaminaDamage(15f);
+        abilityCreature.takeStaminaDamage(30f);
 
     }
 

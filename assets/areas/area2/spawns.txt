@@ -1,4 +1,4 @@
 spawnPoint skeletonSword 1600 2000
 spawnPoint skeletonSword 1600 3000
 respawnArea skeletonSword 1300 1600
-respawnArea wolf 800 1800
+respawnArea wolf 400 2200
