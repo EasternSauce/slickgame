@@ -167,7 +167,7 @@ public abstract class Creature implements Renderable {
             walkAnimation.getAnimation(direction).draw((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight());
         }
 
-        Assets.verdanaTtf.drawString((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY() - 30f, (int) healthPoints + "/" + (int) getMaxHealthPoints(), Color.red);
+        Assets.verdanaTtf.drawString((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY() - 30f, (int) Math.ceil(healthPoints) + "/" + (int) Math.ceil(getMaxHealthPoints()), Color.red);
     }
 
     public void renderAbilities(Graphics g, Camera camera) {

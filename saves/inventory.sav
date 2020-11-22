@@ -1,1 +1,7 @@
-gold 54
+inventory_item 0 ringmailGreaves 0 3
+inventory_item 1 ringmailGreaves 0 2
+inventory_item 2 ringmailGreaves 0 2
+inventory_item 3 ringmailGreaves 0 3
+inventory_item 4 hideGloves 0 2
+gold 40
+respawnPoint area1 0

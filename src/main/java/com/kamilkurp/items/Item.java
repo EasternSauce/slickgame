@@ -52,11 +52,18 @@ public class Item {
         return itemType;
     }
 
-    public String getItemInformation() {
-        return (this.damage != null ? "Damage: " + damage.intValue() + "\n" : "")
-                + (this.armor != null ? "Armor: " + armor.intValue() + "\n" : "")
-                + this.getDescription() + "\n"
-                + "Worth " + (int)(this.getItemType().getWorth() * 0.3) + " Gold" + "\n";
+    public String getItemInformation(boolean trader) {
+        if (trader) {
+            return (this.damage != null ? "Damage: " + damage.intValue() + "\n" : "")
+                    + (this.armor != null ? "Armor: " + armor.intValue() + "\n" : "")
+                    + this.getDescription() + "\n"
+                    + "Worth " + (int)(this.getItemType().getWorth()) + " Gold" + "\n";
+        } else {
+            return (this.damage != null ? "Damage: " + damage.intValue() + "\n" : "")
+                    + (this.armor != null ? "Armor: " + armor.intValue() + "\n" : "")
+                    + this.getDescription() + "\n"
+                    + "Worth " + (int)(this.getItemType().getWorth() * 0.3) + " Gold" + "\n";
+        }
 
     }
 

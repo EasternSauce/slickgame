@@ -66,8 +66,7 @@ public class GameSystem {
         cameraFocusedCreature = playerCharacter;
 
         NonPlayerCharacter nonPlayerCharacter = new NonPlayerCharacter(this, "Johnny", "a1", true);
-        areas.get("area1").addNewCreature(nonPlayerCharacter, 500f, 600f);
-
+        areas.get("area1").addNewCreature(nonPlayerCharacter, 1512f, 11f);
         inventoryWindow.setPlayerCharacter(playerCharacter);
 
         camera = new Camera();

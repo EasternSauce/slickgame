@@ -5,6 +5,7 @@ import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
+import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import org.newdawn.slick.*;
@@ -109,6 +110,8 @@ public class SimpleSlickGame extends BasicGame {
             }
 
             writer.write("gold " + gameSystem.getInventoryWindow().getGold() + "\n");
+            writer.write("respawnPoint " + gameSystem.getPlayerCharacter().getRespawnArea().getId() + " "
+                    + gameSystem.getPlayerCharacter().getRespawnArea().getRespawnList().indexOf(gameSystem.getPlayerCharacter().getCurrentRespawnPoint()));
 
             writer.close();
         } catch (IOException e) {
@@ -201,6 +204,11 @@ public class SimpleSlickGame extends BasicGame {
                 }
                 if(s[0].equals("gold")) {
                     gameSystem.getInventoryWindow().setGold(Integer.parseInt(s[1]));
+                }
+
+                if(s[0].equals("respawnPoint")) {
+                    PlayerRespawnPoint respawnPoint = gameSystem.getAreas().get(s[1]).getRespawnList().get(Integer.parseInt(s[2]));
+                    gameSystem.getPlayerCharacter().setCurrentRespawnPoint(respawnPoint);
                 }
 
                 line = reader.readLine();

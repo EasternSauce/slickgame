@@ -124,7 +124,7 @@ public class PlayerCharacter extends Creature {
 
     @Override
     public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
-//        System.out.println((int)rect.getX() + " " + (int)rect.getY());
+        System.out.println(rect.getX() + " " + rect.getY());
         if (isAlive()) {
             onUpdateStart(i);
 
@@ -221,7 +221,6 @@ public class PlayerCharacter extends Creature {
         for (PlayerRespawnPoint playerRespawnPoint : area.getRespawnList()) {
             if (rect.intersects(playerRespawnPoint.getRect())) {
                 currentRespawnPoint = playerRespawnPoint;
-                System.out.println("player respawn point set");
                 currentRespawnPoint.onRespawnSet();
             }
         }
@@ -263,5 +262,13 @@ public class PlayerCharacter extends Creature {
 
     public Area getRespawnArea() {
         return currentRespawnPoint.getArea();
+    }
+
+    public PlayerRespawnPoint getCurrentRespawnPoint() {
+        return currentRespawnPoint;
+    }
+
+    public void setCurrentRespawnPoint(PlayerRespawnPoint currentRespawnPoint) {
+        this.currentRespawnPoint = currentRespawnPoint;
     }
 }

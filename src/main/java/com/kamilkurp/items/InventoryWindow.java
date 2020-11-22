@@ -176,7 +176,7 @@ public class InventoryWindow implements Renderable {
                 Assets.verdanaTtf.drawString(background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space, item.getName(), Color.orange);
             }
             if (item != null) {
-                g.drawString(item.getItemInformation(),
+                g.drawString(item.getItemInformation(false),
                         background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
             }
 
@@ -186,7 +186,7 @@ public class InventoryWindow implements Renderable {
                 Assets.verdanaTtf.drawString(background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space, item.getName(), Color.orange);
             }
             if (item != null) {
-                g.drawString(item.getItemInformation(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
+                g.drawString(item.getItemInformation(true), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
             }
 
         } else {
@@ -196,7 +196,7 @@ public class InventoryWindow implements Renderable {
 
             }
             if (item != null) {
-                g.drawString(item.getItemInformation(), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
+                g.drawString(item.getItemInformation(false), background.getX() + space, background.getY() + margin + (space + slotHeight) * inventoryRows + space + 25);
             }
 
         }
@@ -446,6 +446,12 @@ public class InventoryWindow implements Renderable {
         currentSelected = 0;
         moving = false;
         trading = false;
+        inTraderInventory = false;
+        inEquipment = false;
+        moving = false;
+        currentMoved = 0;
+        currentSelected = 0;
+        movingInEquipment = false;
     }
 
     public void sellSelectedItem() {

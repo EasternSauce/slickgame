@@ -1,0 +1,9 @@
+creature Johnny
+area area1
+pos 1512.0 11.0
+health 100.0
+creature Protagonist
+area area1
+pos 713.0198 1814.1731
+health 56.151344
+equipment_item 5 ringmailGreaves 0 3

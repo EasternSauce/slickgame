@@ -185,7 +185,6 @@ public class Area implements Renderable {
     }
 
     public void onLeave() {
-        System.out.println("on leave");
         arrowList.clear();
         lootPileList.clear();
 
@@ -199,7 +198,6 @@ public class Area implements Renderable {
 
     public void onEntry() {
 
-        System.out.println("on entry " + id);
         creaturesManager.onAreaChange();
 
     }

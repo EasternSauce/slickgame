@@ -27,6 +27,7 @@ public class BowAttackAbility extends Ability {
         this.abilityCreature = abilityCreature;
         cooldown = 800;
         abilityTime = 300;
+        windupTime = 150;
     }
 
     @Override
