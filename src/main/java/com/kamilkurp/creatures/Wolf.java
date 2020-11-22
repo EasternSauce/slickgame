@@ -50,7 +50,7 @@ public class Wolf extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(1f);
+        setMaxHealthPoints(35f);
         setHealthPoints(getMaxHealthPoints());
 
 

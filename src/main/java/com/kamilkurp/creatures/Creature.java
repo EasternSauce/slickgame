@@ -142,7 +142,7 @@ public abstract class Creature implements Renderable {
         abilityList.add(unarmedAttackAbility);
         abilityList.add(swordAttackAbility);
 
-        unarmedDamage = 5f;
+        unarmedDamage = 15f;
 
         sprinting = false;
 

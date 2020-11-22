@@ -26,6 +26,7 @@ public class SwordAttackAbility extends Ability {
         this.abilityCreature = abilityCreature;
         cooldown = 800;
         abilityTime = 300;
+        windupTime = 500;
 
         swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
         swordWindupAnimation = new AttackAnimation(Assets.slashWindupSpriteSheet, 6, 90);

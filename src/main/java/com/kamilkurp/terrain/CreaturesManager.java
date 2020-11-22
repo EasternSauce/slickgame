@@ -28,15 +28,24 @@ public class CreaturesManager {
 
     public void onAreaChange() {
         for (Creature creature : creatures.values()) {
+//            System.out.println("on area change " + creature.getId());
             if (!(creature instanceof PlayerCharacter || creature instanceof NonPlayerCharacter)) {
+                System.out.println(creature.getId() + " health: " + creature.getHealthPoints());
                 if (!creature.isAlive()) {
+                    System.out.println("marking for deletion");
                     creature.markForDeletion();
+//                    System.out.println("marking for deletion");
                 }
 
             }
         }
 
-        creatures.entrySet().removeIf(e -> e.getValue().isToBeRemoved());
+        System.out.println("removing marked objects");
+        creatures.entrySet().removeIf(e ->  {
+
+            System.out.println(e.getValue().getId() + " is to be removed: " + e.getValue().isToBeRemoved());
+            return e.getValue().isToBeRemoved();
+        });
     }
 
     public void processAreaChanges(List<Creature> creaturesToMove) throws SlickException {
@@ -157,5 +166,10 @@ public class CreaturesManager {
 
     public Map<String, Creature> getCreatures() {
         return creatures;
+    }
+
+    public void clearRespawnableCreatures() {
+        creatures.entrySet().removeIf(creature -> !(creature.getValue() instanceof PlayerCharacter || creature.getValue() instanceof NonPlayerCharacter));
+
     }
 }

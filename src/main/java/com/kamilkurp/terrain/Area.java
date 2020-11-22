@@ -185,6 +185,7 @@ public class Area implements Renderable {
     }
 
     public void onLeave() {
+        System.out.println("on leave");
         arrowList.clear();
         lootPileList.clear();
 
@@ -198,6 +199,7 @@ public class Area implements Renderable {
 
     public void onEntry() {
 
+        System.out.println("on entry " + id);
         creaturesManager.onAreaChange();
 
     }
@@ -238,6 +240,16 @@ public class Area implements Renderable {
         creature.getRect().setY(y);
 
         creature.onInit();
+    }
+
+    public void reset() {
+        arrowList.clear();
+        lootPileList.clear();
+        creaturesManager.clearRespawnableCreatures();
+
+        for (EnemySpawnPoint enemySpawnPoint : enemySpawnPointList) {
+            enemySpawnPoint.markForRespawn();
+        }
     }
 }
 

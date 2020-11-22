@@ -40,6 +40,7 @@ public class GameSystem {
     private Hud hud;
     private PlayerCharacter playerCharacter;
     private Creature cameraFocusedCreature;
+    private boolean markRespawnAreaForReset;
 
     public GameSystem() throws SlickException {
         inventoryWindow = new InventoryWindow(this);
@@ -57,6 +58,7 @@ public class GameSystem {
         areas.put("area2", new Area(this,"area2", Assets.dungeonTileset, Assets.area2Layout, Assets.area2Enemies));
 
         areas.get("area1").addRespawnPoint(new PlayerRespawnPoint(this, 500, 500, areas.get("area1")));
+        areas.get("area1").addRespawnPoint(new PlayerRespawnPoint(this, 3650, 4909, areas.get("area1")));
 
         playerCharacter = new PlayerCharacter(this, "Protagonist");
         areas.get("area1").addNewCreature(playerCharacter, 400f, 400f);
@@ -64,7 +66,7 @@ public class GameSystem {
         cameraFocusedCreature = playerCharacter;
 
         NonPlayerCharacter nonPlayerCharacter = new NonPlayerCharacter(this, "Johnny", "a1", true);
-        areas.get("area1").addNewCreature(nonPlayerCharacter, 600f, 600f);
+        areas.get("area1").addNewCreature(nonPlayerCharacter, 500f, 600f);
 
         inventoryWindow.setPlayerCharacter(playerCharacter);
 
@@ -74,9 +76,11 @@ public class GameSystem {
 
         gateList = new LinkedList<>();
 
-        gateList.add(new AreaGate(areas.get("area1"), 1855, 2300, areas.get("area2"), 150, 150));
+        gateList.add(new AreaGate(areas.get("area1"), 20, 3960, areas.get("area2"), 150, 150));
 
         creaturesToMove = new LinkedList<>();
+
+        markRespawnAreaForReset = false;
     }
 
     public CurrentAreaHolder getCurrentAreaHolder() {
@@ -288,5 +292,16 @@ public class GameSystem {
             creature.update(gc, i, keyInput, this);
 
         }
+
+        if (markRespawnAreaForReset) {
+            markRespawnAreaForReset = false;
+
+            playerCharacter.getRespawnArea().reset();
+        }
     }
+
+    public void resetArea() {
+        markRespawnAreaForReset = true;
+    }
+
 }

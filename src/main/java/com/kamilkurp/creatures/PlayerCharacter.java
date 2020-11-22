@@ -8,6 +8,7 @@ import com.kamilkurp.behavior.DashAbility;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.systems.GameSystem;
+import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
 import org.lwjgl.input.Mouse;
@@ -123,6 +124,7 @@ public class PlayerCharacter extends Creature {
 
     @Override
     public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
+//        System.out.println((int)rect.getX() + " " + (int)rect.getY());
         if (isAlive()) {
             onUpdateStart(i);
 
@@ -176,7 +178,11 @@ public class PlayerCharacter extends Creature {
             pendingY = (float)currentRespawnPoint.getPosY();
 
             setHealthPoints(getMaxHealthPoints());
+
+
             gameSystem.getCurrentAreaHolder().setCurrentArea(currentRespawnPoint.getArea());
+            gameSystem.resetArea();
+
         }
 
         if (passedGateRecently) {
@@ -212,6 +218,13 @@ public class PlayerCharacter extends Creature {
                 ((NonPlayerCharacter)creature).triggerDialogue();
             }
         }
+        for (PlayerRespawnPoint playerRespawnPoint : area.getRespawnList()) {
+            if (rect.intersects(playerRespawnPoint.getRect())) {
+                currentRespawnPoint = playerRespawnPoint;
+                System.out.println("player respawn point set");
+                currentRespawnPoint.onRespawnSet();
+            }
+        }
     }
 
     @Override
@@ -237,7 +250,6 @@ public class PlayerCharacter extends Creature {
     public void onDeath() {
         respawnTimer.reset();
         respawning = true;
-
     }
 
 
@@ -249,4 +261,7 @@ public class PlayerCharacter extends Creature {
         this.respawning = respawning;
     }
 
+    public Area getRespawnArea() {
+        return currentRespawnPoint.getArea();
+    }
 }

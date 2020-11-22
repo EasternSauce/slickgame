@@ -22,10 +22,11 @@ public class UnarmedAttackAbility extends Ability {
         super();
 
         this.abilityCreature = abilityCreature;
-        cooldown = 800;
-        abilityTime = 300;
+        cooldown = 600;
+        abilityTime = 150;
+        windupTime = 300;
 
-        swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
+        swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 25);
         swordWindupAnimation = new AttackAnimation(Assets.slashWindupSpriteSheet, 6, 50);
         swordAttackRect = new Rectangle(-999, -999, 1, 1);
 
