@@ -64,7 +64,7 @@ public class SimpleSlickGame extends BasicGame {
             AppGameContainer appgc;
             appgc = new AppGameContainer(new SimpleSlickGame("Simple Slick Game"));
             appgc.setDisplayMode(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT, false);
-            appgc.setVSync(true);
+            appgc.setVSync(false);
 
             appgc.start();
         }

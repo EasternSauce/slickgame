@@ -184,6 +184,8 @@ public class MapEditor extends BasicGame {
 
         }
         else {
+            g.setColor(Color.red);
+            g.drawString("SELECT MODE", 50, 50);
 
 
 
