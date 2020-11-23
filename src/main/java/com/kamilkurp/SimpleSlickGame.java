@@ -48,7 +48,7 @@ public class SimpleSlickGame extends BasicGame {
 
         townMusic = Assets.townMusic;
 
-//        townMusic.loop(1.0f, 0.5f);
+        townMusic.loop(1.0f, 0.5f);
     }
 
     @Override
@@ -110,6 +110,14 @@ public class SimpleSlickGame extends BasicGame {
             }
 
             writer.write("gold " + gameSystem.getInventoryWindow().getGold() + "\n");
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            FileWriter writer = new FileWriter("saves/respawn_points.sav");
+
             writer.write("respawnPoint " + gameSystem.getPlayerCharacter().getRespawnArea().getId() + " "
                     + gameSystem.getPlayerCharacter().getRespawnArea().getRespawnList().indexOf(gameSystem.getPlayerCharacter().getCurrentRespawnPoint()));
 
@@ -117,8 +125,6 @@ public class SimpleSlickGame extends BasicGame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void loadGame() {
@@ -206,6 +212,20 @@ public class SimpleSlickGame extends BasicGame {
                     gameSystem.getInventoryWindow().setGold(Integer.parseInt(s[1]));
                 }
 
+                line = reader.readLine();
+
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            reader = new BufferedReader(new FileReader("saves/respawn_points.sav"));
+            String line = reader.readLine();
+            while (line != null) {
+                String[] s = line.split(" ");
+
                 if(s[0].equals("respawnPoint")) {
                     PlayerRespawnPoint respawnPoint = gameSystem.getAreas().get(s[1]).getRespawnList().get(Integer.parseInt(s[2]));
                     gameSystem.getPlayerCharacter().setCurrentRespawnPoint(respawnPoint);
@@ -218,8 +238,6 @@ public class SimpleSlickGame extends BasicGame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
         if(gameSystem.getCurrentArea() == null) {
             gameSystem.getCurrentAreaHolder().setCurrentArea(gameSystem.getAreas().get("area1"));

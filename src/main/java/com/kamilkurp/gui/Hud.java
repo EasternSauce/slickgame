@@ -2,7 +2,10 @@ package com.kamilkurp.gui;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.Renderable;
+import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.creatures.NonPlayerCharacter;
 import com.kamilkurp.creatures.PlayerCharacter;
+import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -56,6 +59,27 @@ public class Hud {
 
             g.setColor(Color.green);
             g.fill(staminaRect);
+        }
+
+        if (gameSystem != null && !gameSystem.getDialogueWindow().isActivated()) {
+            g.setColor(Color.white);
+
+            String triggerMessage = "";
+
+            for (Creature creature : gameSystem.getCurrentArea().getCreatures().values()) {
+                if (creature == gameSystem.getPlayerCharacter()) continue;
+                if (gameSystem.getPlayerCharacter().getRect().intersects(creature.getRect()) && creature instanceof NonPlayerCharacter && creature.getHealthPoints() > 0) {
+                    triggerMessage = "> Talk";
+                }
+            }
+            for (PlayerRespawnPoint playerRespawnPoint : gameSystem.getCurrentArea().getRespawnList()) {
+                if (gameSystem.getPlayerCharacter().getRect().intersects(playerRespawnPoint.getRect())) {
+                    triggerMessage = "> Set respawn";
+                }
+            }
+
+            g.drawString(triggerMessage, 10, Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION + 10);
+
         }
     }
 

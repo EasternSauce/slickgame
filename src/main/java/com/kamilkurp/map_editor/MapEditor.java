@@ -47,9 +47,9 @@ public class MapEditor extends BasicGame {
 
         Assets.loadAssets();
 
-        String areaId = "area1";
+        String areaId = "area2";
 
-        area = new Area(null, areaId, Assets.grassyTileset, Assets.area1Layout, Assets.area1Enemies);
+        area = new Area(null, areaId, Assets.dungeonTileset, Assets.area2Layout, Assets.area2Enemies);
 
         terrainFile = "assets/areas/" + areaId + "/layout.txt";
 

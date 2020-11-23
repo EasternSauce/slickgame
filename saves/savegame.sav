@@ -3,7 +3,22 @@ area area1
 pos 1512.0 11.0
 health 100.0
 creature Protagonist
-area area1
-pos 713.0198 1814.1731
-health 56.151344
+area area2
+pos 1343.2083 2174.7705
+health 299.0736
+equipment_item 0 crossbow 17 0
+equipment_item 1 leatherHelmet 0 4
+equipment_item 2 leatherArmor 0 4
+equipment_item 3 hideGloves 0 2
+equipment_item 4 lifeRing 0 0
+equipment_item 5 ringmailGreaves 0 3
+creature Protagonist
+area area2
+pos 1343.2083 2174.7705
+health 299.0736
+equipment_item 0 crossbow 17 0
+equipment_item 1 leatherHelmet 0 4
+equipment_item 2 leatherArmor 0 4
+equipment_item 3 hideGloves 0 2
+equipment_item 4 lifeRing 0 0
 equipment_item 5 ringmailGreaves 0 3

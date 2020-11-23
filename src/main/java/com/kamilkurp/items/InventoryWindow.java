@@ -471,6 +471,10 @@ public class InventoryWindow implements Renderable {
 
                 if (item.getLootPileBackref().itemList.size() == 1) {
                     item.getLootPileBackref().setVisible(false);
+                    if (item.getLootPileBackref() instanceof Treasure) {
+                        System.out.println("picked up treasure!");
+                        //register treasure picked up, dont spawn it again for this save!
+                    }
                 }
                 item.removeFromLoot();
                 itemList.remove(item);

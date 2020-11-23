@@ -5,6 +5,7 @@ import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.NonPlayerCharacter;
 import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.items.Item;
+import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -20,10 +21,12 @@ public class CreaturesManager {
 
     private Queue<Creature> renderPriorityQueue;
 
+    private GameSystem gameSystem;
 
-    public CreaturesManager(Area area) {
+    public CreaturesManager(Area area, GameSystem gameSystem) {
         this.area = area;
         creatures = new HashMap<>();
+        this.gameSystem = gameSystem;
     }
 
     public void onAreaChange() {

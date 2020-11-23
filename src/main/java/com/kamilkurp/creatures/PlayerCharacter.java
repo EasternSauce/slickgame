@@ -195,7 +195,6 @@ public class PlayerCharacter extends Creature {
 
             staminaDrain = 0.0f;
         }
-
     }
 
     @Override

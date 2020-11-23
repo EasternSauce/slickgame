@@ -25,6 +25,9 @@ public class LootSystem implements Renderable {
         for (LootPile lootPile : gameSystem.getCurrentArea().getLootPileList()) {
             lootPile.render(g, camera);
         }
+        for (Treasure treasure : gameSystem.getCurrentArea().getTreasureList()) {
+            treasure.render(g, camera);
+        }
     }
 
     public void update(KeyInput keyInput, PlayerCharacter playerCharacter) {
@@ -39,6 +42,19 @@ public class LootSystem implements Renderable {
 
 //                    visibleLootPile.add(lootPile);
                     visibleItems.addAll(lootPile.getItemList());
+
+                }
+            }
+
+        }
+
+        for (Treasure treasure : gameSystem.getCurrentArea().getTreasureList()) {
+            if (gameSystem.getCurrentArea() == treasure.getArea()) {
+
+                if (Globals.distance(playerCharacter.getRect(), treasure.getRect()) < 40f) {
+                    gameSystem.getLootOptionWindow().setVisible(true);
+
+                    visibleItems.addAll(treasure.getItemList());
 
                 }
             }
@@ -67,5 +83,12 @@ public class LootSystem implements Renderable {
         }
     }
 
+    public void placeTreasure(Area area, float x, float y, ItemType itemType) {
+        Treasure treasure = new Treasure(area, x, y);
+
+        treasure.addItem(new Item(itemType, treasure));
+
+        area.getTreasureList().add(treasure);
+    }
 
 }

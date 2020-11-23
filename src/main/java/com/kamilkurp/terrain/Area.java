@@ -2,7 +2,9 @@ package com.kamilkurp.terrain;
 
 import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootPile;
+import com.kamilkurp.items.Treasure;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.EnemyRespawnArea;
 import com.kamilkurp.spawn.EnemySpawnPoint;
@@ -44,6 +46,8 @@ public class Area implements Renderable {
 
     private final List<LootPile> lootPileList;
 
+    private final List<Treasure> treasureList;
+
     private GameSystem gameSystem;
 
     public Area(GameSystem gameSystem, String id, TerrainTileset terrainTileset, TerrainLayout terrainLayout, SpawnLocationsContainer spawnsContainer) throws SlickException {
@@ -55,7 +59,7 @@ public class Area implements Renderable {
         this.id = id;
 
 
-        creaturesManager = new CreaturesManager(this);
+        creaturesManager = new CreaturesManager(this, gameSystem);
 
         tiles = new LinkedList<>();
 
@@ -64,12 +68,17 @@ public class Area implements Renderable {
         respawnList = new LinkedList<>();
         arrowList = new LinkedList<>();
         lootPileList = new LinkedList<>();
+        treasureList = new LinkedList<>();
 
         loadLayoutTiles();
 
         if (gameSystem != null && gameSystem.getLootSystem() != null) {
             loadSpawns();
 
+        }
+
+        if (gameSystem != null) {
+            gameSystem.getLootSystem().placeTreasure(this, 850, 700, ItemType.getItemType("crossbow"));
         }
 
     }
@@ -248,6 +257,10 @@ public class Area implements Renderable {
         for (EnemySpawnPoint enemySpawnPoint : enemySpawnPointList) {
             enemySpawnPoint.markForRespawn();
         }
+    }
+
+    public List<Treasure> getTreasureList() {
+        return treasureList;
     }
 }
 

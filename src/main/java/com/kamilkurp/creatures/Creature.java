@@ -247,7 +247,7 @@ public abstract class Creature implements Renderable {
         }
 
         if (staminaOveruse) {
-            if (staminaOveruseTimer.getTime() > 1750f) {
+            if (staminaOveruseTimer.getTime() > 1250f) {
                 staminaOveruse = false;
             }
         }

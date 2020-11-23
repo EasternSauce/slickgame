@@ -57,8 +57,11 @@ public class GameSystem {
         areas.put("area1", new Area(this, "area1", Assets.grassyTileset, Assets.area1Layout, Assets.area1Enemies));
         areas.put("area2", new Area(this,"area2", Assets.dungeonTileset, Assets.area2Layout, Assets.area2Enemies));
 
-        areas.get("area1").addRespawnPoint(new PlayerRespawnPoint(this, 500, 500, areas.get("area1")));
+        areas.get("area1").addRespawnPoint(new PlayerRespawnPoint(this, 400, 500, areas.get("area1")));
         areas.get("area1").addRespawnPoint(new PlayerRespawnPoint(this, 3650, 4909, areas.get("area1")));
+
+        areas.get("area2").addRespawnPoint(new PlayerRespawnPoint(this, 594, 133, areas.get("area2")));
+        areas.get("area2").addRespawnPoint(new PlayerRespawnPoint(this, 1342, 2099, areas.get("area2")));
 
         playerCharacter = new PlayerCharacter(this, "Protagonist");
         areas.get("area1").addNewCreature(playerCharacter, 400f, 400f);
@@ -75,7 +78,7 @@ public class GameSystem {
 
         gateList = new LinkedList<>();
 
-        gateList.add(new AreaGate(areas.get("area1"), 20, 3960, areas.get("area2"), 150, 150));
+        gateList.add(new AreaGate(areas.get("area1"), 20, 3960, areas.get("area2"), 3690, 262));
 
         creaturesToMove = new LinkedList<>();
 

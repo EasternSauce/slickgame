@@ -11,14 +11,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class LootPile implements Renderable {
-    private final Rectangle rect;
+    protected final Rectangle rect;
 
     private final int width = 10;
     private final int height = 10;
 
-    private boolean visible = true;
+    protected boolean visible = true;
 
-    private Area area;
+    protected Area area;
 
     List<Item> itemList;
 
