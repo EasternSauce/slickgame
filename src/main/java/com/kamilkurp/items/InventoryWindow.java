@@ -6,11 +6,14 @@ import com.kamilkurp.Renderable;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.systems.GameSystem;
+import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 // too many responsibilities
@@ -473,7 +476,19 @@ public class InventoryWindow implements Renderable {
                     item.getLootPileBackref().setVisible(false);
                     if (item.getLootPileBackref() instanceof Treasure) {
                         System.out.println("picked up treasure!");
-                        //register treasure picked up, dont spawn it again for this save!
+                        //register treasure picked up, dont spawn it again for this save
+                        try {
+                            FileWriter writer = new FileWriter("saves/treasure_collected.sav");
+
+                            Area area = item.getLootPileBackref().getArea();
+
+                            Treasure treasure = (Treasure)item.getLootPileBackref();
+                            writer.append("treasure " + area.getId() + " " + area.getTreasureList().indexOf(treasure));
+
+                            writer.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 item.removeFromLoot();

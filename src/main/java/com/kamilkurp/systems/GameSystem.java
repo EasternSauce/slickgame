@@ -11,6 +11,7 @@ import com.kamilkurp.dialogue.DialogueWindow;
 import com.kamilkurp.gui.Hud;
 import com.kamilkurp.gui.LootOptionWindow;
 import com.kamilkurp.items.InventoryWindow;
+import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
@@ -65,6 +66,8 @@ public class GameSystem {
 
         playerCharacter = new PlayerCharacter(this, "Protagonist");
         areas.get("area1").addNewCreature(playerCharacter, 400f, 400f);
+
+        lootSystem.placeTreasure(areas.get("area1"), 850, 700, ItemType.getItemType("crossbow"));
 
         cameraFocusedCreature = playerCharacter;
 

@@ -25,7 +25,7 @@ public class LootSystem implements Renderable {
         for (LootPile lootPile : gameSystem.getCurrentArea().getLootPileList()) {
             lootPile.render(g, camera);
         }
-        for (Treasure treasure : gameSystem.getCurrentArea().getTreasureList()) {
+        for (Treasure treasure : gameSystem.getCurrentArea().getRemainingTreasureList()) {
             treasure.render(g, camera);
         }
     }
@@ -48,7 +48,7 @@ public class LootSystem implements Renderable {
 
         }
 
-        for (Treasure treasure : gameSystem.getCurrentArea().getTreasureList()) {
+        for (Treasure treasure : gameSystem.getCurrentArea().getRemainingTreasureList()) {
             if (gameSystem.getCurrentArea() == treasure.getArea()) {
 
                 if (Globals.distance(playerCharacter.getRect(), treasure.getRect()) < 40f) {
@@ -89,6 +89,7 @@ public class LootSystem implements Renderable {
         treasure.addItem(new Item(itemType, treasure));
 
         area.getTreasureList().add(treasure);
+        area.getRemainingTreasureList().add(treasure);
     }
 
 }

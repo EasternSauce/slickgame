@@ -5,6 +5,7 @@ import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
+import com.kamilkurp.items.Treasure;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
@@ -125,6 +126,21 @@ public class SimpleSlickGame extends BasicGame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+//        try {
+//            FileWriter writer = new FileWriter("saves/treasure_collected.sav");
+//
+//            for (Area area : gameSystem.getAreas().values()) {
+//                for (Treasure treasure : area.getTreasureList()) {
+//                    writer.write("treasure " + area.getId() + " " + area.getTreasureList().indexOf(treasure));
+//                }
+//            }
+//
+//
+//            writer.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void loadGame() {
@@ -238,6 +254,26 @@ public class SimpleSlickGame extends BasicGame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+            reader = new BufferedReader(new FileReader("saves/treasure_collected.sav"));
+            String line = reader.readLine();
+            while (line != null) {
+                String[] s = line.split(" ");
+
+                if (s[0].equals("treasure")) {
+                    Area area = gameSystem.getAreas().get(s[1]);
+                    area.getRemainingTreasureList().remove(Integer.parseInt(s[2]));
+                }
+
+                line = reader.readLine();
+
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         if(gameSystem.getCurrentArea() == null) {
             gameSystem.getCurrentAreaHolder().setCurrentArea(gameSystem.getAreas().get("area1"));

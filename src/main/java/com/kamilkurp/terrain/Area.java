@@ -48,6 +48,8 @@ public class Area implements Renderable {
 
     private final List<Treasure> treasureList;
 
+    private final List<Treasure> remainingTreasureList;
+
     private GameSystem gameSystem;
 
     public Area(GameSystem gameSystem, String id, TerrainTileset terrainTileset, TerrainLayout terrainLayout, SpawnLocationsContainer spawnsContainer) throws SlickException {
@@ -69,16 +71,13 @@ public class Area implements Renderable {
         arrowList = new LinkedList<>();
         lootPileList = new LinkedList<>();
         treasureList = new LinkedList<>();
+        remainingTreasureList = new LinkedList<>();
 
         loadLayoutTiles();
 
         if (gameSystem != null && gameSystem.getLootSystem() != null) {
             loadSpawns();
 
-        }
-
-        if (gameSystem != null) {
-            gameSystem.getLootSystem().placeTreasure(this, 850, 700, ItemType.getItemType("crossbow"));
         }
 
     }
@@ -261,6 +260,10 @@ public class Area implements Renderable {
 
     public List<Treasure> getTreasureList() {
         return treasureList;
+    }
+
+    public List<Treasure> getRemainingTreasureList() {
+        return remainingTreasureList;
     }
 }
 
