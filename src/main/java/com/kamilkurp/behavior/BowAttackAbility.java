@@ -3,51 +3,32 @@ package com.kamilkurp.behavior;
 import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
-import com.kamilkurp.creatures.Mob;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Sound;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public class BowAttackAbility extends Ability {
-    Creature abilityCreature;
     protected AttackAnimation swordAttackAnimation;
     private final Sound bowAttackSound = Assets.arrowWhizzSound;
 
     public BowAttackAbility(Creature abilityCreature) {
-        super();
+        super(abilityCreature);
 
-        this.abilityCreature = abilityCreature;
-        cooldown = 800;
-        abilityTime = 300;
-        windupTime = 150;
+        cooldownTime = 800;
+        activeTime = 300;
+        channelTime = 150;
     }
 
     @Override
-    public void update(int i) {
-        if (windup && windupTimer.getTime() > windupTime) {
-            windup = false;
-            if (abilityCreature.getStaminaPoints() != 0) {
-                perform();
-                onPerformAction.execute();
-            }
-        }
-        if (cooldownTimer.getTime() > abilityTime) {
-            active = false;
-        }
-    }
+    protected void onAbilityStart() {
 
-    @Override
-    protected void perform() {
-        active = true;
-        cooldownTimer.reset();
+        activeTimer.reset();
 
         bowAttackSound.play(1.0f, 0.1f);
 

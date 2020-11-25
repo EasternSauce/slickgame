@@ -1,43 +1,65 @@
 package com.kamilkurp.behavior;
 
 import com.kamilkurp.Renderable;
+import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.utils.Action;
+import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
-public abstract class Ability implements Renderable {
+public class Ability implements Renderable {
     protected Action onPerformAction;
-    protected Action onWindupAction;
+    protected Action onChannelAction;
 
-    protected Timer cooldownTimer;
-    protected Timer windupTimer;
+    protected Timer activeTimer;
+    protected Timer channelTimer;
 
-    protected int cooldown;
-    protected int abilityTime;
-    protected int windupTime;
+    protected int cooldownTime;
+    protected int activeTime;
+    protected int channelTime;
 
-    protected boolean windup;
-
-    protected boolean active;
+    protected AbilityState state;
 
     protected Rectangle swordAttackRect;
+    Creature abilityCreature;
 
-    public Ability() {
-        cooldownTimer = new Timer();
-        windupTimer = new Timer();
-        cooldown = 3000;
-        abilityTime = 200;
-        windupTime = 500;
+    public Ability(Creature abilityCreature) {
+        this.abilityCreature = abilityCreature;
 
-        active = false;
-        windup = false;
+        activeTimer = new Timer();
+        channelTimer = new Timer();
+        cooldownTime = 3000;
+        activeTime = 200;
+        channelTime = 500;
+
+        state = AbilityState.ABILITY_INACTIVE;
 
         onPerformAction = () -> {};
-        cooldownTimer.setTime(cooldown); // ability immediately available
-        windupTimer.setTime(windupTime);
+        activeTimer.setTime(cooldownTime);
+        channelTimer.setTime(channelTime);
     }
 
-    public abstract void update(int i);
+    public void update(int i) {
+        if (state == AbilityState.ABILITY_CHANNELING && channelTimer.getTime() > channelTime) {
+            if (abilityCreature.getStaminaPoints() != 0) {
+                state = AbilityState.ABILITY_ACTIVE;
+                onAbilityStart();
+                onPerformAction.execute();
+            }
+        }
+        if (state == AbilityState.ABILITY_ACTIVE && activeTimer.getTime() > activeTime) {
+            state = AbilityState.ABILITY_INACTIVE;
+            onAbilityStop();
+        }
+
+        if (state == AbilityState.ABILITY_CHANNELING) {
+            onUpdateChanneling(i);
+        }
+        else if (state == AbilityState.ABILITY_ACTIVE) {
+            onUpdateActive(i);
+        }
+    }
 
     public void performMovement() {
 
@@ -47,26 +69,46 @@ public abstract class Ability implements Renderable {
 
     }
 
-    public void onPerform(Action action) {
+    public void onStartActiveAction(Action action) {
         onPerformAction = action;
     }
 
-    public void onWindup() {
+    public void onChannel() {
 
     }
 
     public void tryPerforming() {
-        if (!windup && cooldownTimer.getTime() > cooldown) {
-            windupTimer.reset();
-            windup = true;
-            onWindup();
+        if (state == AbilityState.ABILITY_INACTIVE && activeTimer.getTime() > cooldownTime) {
+            channelTimer.reset();
+            state = AbilityState.ABILITY_CHANNELING;
+            onChannel();
         }
     }
 
-    protected abstract void perform();
+    protected void onAbilityStart() {
+
+    }
+
+    protected void onAbilityStop() {
+
+    }
 
     public boolean isActive() {
-        return active;
+        return state == AbilityState.ABILITY_ACTIVE;
+    }
+
+
+    protected void onUpdateActive(int i) {
+
+    }
+
+    protected void onUpdateChanneling(int i) {
+
+    }
+
+    @Override
+    public void render(Graphics g, Camera camera) {
+
     }
 }
 

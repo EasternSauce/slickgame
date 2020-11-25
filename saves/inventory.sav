@@ -12,4 +12,7 @@ inventory_item 10 crossbow 24 0
 inventory_item 11 crossbow 16 0
 inventory_item 12 lifeRing 0 0
 inventory_item 13 ringmailGreaves 0 2
+inventory_item 14 ringmailGreaves 0 3
+inventory_item 15 ringmailGreaves 0 2
+inventory_item 16 lifeRing 0 0
 gold 461

@@ -4,9 +4,7 @@ import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
-import com.kamilkurp.utils.Action;
 import com.kamilkurp.utils.Camera;
-import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Sound;
@@ -21,12 +19,12 @@ public class SwordAttackAbility extends Ability {
     private final Sound swordAttackSound = Assets.attackSound;
 
     public SwordAttackAbility(Creature abilityCreature) {
-        super();
+        super(abilityCreature);
 
         this.abilityCreature = abilityCreature;
-        cooldown = 800;
-        abilityTime = 300;
-        windupTime = 500;
+        cooldownTime = 800;
+        activeTime = 300;
+        channelTime = 500;
 
         swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 50);
         swordWindupAnimation = new AttackAnimation(Assets.slashWindupSpriteSheet, 6, 90);
@@ -34,62 +32,8 @@ public class SwordAttackAbility extends Ability {
     }
 
     @Override
-    public void update(int i) {
-        if (windup && windupTimer.getTime() > windupTime) {
-            windup = false;
-            if (abilityCreature.getStaminaPoints() != 0) {
-                perform();
-                onPerformAction.execute();
-            }
-        }
-
-        if (cooldownTimer.getTime() > abilityTime) {
-            active = false;
-        }
-
-        if (windup) {
-            swordWindupAnimation.getAnimation().update(i);
-        }
-
-        if (active || windup) {
-
-
-            float attackRange = 60f;
-
-            float attackShiftX = abilityCreature.getAttackingVector().getNormal().getX() * attackRange;
-            float attackShiftY = abilityCreature.getAttackingVector().getNormal().getY() * attackRange;
-
-            int attackWidth = 40;
-            int attackHeight = 40;
-
-            float attackRectX = attackShiftX + abilityCreature.getRect().getCenterX() - attackWidth / 2f;
-            float attackRectY = attackShiftY + abilityCreature.getRect().getCenterY() - attackHeight / 2f;
-
-            swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
-
-
-
-        }
-
-        if (active) {
-            swordAttackAnimation.getAnimation().update(i);
-
-            Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
-            for (Creature creature : creatures) {
-                if (creature == this.abilityCreature) continue;
-                if (swordAttackRect.intersects(creature.getRect())) {
-                    if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
-                        creature.takeDamage(this.abilityCreature.getEquipmentItems().get(0).getDamage());
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void perform() {
-        active = true;
-        cooldownTimer.reset();
+    protected void onAbilityStart() {
+        activeTimer.reset();
         swordAttackAnimation.restart();
 
         swordAttackSound.play(1.0f, 0.1f);
@@ -99,7 +43,45 @@ public class SwordAttackAbility extends Ability {
     }
 
     @Override
-    public void onWindup() {
+    protected void onUpdateActive(int i) {
+        updateAttackRect(i);
+
+        swordAttackAnimation.getAnimation().update(i);
+
+        Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
+        for (Creature creature : creatures) {
+            if (creature == this.abilityCreature) continue;
+            if (swordAttackRect.intersects(creature.getRect())) {
+                if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
+                    creature.takeDamage(this.abilityCreature.getEquipmentItems().get(0).getDamage());
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onUpdateChanneling(int i) {
+        swordWindupAnimation.getAnimation().update(i);
+        updateAttackRect(i);
+    }
+
+    private void updateAttackRect(int i) {
+        float attackRange = 60f;
+
+        float attackShiftX = abilityCreature.getAttackingVector().getNormal().getX() * attackRange;
+        float attackShiftY = abilityCreature.getAttackingVector().getNormal().getY() * attackRange;
+
+        int attackWidth = 40;
+        int attackHeight = 40;
+
+        float attackRectX = attackShiftX + abilityCreature.getRect().getCenterX() - attackWidth / 2f;
+        float attackRectY = attackShiftY + abilityCreature.getRect().getCenterY() - attackHeight / 2f;
+
+        swordAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
+    }
+
+    @Override
+    public void onChannel() {
         abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
 
         swordWindupAnimation.restart();
@@ -107,13 +89,13 @@ public class SwordAttackAbility extends Ability {
 
     @Override
     public void render(Graphics g, Camera camera) {
-        if (active) {
+        if (state == AbilityState.ABILITY_ACTIVE) {
             Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
             image.setRotation((float) abilityCreature.getAttackingVector().getTheta());
 
             g.drawImage(image, swordAttackRect.getX() - camera.getPosX(), swordAttackRect.getY() - camera.getPosY());
         }
-        if (windup) {
+        if (state == AbilityState.ABILITY_CHANNELING) {
             Image image = swordWindupAnimation.getAnimation().getCurrentFrame();
             image.setRotation((float) abilityCreature.getAttackingVector().getTheta());
 

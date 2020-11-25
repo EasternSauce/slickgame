@@ -150,6 +150,8 @@ public abstract class Creature implements Renderable {
 
         staminaOveruse = false;
 
+        attackingVector = new Vector2f(0f, 0f);
+
     }
 
     public abstract void onInit();

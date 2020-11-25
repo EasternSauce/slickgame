@@ -13,42 +13,27 @@ import java.util.List;
 public class DashAbility extends Ability {
 
     private Creature abilityCreature;
-    protected float dashSpeed = 0.0f;
+    protected float dashSpeed;
 
     protected Timer dashTimer;
     protected Vector2f dashVector;
 
     public DashAbility(Creature abilityCreature) {
-        super();
+        super(abilityCreature);
 
         this.abilityCreature = abilityCreature;
 
         dashTimer = new Timer();
         dashVector = new Vector2f(0f, 0f);
 
-        cooldown = 1000;
+        cooldownTime = 1000;
+        dashSpeed = 0.0f;
     }
 
-    public void update(int i) {
-        if (windup && windupTimer.getTime() > windupTime) {
-            windup = false;
-            if (abilityCreature.getStaminaPoints() != 0) {
-                perform();
-                onPerformAction.execute();
-            }
-        }
-        if (active) {
-            //end dash
-            if (dashTimer.getTime() > abilityTime) {
-                abilityCreature.setImmobilized(false);
-                active = false;
-            }
-        }
-    }
 
     @Override
     public void performMovement() {
-         if (active) {
+         if (state == AbilityState.ABILITY_ACTIVE) {
              Rectangle rect = abilityCreature.getRect();
              List<TerrainTile> tiles = abilityCreature.getArea().getTiles();
 
@@ -68,31 +53,25 @@ public class DashAbility extends Ability {
     }
 
     @Override
-     protected void perform() {
-        active = true;
-
+     protected void onAbilityStart() {
         abilityCreature.setImmobilized(true);
 
-        cooldownTimer.reset();
+        activeTimer.reset();
         dashTimer.reset();
 
         abilityCreature.takeStaminaDamage(35f);
 
-        windupTime = 150;
+        channelTime = 150;
     }
 
     @Override
-    public boolean isActive() {
-        return active;
+    protected void onAbilityStop() {
+        abilityCreature.setImmobilized(false);
     }
 
     @Override
     public void performOnUpdateStart(int i) {
         dashSpeed = 0.7f * i;
-    }
-
-    public Timer getCooldownTimer() {
-        return cooldownTimer;
     }
 
     public void setDashVector(Vector2f dashVector) {
