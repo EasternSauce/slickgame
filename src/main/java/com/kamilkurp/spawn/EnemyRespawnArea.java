@@ -1,7 +1,6 @@
 package com.kamilkurp.spawn;
 
 import com.kamilkurp.Globals;
-import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Skeleton;
 import com.kamilkurp.creatures.Wolf;
@@ -17,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class EnemyRespawnArea implements Renderable {
+public class EnemyRespawnArea {
     private final int posX;
     private final int posY;
     private final List<Creature> spawnedList;
@@ -103,8 +102,6 @@ public class EnemyRespawnArea implements Renderable {
         }
     }
 
-
-    @Override
     public void render(Graphics g, Camera camera) {
         g.setColor(Color.white);
         g.drawRect(posX - range - camera.getPosX(), posY - range - camera.getPosY(), range*2, range*2);

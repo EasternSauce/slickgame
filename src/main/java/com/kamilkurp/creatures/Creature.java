@@ -1,7 +1,6 @@
 package com.kamilkurp.creatures;
 
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.Renderable;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class Creature implements Renderable {
+public abstract class Creature {
 
     protected Rectangle rect;
 
@@ -156,7 +155,6 @@ public abstract class Creature implements Renderable {
 
     public abstract void onInit();
 
-    @Override
     public void render(Graphics g, Camera camera) {
         Image sprite = walkAnimation.getRestPosition(direction);
 

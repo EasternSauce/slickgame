@@ -1,7 +1,6 @@
 package com.kamilkurp.gui;
 
 import com.kamilkurp.Globals;
-import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.NonPlayerCharacter;
 import com.kamilkurp.creatures.PlayerCharacter;

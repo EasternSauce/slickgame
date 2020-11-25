@@ -115,7 +115,6 @@ public class PlayerCharacter extends Creature {
         setMaxHealthPoints(300f);
     }
 
-    @Override
     public void render(Graphics g, Camera camera) {
         super.render(g, camera);
 

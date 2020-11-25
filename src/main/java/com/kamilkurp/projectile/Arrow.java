@@ -1,6 +1,5 @@
 package com.kamilkurp.projectile;
 
-import com.kamilkurp.Renderable;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
@@ -14,7 +13,7 @@ import org.newdawn.slick.geom.Vector2f;
 import java.util.List;
 import java.util.Map;
 
-public class Arrow implements Renderable {
+public class Arrow {
 
     private float posX;
     private float posY;
@@ -49,7 +48,6 @@ public class Arrow implements Renderable {
         this.shooter = shooter;
     }
 
-    @Override
     public void render(Graphics g, Camera camera) {
         g.drawImage(arrowImage, posX - camera.getPosX(), posY - camera.getPosY());
     }

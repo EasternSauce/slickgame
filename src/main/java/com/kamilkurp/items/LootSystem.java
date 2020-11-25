@@ -2,7 +2,6 @@ package com.kamilkurp.items;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
@@ -13,14 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class LootSystem implements Renderable {
+public class LootSystem {
     private GameSystem gameSystem;
 
     public LootSystem(GameSystem gameSystem) {
         this.gameSystem = gameSystem;
     }
 
-    @Override
     public void render(Graphics g, Camera camera) {
         for (LootPile lootPile : gameSystem.getCurrentArea().getLootPileList()) {
             lootPile.render(g, camera);

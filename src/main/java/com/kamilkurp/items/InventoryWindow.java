@@ -2,7 +2,6 @@ package com.kamilkurp.items;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.Renderable;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.systems.GameSystem;
@@ -17,7 +16,7 @@ import java.io.IOException;
 import java.util.*;
 
 // too many responsibilities
-public class InventoryWindow implements Renderable {
+public class InventoryWindow {
 
     private final Rectangle background = new Rectangle((int)(Globals.SCREEN_WIDTH * 0.1), (int)(Globals.SCREEN_HEIGHT * 0.1), (int)(Globals.SCREEN_WIDTH * 0.6), (int)(Globals.SCREEN_HEIGHT * 0.6));
 
@@ -108,9 +107,7 @@ public class InventoryWindow implements Renderable {
 
     }
 
-    @Override
-    public void render(Graphics g, Camera camera) {
-
+    public void render(Graphics g) {
         if (inventoryOpen) {
             g.setColor(Color.darkGray);
             g.fill(background);

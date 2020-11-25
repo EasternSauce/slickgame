@@ -1,6 +1,5 @@
 package com.kamilkurp.spawn;
 
-import com.kamilkurp.Renderable;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
@@ -9,7 +8,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
-public class PlayerRespawnPoint implements Renderable {
+public class PlayerRespawnPoint {
     float width = 30f;
     float height = 30f;
 
@@ -34,7 +33,6 @@ public class PlayerRespawnPoint implements Renderable {
 
     }
 
-    @Override
     public void render(Graphics g, Camera camera) {
         if (respawnSetTimer.getTime() < respawnSetTime) {
             g.setColor(Color.red);

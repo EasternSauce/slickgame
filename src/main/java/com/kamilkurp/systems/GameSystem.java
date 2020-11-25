@@ -269,7 +269,7 @@ public class GameSystem {
 
 
             lootSystem.render(g, camera);
-            inventoryWindow.render(g, camera);
+            inventoryWindow.render(g);
 
             if (playerCharacter.isRespawning()) {
                 Assets.verdanaHugeTtf.drawString(175, 175, "YOU DIED", Color.red);

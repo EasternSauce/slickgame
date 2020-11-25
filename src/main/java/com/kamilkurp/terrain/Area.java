@@ -1,8 +1,6 @@
 package com.kamilkurp.terrain;
 
-import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.Creature;
-import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootPile;
 import com.kamilkurp.items.Treasure;
 import com.kamilkurp.projectile.Arrow;
@@ -24,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class Area implements Renderable {
+public class Area {
 
     private final List<TerrainTile> tiles;
 
@@ -97,7 +95,6 @@ public class Area implements Renderable {
         }
     }
 
-    @Override
     public void render(Graphics g, Camera camera) {
 
         g.setColor(Color.white);

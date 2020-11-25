@@ -15,6 +15,7 @@ import java.util.Collection;
 public class ExplodeAbility extends Ability {
     Creature abilityCreature;
     protected AttackAnimation explosionAnimation;
+    protected float explosionRange;
 
     public ExplodeAbility(Creature abilityCreature) {
         super(abilityCreature);
@@ -25,7 +26,9 @@ public class ExplodeAbility extends Ability {
         channelTime = 2000;
 
         explosionAnimation = new AttackAnimation(Assets.explosionSpriteSheet, 20, 100);
-        swordAttackRect = new Rectangle(-999, -999, 1, 1);
+        meleeAttackRect = new Rectangle(-999, -999, 1, 1);
+
+        explosionRange = 200f;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class ExplodeAbility extends Ability {
         Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
         for (Creature creature : creatures) {
             if (creature == this.abilityCreature) continue;
-            if (Globals.distance(abilityCreature.getRect(), creature.getRect()) < 200f && activeTimer.getTime() < 350f) {
+            if (Globals.distance(abilityCreature.getRect(), creature.getRect()) < explosionRange && activeTimer.getTime() < 350f) {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob) && creature.isAlive()) { // mob can't hurt a mob?
                     creature.takeDamage(700f);
 
@@ -63,14 +66,14 @@ public class ExplodeAbility extends Ability {
 
     }
 
-    @Override
     public void render(Graphics g, Camera camera) {
         if (state == AbilityState.ABILITY_ACTIVE) {
-            int scale = 6;
+            int spriteWidth = 64;
+            float scale = explosionRange * 2 / spriteWidth;
 
             Image image = explosionAnimation.getAnimation().getCurrentFrame();
 
-            image.draw(abilityCreature.getRect().getX() - camera.getPosX() - 150, abilityCreature.getRect().getY() - camera.getPosY() - 150, scale);
+            image.draw(abilityCreature.getRect().getCenterX() - camera.getPosX() - explosionRange, abilityCreature.getRect().getCenterY() - camera.getPosY() - explosionRange, scale);
         }
     }
 }

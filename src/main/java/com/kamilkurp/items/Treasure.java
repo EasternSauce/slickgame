@@ -10,7 +10,6 @@ public class Treasure extends LootPile {
         super(area, x, y);
     }
 
-    @Override
     public void render(Graphics g, Camera camera) {
         if (visible) {
             g.setColor(Color.pink);

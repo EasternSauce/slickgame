@@ -1,6 +1,5 @@
 package com.kamilkurp.behavior;
 
-import com.kamilkurp.Renderable;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.utils.Action;
 import com.kamilkurp.utils.Camera;
@@ -8,7 +7,7 @@ import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
-public class Ability implements Renderable {
+public class Ability {
     protected Action onPerformAction;
     protected Action onChannelAction;
 
@@ -21,7 +20,7 @@ public class Ability implements Renderable {
 
     protected AbilityState state;
 
-    protected Rectangle swordAttackRect;
+    protected Rectangle meleeAttackRect;
     Creature abilityCreature;
 
     public Ability(Creature abilityCreature) {
@@ -106,7 +105,6 @@ public class Ability implements Renderable {
 
     }
 
-    @Override
     public void render(Graphics g, Camera camera) {
 
     }

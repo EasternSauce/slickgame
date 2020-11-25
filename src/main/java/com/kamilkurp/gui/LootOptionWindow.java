@@ -2,7 +2,6 @@ package com.kamilkurp.gui;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.Renderable;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Camera;
@@ -11,7 +10,7 @@ import org.newdawn.slick.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LootOptionWindow implements Renderable {
+public class LootOptionWindow {
     private boolean visible = false;
 
     private int currentSelected = 0;
@@ -28,7 +27,6 @@ public class LootOptionWindow implements Renderable {
         this.gameSystem = gameSystem;
     }
 
-    @Override
     public void render(Graphics g, Camera camera) {
         if (visible) {
 
