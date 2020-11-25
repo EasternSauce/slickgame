@@ -263,7 +263,7 @@ public class SimpleSlickGame extends BasicGame {
 
                 if (s[0].equals("treasure")) {
                     Area area = gameSystem.getAreas().get(s[1]);
-                    area.getRemainingTreasureList().remove(Integer.parseInt(s[2]));
+                    area.getRemainingTreasureList().remove(area.getTreasureList().get(Integer.parseInt(s[2])));
                 }
 
                 line = reader.readLine();

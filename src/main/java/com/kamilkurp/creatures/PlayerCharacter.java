@@ -124,7 +124,7 @@ public class PlayerCharacter extends Creature {
 
     @Override
     public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
-        System.out.println((int)rect.getX() + " " + (int)rect.getY());
+//        System.out.println((int)rect.getX() + " " + (int)rect.getY());
         if (isAlive()) {
             onUpdateStart(i);
 

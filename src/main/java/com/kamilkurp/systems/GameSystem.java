@@ -68,6 +68,7 @@ public class GameSystem {
         areas.get("area1").addNewCreature(playerCharacter, 400f, 400f);
 
         lootSystem.placeTreasure(areas.get("area1"), 850, 700, ItemType.getItemType("crossbow"));
+        lootSystem.placeTreasure(areas.get("area1"), 3551, 3840, ItemType.getItemType("lifeRing"));
 
         cameraFocusedCreature = playerCharacter;
 

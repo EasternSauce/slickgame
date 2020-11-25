@@ -478,12 +478,12 @@ public class InventoryWindow implements Renderable {
                         System.out.println("picked up treasure!");
                         //register treasure picked up, dont spawn it again for this save
                         try {
-                            FileWriter writer = new FileWriter("saves/treasure_collected.sav");
+                            FileWriter writer = new FileWriter("saves/treasure_collected.sav", true);
 
                             Area area = item.getLootPileBackref().getArea();
 
                             Treasure treasure = (Treasure)item.getLootPileBackref();
-                            writer.append("treasure " + area.getId() + " " + area.getTreasureList().indexOf(treasure));
+                            writer.write("treasure " + area.getId() + " " + area.getTreasureList().indexOf(treasure) + "\n");
 
                             writer.close();
                         } catch (IOException e) {

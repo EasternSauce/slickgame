@@ -15,7 +15,9 @@ public class Assets {
     public static TerrainLayout area2Layout;
     public static SpriteSheet skeletonSpriteSheet;
     public static SpriteSheet wolfSpriteSheet;
+    public static SpriteSheet ghostSpriteSheet;
     public static SpriteSheet slashSpriteSheet;
+    public static SpriteSheet explosionSpriteSheet;
     public static SpriteSheet betterSlashSpriteSheet;
     public static SpriteSheet slashWindupSpriteSheet;
     public static Sound stepSound;
@@ -24,6 +26,7 @@ public class Assets {
     public static Sound dogBarkSound;
     public static Sound dogWhimperSound;
     public static Sound punchSound;
+    public static Sound explosionSound;
     public static Music townMusic;
     public static SpriteSheet itemIcons;
     public static SpriteSheet male1SpriteSheet;
@@ -48,7 +51,9 @@ public class Assets {
         area2Enemies = new SpawnLocationsContainer(assetsLocation + "areas/area2/spawns.txt");
         skeletonSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/skeleton.png", 64, 64);
         wolfSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/wolf.png", 50, 35);
+        ghostSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/ghost.png", 32, 32);
         slashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash.png", 40, 40);
+        explosionSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/explosion.png", 64, 64);
         betterSlashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash_hd.png", 40, 40);
         slashWindupSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash_windup.png", 40, 40);
         stepSound = new Sound(Globals.getAssetsLocation() + "sounds/running.wav");
@@ -60,6 +65,7 @@ public class Assets {
         itemIcons = new SpriteSheet(Globals.getAssetsLocation() + "items/item_icons.png", 40, 40);
         arrowWhizzSound = new Sound(Globals.getAssetsLocation() + "sounds/arrow-whizz.wav");
         punchSound = new Sound(Globals.getAssetsLocation() + "sounds/punch.wav");
+        explosionSound = new Sound(Globals.getAssetsLocation() + "sounds/explosion.wav");
 
         male1SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male1.png", 32, 32);
 

@@ -45,16 +45,6 @@ public class BowAttackAbility extends Ability {
     }
 
     @Override
-    public void performMovement() {
-
-    }
-
-    @Override
-    public void performOnUpdateStart(int i) {
-
-    }
-
-    @Override
     protected void perform() {
         active = true;
         cooldownTimer.reset();

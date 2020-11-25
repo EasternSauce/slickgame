@@ -85,16 +85,6 @@ public class UnarmedAttackAbility extends Ability {
     }
 
     @Override
-    public void performMovement() {
-
-    }
-
-    @Override
-    public void performOnUpdateStart(int i) {
-
-    }
-
-    @Override
     protected void perform() {
         active = true;
         cooldownTimer.reset();
@@ -116,8 +106,6 @@ public class UnarmedAttackAbility extends Ability {
     @Override
     public void render(Graphics g, Camera camera) {
         if (active) {
-
-//            if (currentAttackType == AttackType.SWORD) {
             Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
             image.setRotation((float) abilityCreature.getAttackingVector().getTheta());
 

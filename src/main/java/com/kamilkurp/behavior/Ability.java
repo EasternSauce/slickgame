@@ -38,8 +38,14 @@ public abstract class Ability implements Renderable {
     }
 
     public abstract void update(int i);
-    public abstract void performMovement();
-    public abstract void performOnUpdateStart(int i);
+
+    public void performMovement() {
+
+    }
+
+    public void performOnUpdateStart(int i) {
+
+    }
 
     public void onPerform(Action action) {
         onPerformAction = action;

@@ -2,6 +2,7 @@ package com.kamilkurp.spawn;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.creatures.Ghost;
 import com.kamilkurp.creatures.Skeleton;
 import com.kamilkurp.creatures.Wolf;
 import com.kamilkurp.systems.GameSystem;
@@ -59,6 +60,11 @@ public class EnemySpawnPoint {
 
             if (creatureType.equals("wolf")) {
                 spawnedCreature = new Wolf(gameSystem, "wolfie"+Math.abs(Globals.random.nextInt()));
+                area.moveInCreature(spawnedCreature, posX, posY);
+            }
+
+            if (creatureType.equals("ghost")) {
+                spawnedCreature = new Ghost(gameSystem, "ghost"+Math.abs(Globals.random.nextInt()), "woodenSword");
                 area.moveInCreature(spawnedCreature, posX, posY);
             }
 
