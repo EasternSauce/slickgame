@@ -1,10 +1,7 @@
 package com.kamilkurp.spawn;
 
 import com.kamilkurp.Globals;
-import com.kamilkurp.creatures.Creature;
-import com.kamilkurp.creatures.Ghost;
-import com.kamilkurp.creatures.Skeleton;
-import com.kamilkurp.creatures.Wolf;
+import com.kamilkurp.creatures.*;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import org.newdawn.slick.SlickException;
@@ -65,6 +62,11 @@ public class EnemySpawnPoint {
 
             if (creatureType.equals("ghost")) {
                 spawnedCreature = new Ghost(gameSystem, "ghost"+Math.abs(Globals.random.nextInt()), "woodenSword");
+                area.moveInCreature(spawnedCreature, posX, posY);
+            }
+
+            if (creatureType.equals("goblin")) {
+                spawnedCreature = new Goblin(gameSystem, "goblin"+Math.abs(Globals.random.nextInt()), "poisonDagger");
                 area.moveInCreature(spawnedCreature, posX, posY);
             }
 

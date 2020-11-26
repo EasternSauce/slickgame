@@ -74,4 +74,5 @@ public class Item {
     public Float getArmor() {
         return armor;
     }
+
 }

@@ -17,7 +17,7 @@ public class ItemType {
     private final Float maxDamage;
     private final Float maxArmor;
 
-
+    private float poisonChance;
 
     public ItemType(String id, String name, String description, Image image, String equipmentType, int worth, Float maxDamage, Float maxArmor) {
         this.id = id;
@@ -70,6 +70,8 @@ public class ItemType {
         ItemType itemType6 = new ItemType("woodenSword", "Wooden Sword", "-", itemIcons.getSprite(0, 5), "weapon", 200, 20f, null);
         ItemType itemType7 = new ItemType("leatherHelmet", "Leather Helmet", "-", itemIcons.getSprite(2, 7), "helmet", 70, null, 5f);
         ItemType itemType8 = new ItemType("lifeRing", "Life Ring", "Increases life when worn", itemIcons.getSprite(5, 8), "ring", 300, null, null);
+        ItemType itemType9 = new ItemType("poisonDagger", "Poison Dagger", "-", itemIcons.getSprite(6, 5), "weapon", 350, 20f, null);
+        itemType9.setPoisonChance(0.20f);
 
 
         itemTypes.put(itemType1.getId(), itemType1);
@@ -80,6 +82,7 @@ public class ItemType {
         itemTypes.put(itemType6.getId(), itemType6);
         itemTypes.put(itemType7.getId(), itemType7);
         itemTypes.put(itemType8.getId(), itemType8);
+        itemTypes.put(itemType9.getId(), itemType9);
     }
 
     public static ItemType getItemType(String itemTypeId) {
@@ -94,5 +97,13 @@ public class ItemType {
 
     public Float getMaxArmor() {
         return maxArmor;
+    }
+
+    public float getPoisonChance() {
+        return poisonChance;
+    }
+
+    public void setPoisonChance(float poisonChance) {
+        this.poisonChance = poisonChance;
     }
 }

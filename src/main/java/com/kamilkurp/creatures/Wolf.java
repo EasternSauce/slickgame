@@ -32,10 +32,8 @@ public class Wolf extends Mob {
         dropTable.put("ringmailGreaves", 0.9f);
         dropTable.put("leatherArmor", 0.2f);
         dropTable.put("hideGloves", 0.1f);
-        dropTable.put("crossbow", 0.05f);
         dropTable.put("ironSword", 0.05f);
         dropTable.put("leatherHelmet", 0.15f);
-        dropTable.put("lifeRing", 0.05f);
 
 
         findNewDestinationTimer = new Timer();
@@ -104,7 +102,7 @@ public class Wolf extends Mob {
     }
 
     @Override
-    public void takeDamage(float damage) {
+    public void takeDamage(float damage, boolean immunityFrames) {
         if (!immune && isAlive()) {
 
             float beforeHP = healthPoints;
@@ -118,8 +116,11 @@ public class Wolf extends Mob {
                 onDeath();
             }
 
-            immunityTimer.reset();
-            immune = true;
+            if (immunityFrames) {
+                immunityTimer.reset();
+                immune = true;
+            }
+
             dogWhimperSound.play(1.0f, 0.1f);
         }
 

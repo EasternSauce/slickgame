@@ -27,7 +27,6 @@ public class Ghost extends Mob {
         dropTable.put("ringmailGreaves", 0.9f);
         dropTable.put("leatherArmor", 0.2f);
         dropTable.put("hideGloves", 0.1f);
-        dropTable.put("crossbow", 0.05f);
         dropTable.put("ironSword", 0.05f);
         dropTable.put("leatherHelmet", 0.15f);
         dropTable.put("lifeRing", 0.05f);
@@ -35,7 +34,6 @@ public class Ghost extends Mob {
 
         findNewDestinationTimer = new Timer();
 
-        walkAnimation = new WalkAnimation(Assets.ghostSpriteSheet, 3, 100, new int [] {3,1,0,2}, 0);
         walkAnimation = new WalkAnimation(Assets.ghostSpriteSheet, 3, 100, new int [] {3,1,0,2}, 0);
 
         destinationX = 0.0f;
@@ -62,7 +60,7 @@ public class Ghost extends Mob {
     @Override
     public void attack() {
 
-        if (healthPoints > maxHealthPoints / 2) {
+        if (healthPoints > maxHealthPoints * 0.70) {
             if (staminaPoints > 0f) {
                 if (currentAttackType == AttackType.UNARMED) {
                     unarmedAttackAbility.tryPerforming();
@@ -86,7 +84,6 @@ public class Ghost extends Mob {
     @Override
     public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
         super.update(gc, i, keyInput, gameSystem);
-//        System.out.println("is immobilized: " + immobilized);
     }
 
 

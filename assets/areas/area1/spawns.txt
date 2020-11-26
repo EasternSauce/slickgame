@@ -19,4 +19,3 @@ spawnPoint skeletonSword 3135 2450
 spawnPoint skeletonSword 3050 2425
 spawnPoint skeletonCrossbow 2405 4574
 spawnPoint skeletonCrossbow 2405 4600
-spawnPoint ghost 946 483

@@ -77,6 +77,8 @@ public abstract class Creature {
 
     protected Timer healthRegenTimer;
     protected Timer staminaRegenTimer;
+    protected Timer poisonTickTimer;
+    protected Timer poisonTimer;
 
     protected Area area;
 
@@ -107,6 +109,12 @@ public abstract class Creature {
     protected Timer staminaOveruseTimer;
 
     protected boolean staminaOveruse;
+
+    protected boolean poisoned;
+
+    protected int poisonTickTime = 1500;
+
+    protected int poisonTime = 20000;
 
 
     public Creature(GameSystem gameSystem, String id) {
@@ -150,6 +158,13 @@ public abstract class Creature {
         staminaOveruse = false;
 
         attackingVector = new Vector2f(0f, 0f);
+
+        poisonTickTimer = new Timer();
+        poisonTimer = new Timer();
+
+        poisonTickTimer.setTime(poisonTickTime);
+        poisonTimer.setTime(poisonTime);
+
 
     }
 
@@ -251,13 +266,28 @@ public abstract class Creature {
                 staminaOveruse = false;
             }
         }
+
+        if (poisoned) {
+            if (poisonTickTimer.getTime() > poisonTickTime) {
+                takeDamage(15f, false);
+                poisonTickTimer.reset();
+            }
+            if (poisonTimer.getTime() > poisonTime) {
+                poisoned = false;
+            }
+        }
     }
 
     protected abstract void setFacingDirection(GameContainer gc);
 
+    public void becomePoisoned() {
+        poisoned = true;
+        poisonTickTimer.reset();
+        poisonTimer.reset();
+    }
 
-    public void takeDamage(float damage) {
-        if (!immune && isAlive()) {
+    public void takeDamage(float damage, boolean immunityFrames) {
+        if (isAlive()) {
 
             float beforeHP = healthPoints;
 
@@ -270,8 +300,11 @@ public abstract class Creature {
                 onDeath();
             }
 
-            immunityTimer.reset();
-            immune = true;
+            if (immunityFrames) {
+                immunityTimer.reset();
+                immune = true;
+            }
+
             gruntSound.play(1.0f, 0.1f);
         }
 
@@ -477,7 +510,7 @@ public abstract class Creature {
         };
 
         String currentWeaponName = equipmentItems.get(0).getItemType().getId();
-        if (currentWeaponName.equals("woodenSword") || currentWeaponName.equals("ironSword")) {
+        if (currentWeaponName.equals("woodenSword") || currentWeaponName.equals("ironSword") || currentWeaponName.equals("poisonDagger")) {
             currentAttackType = AttackType.SWORD;
         } else if (currentWeaponName.equals("crossbow")) {
             currentAttackType = AttackType.BOW;
@@ -560,5 +593,9 @@ public abstract class Creature {
 
     public float getUnarmedDamage() {
         return unarmedDamage;
+    }
+
+    public boolean isImmune() {
+        return immune;
     }
 }

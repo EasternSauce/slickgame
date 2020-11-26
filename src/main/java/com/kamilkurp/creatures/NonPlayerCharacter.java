@@ -16,7 +16,7 @@ import java.util.*;
 public class NonPlayerCharacter extends Creature {
     private final Timer actionTimer;
 
-    public Random random = new Random();
+    public Random random = Globals.random;
 
     private String dialogueStartId;
 

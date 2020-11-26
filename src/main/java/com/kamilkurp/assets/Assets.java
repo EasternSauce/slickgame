@@ -16,6 +16,7 @@ public class Assets {
     public static SpriteSheet skeletonSpriteSheet;
     public static SpriteSheet wolfSpriteSheet;
     public static SpriteSheet ghostSpriteSheet;
+    public static SpriteSheet goblinSpriteSheet;
     public static SpriteSheet slashSpriteSheet;
     public static SpriteSheet explosionSpriteSheet;
     public static SpriteSheet betterSlashSpriteSheet;
@@ -52,6 +53,7 @@ public class Assets {
         skeletonSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/skeleton.png", 64, 64);
         wolfSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/wolf.png", 50, 35);
         ghostSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/ghost.png", 32, 32);
+        goblinSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/goblin.png", 32, 32);
         slashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash.png", 40, 40);
         explosionSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/explosion.png", 64, 64);
         betterSlashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash_hd.png", 40, 40);

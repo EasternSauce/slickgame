@@ -55,7 +55,9 @@ public class UnarmedAttackAbility extends Ability {
             if (creature == this.abilityCreature) continue;
             if (meleeAttackRect.intersects(creature.getRect())) {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
-                    creature.takeDamage(this.abilityCreature.getUnarmedDamage());
+                    if (!creature.isImmune()) {
+                        creature.takeDamage(this.abilityCreature.getUnarmedDamage(), true);
+                    }
                 }
             }
         }

@@ -13,10 +13,10 @@ import org.newdawn.slick.geom.Rectangle;
 
 import java.util.HashMap;
 
-public class Skeleton extends Mob {
+public class Goblin extends Mob {
 
 
-    public Skeleton(GameSystem gameSystem, String id, String weapon) throws SlickException {
+    public Goblin(GameSystem gameSystem, String id, String weapon) throws SlickException {
         super(gameSystem, id);
 
         actionTimer = new Timer();
@@ -27,12 +27,12 @@ public class Skeleton extends Mob {
         dropTable.put("hideGloves", 0.1f);
         dropTable.put("ironSword", 0.05f);
         dropTable.put("leatherHelmet", 0.15f);
-        dropTable.put("crossbow", 0.005f);
+        dropTable.put("poisonDagger", 0.05f);
 
 
         findNewDestinationTimer = new Timer();
 
-        walkAnimation = new WalkAnimation(Assets.skeletonSpriteSheet, 9, 100, new int [] {0,1,2,3}, 0);
+        walkAnimation = new WalkAnimation(Assets.goblinSpriteSheet, 3, 100, new int [] {3,1,0,2}, 0);
 
         destinationX = 0.0f;
         destinationY = 0.0f;
@@ -64,6 +64,6 @@ public class Skeleton extends Mob {
 
     @Override
     public String getCreatureType() {
-        return "skeleton";
+        return "goblin";
     }
 }

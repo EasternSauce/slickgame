@@ -182,6 +182,8 @@ public class PlayerCharacter extends Creature {
             gameSystem.getCurrentAreaHolder().setCurrentArea(currentRespawnPoint.getArea());
             gameSystem.resetArea();
 
+            poisoned = false;
+
         }
 
         if (passedGateRecently) {

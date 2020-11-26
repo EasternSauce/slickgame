@@ -472,7 +472,6 @@ public class InventoryWindow {
                 if (item.getLootPileBackref().itemList.size() == 1) {
                     item.getLootPileBackref().setVisible(false);
                     if (item.getLootPileBackref() instanceof Treasure) {
-                        System.out.println("picked up treasure!");
                         //register treasure picked up, dont spawn it again for this save
                         try {
                             FileWriter writer = new FileWriter("saves/treasure_collected.sav", true);

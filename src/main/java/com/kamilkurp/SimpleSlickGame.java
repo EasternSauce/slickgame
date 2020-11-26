@@ -49,7 +49,7 @@ public class SimpleSlickGame extends BasicGame {
 
         townMusic = Assets.townMusic;
 
-        townMusic.loop(1.0f, 0.5f);
+//        townMusic.loop(1.0f, 0.5f);
     }
 
     @Override
@@ -220,7 +220,13 @@ public class SimpleSlickGame extends BasicGame {
                 if(s[0].equals("inventory_item")) {
                     if (creature != null) {
                         Map<Integer, Item> inventoryItems = gameSystem.getInventoryWindow().getInventoryItems();
-                        inventoryItems.put(Integer.parseInt(s[1]), new Item(ItemType.getItemType(s[2]), null, (s[3].equals("0") ? null : (float)(Integer.parseInt(s[3]))), (s[4].equals("0") ? null : (float)(Integer.parseInt(s[4])))));
+                        inventoryItems.put(
+                                Integer.parseInt(s[1]),
+                                new Item(ItemType.getItemType(s[2]),
+                                        null, (s[3].equals("0") ? null : (float)(Integer.parseInt(s[3]))),
+                                        (s[4].equals("0") ? null : (float)(Integer.parseInt(s[4])))
+                                )
+                        );
                     }
 
                 }

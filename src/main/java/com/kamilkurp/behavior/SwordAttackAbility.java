@@ -1,9 +1,11 @@
 package com.kamilkurp.behavior;
 
+import com.kamilkurp.Globals;
 import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
+import com.kamilkurp.items.Item;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -11,6 +13,7 @@ import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.Collection;
+import java.util.Random;
 
 public class SwordAttackAbility extends Ability {
     Creature abilityCreature;
@@ -53,7 +56,14 @@ public class SwordAttackAbility extends Ability {
             if (creature == this.abilityCreature) continue;
             if (meleeAttackRect.intersects(creature.getRect())) {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
-                    creature.takeDamage(this.abilityCreature.getEquipmentItems().get(0).getDamage());
+                    if (!creature.isImmune()) {
+                        Item weapon = this.abilityCreature.getEquipmentItems().get(0);
+                        creature.takeDamage(weapon.getDamage(), true);
+                        int random = Globals.random.nextInt(100);
+                        if (random < weapon.getItemType().getPoisonChance() * 100f) {
+                            creature.becomePoisoned();
+                        }
+                    }
                 }
             }
         }

@@ -18,7 +18,7 @@ public abstract class Mob extends Creature {
 
     protected boolean stayInPlace = false;
 
-    public Random random = new Random();
+    public Random random = Globals.random;
 
     protected Map<String, Float> dropTable;
 
