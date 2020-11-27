@@ -9,6 +9,8 @@ public class Item {
     private Float damage;
     private Float armor;
 
+    private Integer quantity;
+
     public Item(ItemType itemType, LootPile lootPileBackref) {
         this.itemType = itemType;
         this.lootPileBackref = lootPileBackref;
@@ -16,14 +18,17 @@ public class Item {
         if (itemType.getMaxDamage() != null) this.damage = (float)Math.ceil(itemType.getMaxDamage() * (0.5f + 0.5f * Globals.randFloat()));
         if (itemType.getMaxArmor() != null) this.armor = (float)Math.ceil(itemType.getMaxArmor() * (0.5f + 0.5f * Globals.randFloat()));
 
+        quantity = 1;
     }
 
-    public Item(ItemType itemType, LootPile lootPileBackref, Float damage, Float armor) {
+    public Item(ItemType itemType, LootPile lootPileBackref, Float damage, Float armor, Integer quantity) {
         this.itemType = itemType;
         this.lootPileBackref = lootPileBackref;
 
         this.damage = damage;
         this.armor = armor;
+
+        this.quantity = quantity;
 
 
     }
@@ -75,4 +80,11 @@ public class Item {
         return armor;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 }

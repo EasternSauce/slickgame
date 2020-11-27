@@ -42,7 +42,7 @@ public class Ghost extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(60f);
+        setMaxHealthPoints(100f);
         setHealthPoints(getMaxHealthPoints());
 
         equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));

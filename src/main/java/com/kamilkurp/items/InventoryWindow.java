@@ -137,6 +137,10 @@ public class InventoryWindow {
                 g.draw(traderInventorySlotList.get(i));
                 if (traderInventoryItems.get(i) != null) {
                     traderInventoryItems.get(i).getItemType().getImage().draw(traderInventorySlotList.get(i).getX(), traderInventorySlotList.get(i).getY(), slotWidth, slotHeight);
+                    if (traderInventoryItems.get(i).getQuantity() > 1) {
+                        g.setColor(Color.cyan);
+                        g.drawString("" + traderInventoryItems.get(i).getQuantity(), traderInventorySlotList.get(i).getX(), traderInventorySlotList.get(i).getY());
+                    }
                 }
             }
             g.setColor(Color.white);
@@ -160,6 +164,10 @@ public class InventoryWindow {
                 g.draw(equipmentSlotList.get(i));
                 if (equipmentItems.get(i) != null) {
                     equipmentItems.get(i).getItemType().getImage().draw(equipmentSlotList.get(i).getX(), equipmentSlotList.get(i).getY(), slotWidth, slotHeight);
+                    if (equipmentItems.get(i).getQuantity() > 1) {
+                        g.setColor(Color.cyan);
+                        g.drawString("" + equipmentItems.get(i).getQuantity(), equipmentSlotList.get(i).getX(), equipmentSlotList.get(i).getY());
+                    }
                 }
 
                 g.setColor(Color.white);
@@ -220,6 +228,10 @@ public class InventoryWindow {
             g.draw(slotList.get(i));
             if (inventoryItems.get(i) != null) {
                 inventoryItems.get(i).getItemType().getImage().draw(slotList.get(i).getX(), slotList.get(i).getY(), slotWidth, slotHeight);
+                if (inventoryItems.get(i).getQuantity() > 1) {
+                    g.setColor(Color.cyan);
+                    g.drawString("" + inventoryItems.get(i).getQuantity(), slotList.get(i).getX(), slotList.get(i).getY());
+                }
             }
         }
 
@@ -467,7 +479,30 @@ public class InventoryWindow {
 
         for (int i = 0; i < inventorySlots; i++) {
             if (inventoryItems.get(i) == null) {
-                inventoryItems.put(i, item);
+
+                ItemType itemType = item.getItemType();
+                boolean stackable = itemType.isStackable();
+
+                if (stackable) {
+                    int invPos = -1;
+                    for (Map.Entry<Integer, Item> invItem : inventoryItems.entrySet()) {
+                        if (invItem.getValue().getItemType() == itemType) {
+                            invPos = invItem.getKey();
+                            break;
+                        }
+                    }
+
+                    if (invPos == -1) {
+                        inventoryItems.put(i, item);
+                    }
+                    else {
+                        inventoryItems.get(invPos).setQuantity(inventoryItems.get(invPos).getQuantity() + item.getQuantity());
+                    }
+                }
+                else {
+                    inventoryItems.put(i, item);
+
+                }
 
                 if (item.getLootPileBackref().itemList.size() == 1) {
                     item.getLootPileBackref().setVisible(false);

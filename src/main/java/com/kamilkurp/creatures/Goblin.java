@@ -40,7 +40,7 @@ public class Goblin extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(60f);
+        setMaxHealthPoints(120f);
         setHealthPoints(getMaxHealthPoints());
 
         equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));

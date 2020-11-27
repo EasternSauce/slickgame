@@ -19,7 +19,9 @@ public class ItemType {
 
     private float poisonChance;
 
-    public ItemType(String id, String name, String description, Image image, String equipmentType, int worth, Float maxDamage, Float maxArmor) {
+    private boolean stackable;
+
+    public ItemType(String id, String name, String description, Image image, String equipmentType, int worth, Float maxDamage, Float maxArmor, boolean stackable) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -28,6 +30,7 @@ public class ItemType {
         this.worth = worth;
         this.maxDamage = maxDamage;
         this.maxArmor = maxArmor;
+        this.stackable = stackable;
     }
 
 
@@ -62,16 +65,17 @@ public class ItemType {
 
         itemTypes = new HashMap<>();
 
-        ItemType itemType1 = new ItemType("leatherArmor", "Leather Armor", "-", itemIcons.getSprite(8,7), "body", 50, null, 7f);
-        ItemType itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", itemIcons.getSprite(3,8), "boots", 30, null, 3f);
-        ItemType itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", itemIcons.getSprite(0,8), "gloves", 25, null, 2f);
-        ItemType itemType4 = new ItemType("crossbow", "Crossbow", "-", itemIcons.getSprite(4,6), "weapon", 250, 30f, null);
-        ItemType itemType5 = new ItemType("ironSword", "Iron Sword", "-", itemIcons.getSprite(2, 5), "weapon", 200, 25f, null);
-        ItemType itemType6 = new ItemType("woodenSword", "Wooden Sword", "-", itemIcons.getSprite(0, 5), "weapon", 200, 20f, null);
-        ItemType itemType7 = new ItemType("leatherHelmet", "Leather Helmet", "-", itemIcons.getSprite(2, 7), "helmet", 70, null, 5f);
-        ItemType itemType8 = new ItemType("lifeRing", "Life Ring", "Increases life when worn", itemIcons.getSprite(5, 8), "ring", 300, null, null);
-        ItemType itemType9 = new ItemType("poisonDagger", "Poison Dagger", "-", itemIcons.getSprite(6, 5), "weapon", 350, 20f, null);
+        ItemType itemType1 = new ItemType("leatherArmor", "Leather Armor", "-", itemIcons.getSprite(8,7), "body", 50, null, 7f, false);
+        ItemType itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", itemIcons.getSprite(3,8), "boots", 30, null, 3f, false);
+        ItemType itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", itemIcons.getSprite(0,8), "gloves", 25, null, 2f, false);
+        ItemType itemType4 = new ItemType("crossbow", "Crossbow", "-", itemIcons.getSprite(4,6), "weapon", 250, 30f, null, false);
+        ItemType itemType5 = new ItemType("ironSword", "Iron Sword", "-", itemIcons.getSprite(2, 5), "weapon", 200, 50f, null, false);
+        ItemType itemType6 = new ItemType("woodenSword", "Wooden Sword", "-", itemIcons.getSprite(0, 5), "weapon", 200, 35f, null, false);
+        ItemType itemType7 = new ItemType("leatherHelmet", "Leather Helmet", "-", itemIcons.getSprite(2, 7), "helmet", 70, null, 5f, false);
+        ItemType itemType8 = new ItemType("lifeRing", "Life Ring", "Increases life when worn", itemIcons.getSprite(5, 8), "ring", 300, null, null, false);
+        ItemType itemType9 = new ItemType("poisonDagger", "Poison Dagger", "-", itemIcons.getSprite(6, 5), "weapon", 350, 20f, null, false);
         itemType9.setPoisonChance(0.20f);
+        ItemType itemType10 = new ItemType("healingPowder", "Healing Powder", "Quickly regenerates health", itemIcons.getSprite(5, 20), null, 30, null, null, true);
 
 
         itemTypes.put(itemType1.getId(), itemType1);
@@ -83,6 +87,7 @@ public class ItemType {
         itemTypes.put(itemType7.getId(), itemType7);
         itemTypes.put(itemType8.getId(), itemType8);
         itemTypes.put(itemType9.getId(), itemType9);
+        itemTypes.put(itemType10.getId(), itemType10);
     }
 
     public static ItemType getItemType(String itemTypeId) {
@@ -105,5 +110,13 @@ public class ItemType {
 
     public void setPoisonChance(float poisonChance) {
         this.poisonChance = poisonChance;
+    }
+
+    public boolean isStackable() {
+        return stackable;
+    }
+
+    public void setStackable(boolean stackable) {
+        this.stackable = stackable;
     }
 }

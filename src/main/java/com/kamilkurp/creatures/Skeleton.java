@@ -25,9 +25,11 @@ public class Skeleton extends Mob {
         dropTable.put("ringmailGreaves", 0.9f);
         dropTable.put("leatherArmor", 0.2f);
         dropTable.put("hideGloves", 0.1f);
-        dropTable.put("ironSword", 0.05f);
+        dropTable.put("ironSword", 0.07f);
+        dropTable.put("woodenSword", 0.2f);
         dropTable.put("leatherHelmet", 0.15f);
-        dropTable.put("crossbow", 0.005f);
+        dropTable.put("crossbow", 0.02f);
+        dropTable.put("healingPowder", 0.3f);
 
 
         findNewDestinationTimer = new Timer();
@@ -40,7 +42,7 @@ public class Skeleton extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(60f);
+        setMaxHealthPoints(110f);
         setHealthPoints(getMaxHealthPoints());
 
         equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));

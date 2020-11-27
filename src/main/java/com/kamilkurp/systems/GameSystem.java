@@ -68,7 +68,8 @@ public class GameSystem {
         areas.get("area1").addNewCreature(playerCharacter, 400f, 400f);
 
         lootSystem.placeTreasure(areas.get("area1"), 850, 700, ItemType.getItemType("leatherArmor"));
-        lootSystem.placeTreasure(areas.get("area1"), 3551, 3840, ItemType.getItemType("lifeRing"));
+        lootSystem.placeTreasure(areas.get("area1"), 3551, 3840, ItemType.getItemType("woodenSword"));
+        lootSystem.placeTreasure(areas.get("area1"), 3145, 2952, ItemType.getItemType("lifeRing"));
         lootSystem.placeTreasure(areas.get("area1"), 1332, 2833, ItemType.getItemType("ironSword"));
         lootSystem.placeTreasure(areas.get("area2"), 3100, 2654, ItemType.getItemType("crossbow"));
 

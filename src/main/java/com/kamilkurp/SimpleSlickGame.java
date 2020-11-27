@@ -104,9 +104,10 @@ public class SimpleSlickGame extends BasicGame {
                 if (inventoryItem.getValue() != null) {
                     int slotId = inventoryItem.getKey();
                     String damage = inventoryItem.getValue().getDamage() == null ? "0" : "" + inventoryItem.getValue().getDamage().intValue();
-
                     String armor = inventoryItem.getValue().getArmor() == null ? "0" : "" + inventoryItem.getValue().getArmor().intValue();
-                    writer.write("inventory_item " + slotId + " " + inventoryItem.getValue().getItemType().getId() + " " + damage + " " + armor + "\n");
+                    String quantity = inventoryItem.getValue().getQuantity() == null ? "0" : "" + inventoryItem.getValue().getQuantity();
+
+                    writer.write("inventory_item " + slotId + " " + inventoryItem.getValue().getItemType().getId() + " " + damage + " " + armor + " " + quantity + "\n");
                 }
             }
 
@@ -192,7 +193,7 @@ public class SimpleSlickGame extends BasicGame {
                 if(s[0].equals("equipment_item")) {
                     if (creature != null) {
                         Map<Integer, Item> equipmentItems = creature.getEquipmentItems();
-                        equipmentItems.put(Integer.parseInt(s[1]), new Item(ItemType.getItemType(s[2]), null, (s[3].equals("0") ? null : (float)(Integer.parseInt(s[3]))), (s[4].equals("0") ? null : (float)(Integer.parseInt(s[4])))));
+                        equipmentItems.put(Integer.parseInt(s[1]), new Item(ItemType.getItemType(s[2]), null, (s[3].equals("0") ? null : (float)(Integer.parseInt(s[3]))), (s[4].equals("0") ? null : (float)(Integer.parseInt(s[4]))), 1));
                     }
 
                 }
@@ -224,7 +225,8 @@ public class SimpleSlickGame extends BasicGame {
                                 Integer.parseInt(s[1]),
                                 new Item(ItemType.getItemType(s[2]),
                                         null, (s[3].equals("0") ? null : (float)(Integer.parseInt(s[3]))),
-                                        (s[4].equals("0") ? null : (float)(Integer.parseInt(s[4])))
+                                        (s[4].equals("0") ? null : (float)(Integer.parseInt(s[4]))),
+                                        (s[5].equals("0") ? null : (Integer.parseInt(s[5])))
                                 )
                         );
                     }

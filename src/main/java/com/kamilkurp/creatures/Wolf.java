@@ -34,7 +34,8 @@ public class Wolf extends Mob {
         dropTable.put("hideGloves", 0.1f);
         dropTable.put("ironSword", 0.05f);
         dropTable.put("leatherHelmet", 0.15f);
-
+        dropTable.put("woodenSword", 0.05f);
+        dropTable.put("healingPowder", 0.3f);
 
         findNewDestinationTimer = new Timer();
 
@@ -46,7 +47,7 @@ public class Wolf extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(35f);
+        setMaxHealthPoints(90f);
         setHealthPoints(getMaxHealthPoints());
 
 
