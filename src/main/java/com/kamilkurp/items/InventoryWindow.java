@@ -244,7 +244,15 @@ public class InventoryWindow {
 
     public void update(KeyInput keyInput) {
         if (keyInput.isKeyPressed(KeyInput.Key.I)) {
-            openInventory();
+            if (!inventoryOpen) {
+                openInventory();
+            }
+            else {
+                closeInventory();
+            }
+        }
+        if (keyInput.isKeyPressed(KeyInput.Key.ESC)) {
+            closeInventory();
         }
         else if (inventoryOpen) {
             if (keyInput.isKeyPressed(KeyInput.Key.W)) {
@@ -318,18 +326,18 @@ public class InventoryWindow {
                 }
 
             }
-            if (keyInput.isKeyPressed(KeyInput.Key.E)) {
+            if (keyInput.isKeyPressed(KeyInput.Key.SPACE)) {
                 if (!trading) {
                     if (!moving) {
-                        boolean itemToMoveExists;
+                        boolean itemExistsInSlot;
 
                         if (inEquipment) {
-                            itemToMoveExists = equipmentItems.get(currentSelected) != null;
+                            itemExistsInSlot = equipmentItems.get(currentSelected) != null;
                         } else {
-                            itemToMoveExists = inventoryItems.get(currentSelected) != null;
+                            itemExistsInSlot = inventoryItems.get(currentSelected) != null;
                         }
 
-                        if (itemToMoveExists) {
+                        if (itemExistsInSlot) {
                             currentMoved = currentSelected;
                             moving = true;
                             movingInEquipment = inEquipment;
@@ -420,9 +428,37 @@ public class InventoryWindow {
                 }
 
             }
-            if (keyInput.isKeyPressed(KeyInput.Key.ESC)) {
-                closeInventory();
+            if (keyInput.isKeyPressed(KeyInput.Key.E)) {
+                if (inventoryOpen) {
+                    if (trading) {
+                        if (!inEquipment && !inTraderInventory) {
+                            if (inventoryItems.get(currentSelected) != null) {
+                                sellSelectedItem();
+
+                            }
+                        }
+                    }
+                    else {
+
+                        if (!inEquipment && !inTraderInventory) {
+                            Item item = inventoryItems.get(currentSelected);
+                            if (item != null && item.getItemType().isConsumable()) {
+                                playerCharacter.useItem(item);
+                                if (item.getQuantity() <= 1) {
+                                    inventoryItems.remove(currentSelected);
+                                }
+                                else {
+                                    item.setQuantity(item.getQuantity()-1);
+                                }
+
+
+                            }
+                        }
+
+                    }
+                }
             }
+
         }
     }
 

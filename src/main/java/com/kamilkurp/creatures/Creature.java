@@ -116,6 +116,14 @@ public abstract class Creature {
 
     protected int poisonTime = 20000;
 
+    private Timer healingTimer;
+    private Timer healingTickTimer;
+    private boolean healing;
+
+    protected int healingTickTime = 300;
+
+    protected int healingTime = 15000;
+    private float healingPower;
 
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
@@ -165,7 +173,11 @@ public abstract class Creature {
         poisonTickTimer.setTime(poisonTickTime);
         poisonTimer.setTime(poisonTime);
 
+        healingTimer = new Timer();
+        healingTickTimer = new Timer();
+        healing = false;
 
+        healingPower = 0f;
     }
 
     public abstract void onInit();
@@ -237,23 +249,11 @@ public abstract class Creature {
 
     public void regenerate() {
         if (healthRegenTimer.getTime() > 500f) {
-            if (getHealthPoints() < getMaxHealthPoints()) {
-                float afterRegen = getHealthPoints() + healthRegen;
-                healthPoints = Math.min(afterRegen, getMaxHealthPoints());
-            }
+            heal(healthRegen);
             healthRegenTimer.reset();
         }
 
-        boolean abilityActive = false;
-
-        for (Ability ability : abilityList) {
-            if (ability.isActive()) {
-                abilityActive = true;
-                break;
-            }
-        }
-
-        if (staminaRegenTimer.getTime() > 500f && !sprinting && !abilityActive && !staminaOveruse) {
+        if (staminaRegenTimer.getTime() > 500f && !sprinting && !isAbilityActive() && !staminaOveruse) {
             if (getStaminaPoints() < getMaxStaminaPoints()) {
                 float afterRegen = getStaminaPoints() + staminaRegen;
                 staminaPoints = Math.min(afterRegen, getMaxStaminaPoints());
@@ -276,6 +276,36 @@ public abstract class Creature {
                 poisoned = false;
             }
         }
+
+        if (healing) {
+            if (healingTickTimer.getTime() > healingTickTime) {
+                heal(healingPower);
+                healingTickTimer.reset();
+            }
+            if (healingTimer.getTime() > healingTime || healthPoints >= maxHealthPoints) {
+                healing = false;
+            }
+        }
+    }
+
+    private boolean isAbilityActive() {
+        boolean abilityActive = false;
+
+        for (Ability ability : abilityList) {
+            if (ability.isActive()) {
+                abilityActive = true;
+                break;
+            }
+        }
+        return abilityActive;
+    }
+
+    private void heal(float healValue) {
+        if (getHealthPoints() < getMaxHealthPoints()) {
+            float afterHeal = getHealthPoints() + healValue;
+            healthPoints = Math.min(afterHeal, getMaxHealthPoints());
+        }
+
     }
 
     protected abstract void setFacingDirection(GameContainer gc);
@@ -498,6 +528,19 @@ public abstract class Creature {
             staminaOveruseTimer.reset();
         }
 
+    }
+
+    public void useItem(Item item) {
+        if (item.getItemType().getId().equals("healingPowder")) {
+            startHealing(10f);
+        }
+    }
+
+    private void startHealing(float healingPower) {
+        healingTimer.reset();
+        healingTickTimer.reset();
+        healing = true;
+        this.healingPower = healingPower;
     }
 
     public enum AttackType {UNARMED, SWORD, BOW}

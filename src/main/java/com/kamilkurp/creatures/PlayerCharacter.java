@@ -48,7 +48,6 @@ public class PlayerCharacter extends Creature {
 
     @Override
     public void performActions(GameContainer gc, KeyInput keyInput) {
-        if (gameSystem.getInventoryWindow().isInventoryOpen()) return;
 
         Input input = gc.getInput();
 
@@ -134,13 +133,14 @@ public class PlayerCharacter extends Creature {
 
             regenerate();
 
-            if (!gameSystem.getDialogueWindow().isActivated()) {
+            if (!(gameSystem.getInventoryWindow().isInventoryOpen() || gameSystem.getDialogueWindow().isActivated() || gameSystem.getLootOptionWindow().isActivated())) {
                 performActions(gc, keyInput);
 
                 executeMovementLogic();
 
                 setFacingDirection(gc);
             }
+
 
         } else {
             stepSound.stop();
