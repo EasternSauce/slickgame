@@ -26,8 +26,12 @@ public class DashAbility extends Ability {
         dashTimer = new Timer();
         dashVector = new Vector2f(0f, 0f);
 
-        cooldownTime = 1000;
+        cooldownTime = 2000;
         dashSpeed = 0.0f;
+        channelTime = 0;
+
+        activeTime = 200;
+
     }
 
 
@@ -59,9 +63,7 @@ public class DashAbility extends Ability {
         activeTimer.reset();
         dashTimer.reset();
 
-        abilityCreature.takeStaminaDamage(35f);
-
-        channelTime = 150;
+        abilityCreature.takeStaminaDamage(30f);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class DashAbility extends Ability {
 
     @Override
     public void performOnUpdateStart(int i) {
-        dashSpeed = 0.7f * i;
+        dashSpeed = 1.0f * i;
     }
 
     public void setDashVector(Vector2f dashVector) {

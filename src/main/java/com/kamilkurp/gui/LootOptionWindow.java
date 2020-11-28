@@ -32,7 +32,12 @@ public class LootOptionWindow {
 
 
             for (int i = 0; i < Math.min(4, itemList.size()); i++) {
-                g.drawString((currentSelected == (i + scroll) && activated ? ">" : "") + itemList.get(i + scroll).getName(), 10, Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION + 10 + 30 * i);
+                if (i + scroll >= itemList.size()) {
+                    System.out.println("trying to access non existent item on the loot pile!");
+                }
+                else {
+                    g.drawString((currentSelected == (i + scroll) && activated ? ">" : "") + itemList.get(i + scroll).getName(), 10, Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION + 10 + 30 * i);
+                }
             }
 
 
@@ -58,12 +63,14 @@ public class LootOptionWindow {
                 }
                 if (keyInput.isKeyPressed(KeyInput.Key.E)) {
                     if (itemList.size() != 0) {
-                        gameSystem.getInventoryWindow().pickUpItem(itemList.get(currentSelected), itemList);
-                        if (currentSelected > 0) currentSelected--;
-                        if(scroll > 0) scroll--;
-                        if (itemList.size() == 0) {
-                            currentSelected = 0;
-                            activated = false;
+                        if (!gameSystem.getInventoryWindow().isInventoryOpen()) {
+                            gameSystem.getInventoryWindow().pickUpItem(itemList.get(currentSelected), itemList);
+                            if (currentSelected > 0) currentSelected--;
+                            if(scroll > 0) scroll--;
+                            if (itemList.size() == 0) {
+                                currentSelected = 0;
+                                activated = false;
+                            }
                         }
                     }
                 }

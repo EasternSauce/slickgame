@@ -458,6 +458,20 @@ public class InventoryWindow {
                     }
                 }
             }
+            if (keyInput.isKeyPressed(KeyInput.Key.ALT)) {
+                // drop item
+                if (inventoryOpen) {
+                    if (!inEquipment && !inTraderInventory) {
+                        Item item = inventoryItems.get(currentSelected);
+                        if (item != null) {
+                            PlayerCharacter character = gameSystem.getPlayerCharacter();
+                            gameSystem.getLootSystem().spawnLootPile(gameSystem.getCurrentArea(), character.getRect().getCenterX(), character.getRect().getCenterY(), item);
+                            inventoryItems.remove(currentSelected);
+                        }
+                    }
+                }
+
+            }
 
         }
     }

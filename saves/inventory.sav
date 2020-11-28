@@ -5,14 +5,17 @@ inventory_item 3 ringmailGreaves 0 3 1
 inventory_item 4 ringmailGreaves 0 3 1
 inventory_item 5 woodenSword 35 0 1
 inventory_item 6 crossbow 17 0 1
-inventory_item 8 leatherHelmet 0 5 1
+inventory_item 7 leatherHelmet 0 5 1
+inventory_item 8 ringmailGreaves 0 3 1
 inventory_item 9 ringmailGreaves 0 3 1
 inventory_item 10 hideGloves 0 2 1
 inventory_item 11 woodenSword 29 0 1
 inventory_item 12 ringmailGreaves 0 3 1
-inventory_item 13 hideGloves 0 2 1
+inventory_item 13 healingPowder 0 0 1
 inventory_item 14 hideGloves 0 2 1
 inventory_item 15 ringmailGreaves 0 3 1
 inventory_item 16 ringmailGreaves 0 2 1
-inventory_item 17 ringmailGreaves 0 3 1
+inventory_item 17 ringmailGreaves 0 2 1
+inventory_item 18 ironSword 27 0 1
+inventory_item 19 ringmailGreaves 0 3 1
 gold 461

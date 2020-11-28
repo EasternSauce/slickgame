@@ -85,6 +85,19 @@ public class LootSystem {
         }
     }
 
+    public void spawnLootPile(Area area, float x, float y, Item item) {
+        LootPile newLootPile = new LootPile(area, x, y);
+
+        newLootPile.addItem(item);
+
+
+        if (!newLootPile.getItemList().isEmpty()) {
+            item.setLootPileBackref(newLootPile);
+
+            area.getLootPileList().add(newLootPile);
+        }
+    }
+
     public void placeTreasure(Area area, float x, float y, ItemType itemType) {
         Treasure treasure = new Treasure(area, x, y);
 

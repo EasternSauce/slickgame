@@ -87,4 +87,8 @@ public class Item {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+    public void setLootPileBackref(LootPile lootPileBackref) {
+        this.lootPileBackref = lootPileBackref;
+    }
 }
