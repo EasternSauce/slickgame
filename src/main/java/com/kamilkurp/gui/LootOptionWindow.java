@@ -27,7 +27,7 @@ public class LootOptionWindow {
         this.gameSystem = gameSystem;
     }
 
-    public void render(Graphics g, Camera camera) {
+    public void render(Graphics g) {
         if (visible) {
 
 

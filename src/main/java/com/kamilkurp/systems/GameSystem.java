@@ -283,7 +283,7 @@ public class GameSystem {
 
         dialogueWindow.render(g);
 
-        lootOptionWindow.render(g, camera);
+        lootOptionWindow.render(g);
     }
 
     public void updateCreatures(GameContainer gc, int i, KeyInput keyInput) {

@@ -9,14 +9,18 @@ import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class LootSystem {
     private GameSystem gameSystem;
 
+    private List<Item> visibleItems;
+
     public LootSystem(GameSystem gameSystem) {
         this.gameSystem = gameSystem;
+        visibleItems = new LinkedList<>();
     }
 
     public void render(Graphics g, Camera camera) {
@@ -31,7 +35,7 @@ public class LootSystem {
     public void update(KeyInput keyInput, PlayerCharacter playerCharacter) {
 //        List<LootPile> visibleLootPile = new LinkedList<>();
 
-        List<Item> visibleItems = new ArrayList<>();
+        visibleItems = new ArrayList<>();
         for (LootPile lootPile : gameSystem.getCurrentArea().getLootPileList()) {
             if (gameSystem.getCurrentArea() == lootPile.getArea()) {
 
@@ -90,4 +94,7 @@ public class LootSystem {
         area.getRemainingTreasureList().add(treasure);
     }
 
+    public int getVisibleItemsCount() {
+        return visibleItems.size();
+    }
 }

@@ -212,16 +212,19 @@ public class PlayerCharacter extends Creature {
 
     private void interact() {
 
-        for (Creature creature : area.getCreatures().values()) {
-            if (creature == this) continue;
-            if (rect.intersects(creature.rect) && creature instanceof NonPlayerCharacter && creature.healthPoints > 0) {
-                ((NonPlayerCharacter)creature).triggerDialogue();
+        if (gameSystem.getLootSystem().getVisibleItemsCount() == 0) {
+
+            for (Creature creature : area.getCreatures().values()) {
+                if (creature == this) continue;
+                if (rect.intersects(creature.rect) && creature instanceof NonPlayerCharacter && creature.healthPoints > 0) {
+                    ((NonPlayerCharacter) creature).triggerDialogue();
+                }
             }
-        }
-        for (PlayerRespawnPoint playerRespawnPoint : area.getRespawnList()) {
-            if (rect.intersects(playerRespawnPoint.getRect())) {
-                currentRespawnPoint = playerRespawnPoint;
-                currentRespawnPoint.onRespawnSet();
+            for (PlayerRespawnPoint playerRespawnPoint : area.getRespawnList()) {
+                if (rect.intersects(playerRespawnPoint.getRect())) {
+                    currentRespawnPoint = playerRespawnPoint;
+                    currentRespawnPoint.onRespawnSet();
+                }
             }
         }
     }

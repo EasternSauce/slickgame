@@ -61,23 +61,27 @@ public class Hud {
         }
 
         if (gameSystem != null && !gameSystem.getDialogueWindow().isActivated()) {
-            g.setColor(Color.white);
 
-            String triggerMessage = "";
+            if (gameSystem.getLootSystem().getVisibleItemsCount() == 0) {
+                g.setColor(Color.white);
 
-            for (Creature creature : gameSystem.getCurrentArea().getCreatures().values()) {
-                if (creature == gameSystem.getPlayerCharacter()) continue;
-                if (gameSystem.getPlayerCharacter().getRect().intersects(creature.getRect()) && creature instanceof NonPlayerCharacter && creature.getHealthPoints() > 0) {
-                    triggerMessage = "> Talk";
+                String triggerMessage = "";
+
+                for (Creature creature : gameSystem.getCurrentArea().getCreatures().values()) {
+                    if (creature == gameSystem.getPlayerCharacter()) continue;
+                    if (gameSystem.getPlayerCharacter().getRect().intersects(creature.getRect()) && creature instanceof NonPlayerCharacter && creature.getHealthPoints() > 0) {
+                        triggerMessage = "> Talk";
+                    }
                 }
-            }
-            for (PlayerRespawnPoint playerRespawnPoint : gameSystem.getCurrentArea().getRespawnList()) {
-                if (gameSystem.getPlayerCharacter().getRect().intersects(playerRespawnPoint.getRect())) {
-                    triggerMessage = "> Set respawn";
+                for (PlayerRespawnPoint playerRespawnPoint : gameSystem.getCurrentArea().getRespawnList()) {
+                    if (gameSystem.getPlayerCharacter().getRect().intersects(playerRespawnPoint.getRect())) {
+                        triggerMessage = "> Set respawn";
+                    }
                 }
-            }
 
-            g.drawString(triggerMessage, 10, Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION + 10);
+                g.drawString(triggerMessage, 10, Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION + 10);
+
+            }
 
         }
     }
