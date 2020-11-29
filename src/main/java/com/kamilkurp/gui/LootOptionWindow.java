@@ -64,12 +64,14 @@ public class LootOptionWindow {
                 if (keyInput.isKeyPressed(KeyInput.Key.E)) {
                     if (itemList.size() != 0) {
                         if (!gameSystem.getInventoryWindow().isInventoryOpen()) {
-                            gameSystem.getInventoryWindow().pickUpItem(itemList.get(currentSelected), itemList);
-                            if (currentSelected > 0) currentSelected--;
-                            if(scroll > 0) scroll--;
-                            if (itemList.size() == 0) {
-                                currentSelected = 0;
-                                activated = false;
+                            boolean isPickedUp = gameSystem.getInventoryWindow().pickUpItem(itemList.get(currentSelected), itemList);
+                            if (isPickedUp) {
+                                if (currentSelected > 0) currentSelected--;
+                                if(scroll > 0) scroll--;
+                                if (itemList.size() == 0) {
+                                    currentSelected = 0;
+                                    activated = false;
+                                }
                             }
                         }
                     }

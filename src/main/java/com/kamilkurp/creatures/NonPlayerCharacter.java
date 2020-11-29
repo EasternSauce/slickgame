@@ -10,6 +10,7 @@ import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.SpriteSheet;
 
 import java.util.*;
 
@@ -27,7 +28,7 @@ public class NonPlayerCharacter extends Creature {
     private final Map<String, Float> dropTable;
 
 
-    public NonPlayerCharacter(GameSystem gameSystem, String id, String dialogueStartId, boolean trader) {
+    public NonPlayerCharacter(GameSystem gameSystem, String id, String dialogueStartId, boolean trader, SpriteSheet spriteSheet) {
         super(gameSystem, id);
 
         this.dialogueStartId = dialogueStartId;
@@ -38,7 +39,7 @@ public class NonPlayerCharacter extends Creature {
 
         traderInventory = new LinkedList<>();
 
-        walkAnimation = new WalkAnimation(Assets.male1SpriteSheet, 3, 100, new int [] {3,1,0,2}, 1);
+        walkAnimation = new WalkAnimation(spriteSheet, 3, 100, new int [] {3,1,0,2}, 1);
 
 
         dropTable = new HashMap<>();

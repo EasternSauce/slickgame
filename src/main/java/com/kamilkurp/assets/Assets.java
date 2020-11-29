@@ -27,10 +27,14 @@ public class Assets {
     public static Sound dogBarkSound;
     public static Sound dogWhimperSound;
     public static Sound punchSound;
+    public static Sound strongPunchSound;
     public static Sound explosionSound;
+    public static Sound bounceSound;
     public static Music townMusic;
     public static SpriteSheet itemIcons;
     public static SpriteSheet male1SpriteSheet;
+    public static SpriteSheet male2SpriteSheet;
+    public static SpriteSheet female1SpriteSheet;
     public static SpriteSheet projectileSpriteSheet;
     public static SpriteSheet niceItemIcons;
     public static Font verdanaFont;
@@ -39,6 +43,8 @@ public class Assets {
     public static TrueTypeFont verdanaHugeTtf;
 
     public static Sound arrowWhizzSound;
+    public static Sound boneCrushSound;
+
     public static SpawnLocationsContainer area1Enemies;
     public static SpawnLocationsContainer area2Enemies;
 
@@ -67,9 +73,15 @@ public class Assets {
         itemIcons = new SpriteSheet(Globals.getAssetsLocation() + "items/item_icons.png", 40, 40);
         arrowWhizzSound = new Sound(Globals.getAssetsLocation() + "sounds/arrow-whizz.wav");
         punchSound = new Sound(Globals.getAssetsLocation() + "sounds/punch.wav");
+        strongPunchSound = new Sound(Globals.getAssetsLocation() + "sounds/strong-punch.wav");
         explosionSound = new Sound(Globals.getAssetsLocation() + "sounds/explosion.wav");
+        boneCrushSound = new Sound(Globals.getAssetsLocation() + "sounds/bone-crush.wav");
+        bounceSound = new Sound(Globals.getAssetsLocation() + "sounds/bounce.wav");
 
         male1SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male1.png", 32, 32);
+        male2SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male2.png", 32, 32);
+        female1SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/female1.png", 32, 32);
+
 
         projectileSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "projectiles/arrow.png", 40, 40);
 

@@ -9,12 +9,14 @@ import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.HashMap;
 
 public class Skeleton extends Mob {
 
+    private Sound bounceSound = Assets.bounceSound;
 
     public Skeleton(GameSystem gameSystem, String id, String weapon) throws SlickException {
         super(gameSystem, id);
@@ -68,4 +70,30 @@ public class Skeleton extends Mob {
     public String getCreatureType() {
         return "skeleton";
     }
+
+    @Override
+    public void takeDamage(float damage, boolean immunityFrames) {
+        if (isAlive()) {
+
+            float beforeHP = healthPoints;
+
+            float actualDamage = damage * 100f/(100f + getTotalArmor());
+
+            if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
+            else healthPoints = 0f;
+
+            if (beforeHP != healthPoints && healthPoints == 0f) {
+                onDeath();
+            }
+
+            if (immunityFrames) {
+                immunityTimer.reset();
+                immune = true;
+            }
+
+            bounceSound.play(1.0f, 0.1f);
+        }
+
+    }
+
 }

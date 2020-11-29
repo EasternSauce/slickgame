@@ -525,34 +525,33 @@ public class InventoryWindow {
         return inventoryOpen;
     }
 
-    public void pickUpItem(Item item, List<Item> itemList) {
+    public boolean pickUpItem(Item item, List<Item> itemList) {
+        ItemType itemType = item.getItemType();
+
+        boolean stackable = itemType.isStackable();
+
+        if (stackable) {
+            int invPos = -1;
+            for (Map.Entry<Integer, Item> invItem : inventoryItems.entrySet()) {
+                if (invItem.getValue().getItemType() == itemType) {
+                    invPos = invItem.getKey();
+                    break;
+                }
+            }
+            if (invPos != -1) {
+                // add quantity to existing item
+                inventoryItems.get(invPos).setQuantity(inventoryItems.get(invPos).getQuantity() + item.getQuantity());
+
+                item.removeFromLoot();
+                itemList.remove(item);
+                return true;
+            }
+        }
 
         for (int i = 0; i < inventorySlots; i++) {
-            if (inventoryItems.get(i) == null) {
+            if (inventoryItems.get(i) == null) { // if slot empty
 
-                ItemType itemType = item.getItemType();
-                boolean stackable = itemType.isStackable();
-
-                if (stackable) {
-                    int invPos = -1;
-                    for (Map.Entry<Integer, Item> invItem : inventoryItems.entrySet()) {
-                        if (invItem.getValue().getItemType() == itemType) {
-                            invPos = invItem.getKey();
-                            break;
-                        }
-                    }
-
-                    if (invPos == -1) {
-                        inventoryItems.put(i, item);
-                    }
-                    else {
-                        inventoryItems.get(invPos).setQuantity(inventoryItems.get(invPos).getQuantity() + item.getQuantity());
-                    }
-                }
-                else {
-                    inventoryItems.put(i, item);
-
-                }
+                inventoryItems.put(i, item);
 
                 if (item.getLootPileBackref().itemList.size() == 1) {
                     item.getLootPileBackref().setVisible(false);
@@ -575,9 +574,11 @@ public class InventoryWindow {
                 item.removeFromLoot();
                 itemList.remove(item);
 
-                return;
+                return true;
             }
         }
+
+        return false;
     }
 
     public void openTradeWindow() {

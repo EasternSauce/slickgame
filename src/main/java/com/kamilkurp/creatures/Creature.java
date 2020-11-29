@@ -282,7 +282,7 @@ public abstract class Creature {
                 heal(healingPower);
                 healingTickTimer.reset();
             }
-            if (healingTimer.getTime() > healingTime || healthPoints >= maxHealthPoints) {
+            if (healingTimer.getTime() > healingTime || getHealthPoints() >= getMaxHealthPoints()) {
                 healing = false;
             }
         }
@@ -301,8 +301,10 @@ public abstract class Creature {
     }
 
     private void heal(float healValue) {
+
         if (getHealthPoints() < getMaxHealthPoints()) {
             float afterHeal = getHealthPoints() + healValue;
+
             healthPoints = Math.min(afterHeal, getMaxHealthPoints());
         }
 
