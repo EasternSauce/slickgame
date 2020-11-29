@@ -250,6 +250,8 @@ public class GameSystem {
     }
 
     public void render(Graphics g) {
+        g.setWorldClip(0, 0, Globals.SCREEN_WIDTH * Globals.SCREEN_PROPORTION, Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION);
+
         Area currentArea = currentAreaHolder.getCurrentArea();
 
         if (cameraFocusedCreature.getArea() == currentArea) {

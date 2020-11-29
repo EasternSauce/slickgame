@@ -44,9 +44,7 @@ public class SimpleSlickGame extends BasicGame {
         keyInput = new KeyInput();
 
         loadGame();
-
-
-
+        
         townMusic = Assets.townMusic;
 
 //        townMusic.loop(1.0f, 0.5f);
