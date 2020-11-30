@@ -4,8 +4,8 @@ pos 1512.0 11.0
 health 0.0
 creature Protagonist
 area area2
-pos 513.37476 442.10367
-health 132.56532
+pos 529.16724 230.59966
+health 330.0
 equipment_item 0 ironSword 46 0
 equipment_item 1 leatherHelmet 0 4
 equipment_item 2 leatherArmor 0 4
@@ -18,8 +18,8 @@ pos 313.0 134.0
 health 100.0
 creature Protagonist
 area area2
-pos 513.37476 442.10367
-health 132.56532
+pos 529.16724 230.59966
+health 330.0
 equipment_item 0 ironSword 46 0
 equipment_item 1 leatherHelmet 0 4
 equipment_item 2 leatherArmor 0 4

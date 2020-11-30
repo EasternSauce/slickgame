@@ -26,7 +26,6 @@ public class ExplodeAbility extends Ability {
         channelTime = 2000;
 
         explosionAnimation = new AttackAnimation(Assets.explosionSpriteSheet, 20, 100);
-        meleeAttackRect = new Rectangle(-999, -999, 1, 1);
 
         explosionRange = 200f;
     }

@@ -20,11 +20,13 @@ public class SwordAttackAbility extends Ability {
     protected AttackAnimation swordAttackAnimation;
     protected AttackAnimation swordWindupAnimation;
     private final Sound swordAttackSound = Assets.attackSound;
+    private boolean aimed;
 
-    public SwordAttackAbility(Creature abilityCreature) {
+    public SwordAttackAbility(Creature abilityCreature, boolean aimed) {
         super(abilityCreature);
 
         this.abilityCreature = abilityCreature;
+        this.aimed = aimed;
         cooldownTime = 800;
         activeTime = 300;
         channelTime = 500;
@@ -73,6 +75,10 @@ public class SwordAttackAbility extends Ability {
     protected void onUpdateChanneling(int i) {
         swordWindupAnimation.getAnimation().update(i);
         updateAttackRect(i);
+
+        if (aimed) {
+            abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
+        }
     }
 
     private void updateAttackRect(int i) {
@@ -110,5 +116,9 @@ public class SwordAttackAbility extends Ability {
 
             g.drawImage(image, meleeAttackRect.getX() - camera.getPosX(), meleeAttackRect.getY() - camera.getPosY());
         }
+    }
+
+    public void setAimed(boolean aimed) {
+        this.aimed = aimed;
     }
 }

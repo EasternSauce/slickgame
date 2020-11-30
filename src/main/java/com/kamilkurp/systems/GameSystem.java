@@ -13,7 +13,6 @@ import com.kamilkurp.gui.LootOptionWindow;
 import com.kamilkurp.items.InventoryWindow;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.items.LootSystem;
-import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.CurrentAreaHolder;
@@ -239,10 +238,7 @@ public class GameSystem {
 
         lootSystem.update(keyInput, playerCharacter);
 
-
-        for (AreaGate areaGate : gateList) {
-            areaGate.update(this);
-        }
+        gateList.forEach(gate -> gate.update(this));
 
         currentArea.getCreaturesManager().updateRenderPriorityQueue();
 
@@ -250,7 +246,7 @@ public class GameSystem {
     }
 
     public void render(Graphics g) {
-        g.setWorldClip(0, 0, Globals.SCREEN_WIDTH * Globals.SCREEN_PROPORTION, Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION);
+        g.setWorldClip(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
 
         Area currentArea = currentAreaHolder.getCurrentArea();
 
@@ -260,20 +256,13 @@ public class GameSystem {
 
             currentArea.renderSpawns(g, camera);
 
-            for (PlayerRespawnPoint playerRespawnPoint : currentArea.getRespawnList()) {
-                playerRespawnPoint.render(g, camera);
-            }
+            currentArea.getRespawnList().forEach(respawnPoint -> respawnPoint.render(g, camera));
 
-            for (AreaGate areaGate : gateList) {
-                areaGate.render(g, camera, currentArea);
-            }
+            gateList.forEach(gate -> gate.render(g, camera, currentArea));
 
             currentArea.getCreaturesManager().renderCreatures(g, camera);
 
-            for (Arrow arrow : currentArea.getArrowList()) {
-                arrow.render(g, camera);
-            }
-
+            currentArea.getArrowList().forEach(arrow -> arrow.render(g, camera));
 
             lootSystem.render(g, camera);
             inventoryWindow.render(g);
@@ -293,18 +282,7 @@ public class GameSystem {
     public void updateCreatures(GameContainer gc, int i, KeyInput keyInput) {
         Map<String, Creature> areaCreatures = getCurrentArea().getCreatures();
 
-        for (Creature creature : areaCreatures.values()) {
-//            if (creature instanceof PlayerCharacter) {
-//                if (!getInventoryWindow().isInventoryOpen() && !getLootOptionWindow().isActivated() && !getDialogueWindow().isActivated()) {
-//                    creature.update(gc, i, keyInput);
-//
-//                    creature.areaGateLogic(getGateList());
-//                }
-//            }
-
-            creature.update(gc, i, keyInput, this);
-
-        }
+        areaCreatures.values().forEach(creature -> creature.update(gc, i, keyInput, this));
 
         if (markRespawnAreaForReset) {
             markRespawnAreaForReset = false;

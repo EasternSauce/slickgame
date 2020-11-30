@@ -48,6 +48,8 @@ public class SimpleSlickGame extends BasicGame {
         townMusic = Assets.townMusic;
 
 //        townMusic.loop(1.0f, 0.5f);
+
+        gc.setMouseCursor(Assets.cursor, 0,0);
     }
 
     @Override
@@ -125,21 +127,6 @@ public class SimpleSlickGame extends BasicGame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        try {
-//            FileWriter writer = new FileWriter("saves/treasure_collected.sav");
-//
-//            for (Area area : gameSystem.getAreas().values()) {
-//                for (Treasure treasure : area.getTreasureList()) {
-//                    writer.write("treasure " + area.getId() + " " + area.getTreasureList().indexOf(treasure));
-//                }
-//            }
-//
-//
-//            writer.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     private void loadGame() {

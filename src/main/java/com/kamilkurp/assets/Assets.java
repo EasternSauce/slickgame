@@ -48,6 +48,8 @@ public class Assets {
     public static SpawnLocationsContainer area1Enemies;
     public static SpawnLocationsContainer area2Enemies;
 
+    public static Image cursor;
+
     public static void loadAssets() throws SlickException {
         String assetsLocation = Globals.getAssetsLocation();
         grassyTileset = new TerrainTileset(16,16,12,16,4, assetsLocation + "grassy_terrain/tileset.png", assetsLocation + "grassy_terrain/terrain_passable.txt");
@@ -91,6 +93,8 @@ public class Assets {
         verdanaTtf = new TrueTypeFont(verdanaFont, true);
         verdanaHugeFont = new Font("Verdana", Font.BOLD, 46);
         verdanaHugeTtf = new TrueTypeFont(verdanaHugeFont, true);
+
+        cursor = new Image(Globals.getAssetsLocation() + "cursor/cursor.png");
 
     }
 }

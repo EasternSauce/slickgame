@@ -42,6 +42,8 @@ public class PlayerCharacter extends Creature {
 
         dashAbility = new DashAbility(this);
         abilityList.add(dashAbility);
+
+        swordAttackAbility.setAimed(true);
     }
 
 
