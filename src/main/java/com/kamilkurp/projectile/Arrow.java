@@ -90,12 +90,12 @@ public class Arrow {
         int tilesetColumns = area.getTerrainColumns();
         int tilesetRows = area.getTerrainRows();
 
-        int startColumn = ((int)(newPosX / 64f) - 2) < 0f ? 0 : ((int)(newPosX / 64f) - 2);
-        int startRow = ((int)(newPosY / 64f) - 2) < 0f ? 0 : ((int)(newPosY / 64f) - 2);
+        int startColumn = ((int)(newPosX / 64f) - 1) < 0f ? 0 : ((int)(newPosX / 64f) - 1);
+        int startRow = ((int)(newPosY / 64f) - 1) < 0f ? 0 : ((int)(newPosY / 64f) - 1);
 
 
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
                 int column = startColumn + j >= tilesetColumns ? tilesetColumns - 1 : startColumn + j;
                 int row = startRow + i >= tilesetRows ? tilesetRows -1 : startRow + i;
                 TerrainTile tile = tiles.get(tilesetColumns * row + column);
