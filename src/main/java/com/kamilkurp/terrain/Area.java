@@ -205,6 +205,8 @@ public class Area {
 
         creaturesManager.onAreaChange();
 
+        reset();
+
     }
 
     public List<Arrow> getArrowList() {

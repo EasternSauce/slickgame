@@ -41,11 +41,11 @@ public class Ability {
 
     public void update(int i) {
         if (state == AbilityState.ABILITY_CHANNELING && channelTimer.getTime() > channelTime) {
-            if (abilityCreature.getStaminaPoints() != 0) {
-                state = AbilityState.ABILITY_ACTIVE;
-                onAbilityStart();
-                onPerformAction.execute();
-            }
+            state = AbilityState.ABILITY_ACTIVE;
+            onAbilityStart();
+            onPerformAction.execute();
+            abilityCreature.startStaminaRegen();
+
         }
         if (state == AbilityState.ABILITY_ACTIVE && activeTimer.getTime() > activeTime) {
             state = AbilityState.ABILITY_INACTIVE;
@@ -77,10 +77,11 @@ public class Ability {
     }
 
     public void tryPerforming() {
-        if (state == AbilityState.ABILITY_INACTIVE && activeTimer.getTime() > cooldownTime) {
+        if (abilityCreature.getStaminaPoints() != 0 && state == AbilityState.ABILITY_INACTIVE && activeTimer.getTime() > cooldownTime) {
             channelTimer.reset();
             state = AbilityState.ABILITY_CHANNELING;
             onChannel();
+            abilityCreature.stopStaminaRegen();
         }
     }
 

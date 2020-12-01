@@ -29,7 +29,9 @@ public class Assets {
     public static Sound punchSound;
     public static Sound strongPunchSound;
     public static Sound explosionSound;
-    public static Sound bounceSound;
+    public static Sound bowPullSound;
+    public static Sound bowReleaseSound;
+    public static Sound boneClickSound;
     public static Music townMusic;
     public static SpriteSheet itemIcons;
     public static SpriteSheet male1SpriteSheet;
@@ -78,7 +80,9 @@ public class Assets {
         strongPunchSound = new Sound(Globals.getAssetsLocation() + "sounds/strong-punch.wav");
         explosionSound = new Sound(Globals.getAssetsLocation() + "sounds/explosion.wav");
         boneCrushSound = new Sound(Globals.getAssetsLocation() + "sounds/bone-crush.wav");
-        bounceSound = new Sound(Globals.getAssetsLocation() + "sounds/bounce.wav");
+        bowPullSound = new Sound(Globals.getAssetsLocation() + "sounds/bow-pull.wav");
+        bowReleaseSound = new Sound(Globals.getAssetsLocation() + "sounds/bow-release.wav");
+        boneClickSound = new Sound(Globals.getAssetsLocation() + "sounds/bone-click.wav");
 
         male1SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male1.png", 32, 32);
         male2SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male2.png", 32, 32);

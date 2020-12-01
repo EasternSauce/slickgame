@@ -23,7 +23,7 @@ public class Arrow {
 
     private Vector2f speedVector;
 
-    private final float arrowSpeed = 0.6f;
+    private final float arrowSpeed = 0.4f;
 
     private final Image arrowImage = Assets.projectileSpriteSheet.getSprite(0, 0).copy();
 

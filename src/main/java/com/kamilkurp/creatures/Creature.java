@@ -128,6 +128,8 @@ public abstract class Creature {
     protected int healingTime = 15000;
     private float healingPower;
 
+    private boolean staminaRegenActive = true;
+
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
         this.id = id;
@@ -256,16 +258,18 @@ public abstract class Creature {
             healthRegenTimer.reset();
         }
 
-        if (staminaRegenTimer.getTime() > 500f && !sprinting && !isAbilityActive() && !staminaOveruse) {
-            if (getStaminaPoints() < getMaxStaminaPoints()) {
-                float afterRegen = getStaminaPoints() + staminaRegen;
-                staminaPoints = Math.min(afterRegen, getMaxStaminaPoints());
+        if (staminaRegenActive && !sprinting) {
+            if (staminaRegenTimer.getTime() > 500f && !isAbilityActive() && !staminaOveruse) {
+                if (getStaminaPoints() < getMaxStaminaPoints()) {
+                    float afterRegen = getStaminaPoints() + staminaRegen;
+                    staminaPoints = Math.min(afterRegen, getMaxStaminaPoints());
+                }
+                staminaRegenTimer.reset();
             }
-            staminaRegenTimer.reset();
         }
 
         if (staminaOveruse) {
-            if (staminaOveruseTimer.getTime() > 1250f) {
+            if (staminaOveruseTimer.getTime() > 800f) {
                 staminaOveruse = false;
             }
         }
@@ -576,6 +580,14 @@ public abstract class Creature {
         healingTickTimer.reset();
         healing = true;
         this.healingPower = healingPower;
+    }
+
+    public void stopStaminaRegen() {
+        staminaRegenActive = false;
+    }
+
+    public void startStaminaRegen() {
+        staminaRegenActive = true;
     }
 
     public enum AttackType {UNARMED, SWORD, BOW}

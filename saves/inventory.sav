@@ -1,2 +1,8 @@
-inventory_item 0 healingPowder 0 0 20
-gold 1074
+inventory_item 0 healingPowder 0 0 26
+inventory_item 1 ringmailGreaves 0 3 1
+inventory_item 2 woodenSword 35 0 1
+inventory_item 3 ironSword 46 0 1
+inventory_item 4 woodenSword 28 0 1
+inventory_item 5 ringmailGreaves 0 3 1
+inventory_item 6 ironSword 37 0 1
+gold 824

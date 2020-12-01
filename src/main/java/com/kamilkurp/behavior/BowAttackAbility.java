@@ -15,14 +15,16 @@ import java.util.Map;
 
 public class BowAttackAbility extends Ability {
     protected AttackAnimation swordAttackAnimation;
-    private final Sound bowAttackSound = Assets.arrowWhizzSound;
+    private final Sound bowReleaseSound = Assets.bowReleaseSound;
+    private final Sound bowPullSound = Assets.bowPullSound;
+
 
     public BowAttackAbility(Creature abilityCreature) {
         super(abilityCreature);
 
-        cooldownTime = 800;
+        cooldownTime = 1500;
         activeTime = 300;
-        channelTime = 150;
+        channelTime = 500;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class BowAttackAbility extends Ability {
 
         activeTimer.reset();
 
-        bowAttackSound.play(1.0f, 0.1f);
+        bowReleaseSound.play(1.0f, 0.1f);
 
         abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
 
@@ -43,11 +45,16 @@ public class BowAttackAbility extends Ability {
             arrowList.add(arrow);
         }
 
-        abilityCreature.takeStaminaDamage(30f);
+        abilityCreature.takeStaminaDamage(40f);
 
     }
 
     public void render(Graphics g, Camera camera) {
 
+    }
+
+    @Override
+    public void onChannel() {
+        bowPullSound.play(1.0f, 0.3f);
     }
 }

@@ -1,12 +1,12 @@
 creature Johnny
 area area1
 pos 1512.0 11.0
-health 0.0
+health 100.0
 creature Protagonist
 area area1
-pos 460.467 3916.8943
-health 231.63591
-equipment_item 0 ironSword 46 0
+pos 1261.9595 1596.709
+health 330.0
+equipment_item 0 crossbow 53 0
 equipment_item 1 leatherHelmet 0 4
 equipment_item 2 leatherArmor 0 4
 equipment_item 3 hideGloves 0 2
@@ -15,4 +15,4 @@ equipment_item 5 ringmailGreaves 0 3
 creature Rita
 area area2
 pos 313.0 134.0
-health 0.0
+health 100.0

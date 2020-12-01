@@ -226,6 +226,12 @@ public class GameSystem {
             }
         }
 
+        if (markRespawnAreaForReset) {
+            markRespawnAreaForReset = false;
+
+            playerCharacter.getRespawnArea().reset();
+        }
+
 
 
         camera.update(gc, cameraFocusedCreature.getRect());
@@ -284,11 +290,7 @@ public class GameSystem {
 
         areaCreatures.values().forEach(creature -> creature.update(gc, i, keyInput, this));
 
-        if (markRespawnAreaForReset) {
-            markRespawnAreaForReset = false;
 
-            playerCharacter.getRespawnArea().reset();
-        }
     }
 
     public void resetArea() {

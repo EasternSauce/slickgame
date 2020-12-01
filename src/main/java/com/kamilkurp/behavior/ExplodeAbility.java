@@ -40,7 +40,7 @@ public class ExplodeAbility extends Ability {
 
         abilityCreature.takeDamage(700f, false);
 
-        Assets.explosionSound.play();
+        Assets.explosionSound.play(1.0f, 0.4f);
 
     }
 

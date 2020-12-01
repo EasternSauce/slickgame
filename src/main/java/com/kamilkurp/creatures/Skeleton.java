@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 public class Skeleton extends Mob {
 
-    private Sound bounceSound = Assets.bounceSound;
+    private Sound boneClickSound = Assets.boneClickSound;
 
     public Skeleton(GameSystem gameSystem, String id, String weapon) throws SlickException {
         super(gameSystem, id);
@@ -91,7 +91,7 @@ public class Skeleton extends Mob {
                 immune = true;
             }
 
-            bounceSound.play(1.0f, 0.1f);
+            boneClickSound.play(1.0f, 0.25f);
         }
 
     }
