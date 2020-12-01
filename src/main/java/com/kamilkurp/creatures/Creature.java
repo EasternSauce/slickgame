@@ -1,5 +1,6 @@
 package com.kamilkurp.creatures;
 
+import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.areagate.AreaGate;
@@ -13,9 +14,11 @@ import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
+import com.kamilkurp.utils.Rect;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.LinkedList;
@@ -361,34 +364,64 @@ public abstract class Creature {
     }
 
     public boolean isCollidingX(List<TerrainTile> tiles, float newPosX, float newPosY) {
-        for(TerrainTile tile : tiles) {
-            if (tile.isPassable()) continue;
 
-            Rectangle tileRect = tile.getRect();
-            Rectangle rect1 = new Rectangle(tileRect.getX(), tileRect.getY(), tileRect.getWidth(), tileRect.getHeight());
+        int tilesetColumns = area.getTerrainColumns();
+        int tilesetRows = area.getTerrainRows();
 
-            Rectangle rect2 = new Rectangle(newPosX + hitbox.getX(), rect.getY() + hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
 
-            if(rect1.intersects(rect2)) {
-                return true;
+        int startColumn = ((int)(newPosX / 64f) - 2) < 0f ? 0 : ((int)(newPosX / 64f) - 2);
+        int startRow = ((int)(newPosY / 64f) - 2) < 0f ? 0 : ((int)(newPosY / 64f) - 2);
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                int column = startColumn + j >= tilesetColumns ? tilesetColumns - 1 : startColumn + j;
+                int row = startRow + i >= tilesetRows ? tilesetRows -1 : startRow + i;
+                TerrainTile tile = tiles.get(tilesetColumns * row + column);
+
+                if (tile.isPassable()) continue;
+
+                Rectangle tileRect = tile.getRect();
+                Rect rect1 = new Rect(tileRect.getX(), tileRect.getY(), tileRect.getWidth(), tileRect.getHeight());
+
+                Rect rect2 = new Rect(newPosX + hitbox.getX(), rect.getY() + hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+
+                if (Globals.intersects(rect1, rect2)) {
+                    return true;
+                }
             }
         }
+
         return false;
     }
 
     public boolean isCollidingY(List<TerrainTile> tiles, float newPosX, float newPosY) {
-        for(TerrainTile tile : tiles) {
-            if (tile.isPassable()) continue;
 
-            Rectangle tileRect = tile.getRect();
-            Rectangle rect1 = new Rectangle(tileRect.getX(), tileRect.getY(), tileRect.getWidth(), tileRect.getHeight());
+        int tilesetColumns = area.getTerrainColumns();
+        int tilesetRows = area.getTerrainRows();
 
-            Rectangle rect2 = new Rectangle(rect.getX() + hitbox.getX(), newPosY + hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+        int startColumn = ((int)(newPosX / 64f) - 2) < 0f ? 0 : ((int)(newPosX / 64f) - 2);
+        int startRow = ((int)(newPosY / 64f) - 2) < 0f ? 0 : ((int)(newPosY / 64f) - 2);
 
-            if(rect1.intersects(rect2)) {
-                return true;
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                int column = startColumn + j >= tilesetColumns ? tilesetColumns - 1 : startColumn + j;
+                int row = startRow + i >= tilesetRows ? tilesetRows -1 : startRow + i;
+                TerrainTile tile = tiles.get(tilesetColumns * row + column);
+
+                if (tile.isPassable()) continue;
+
+                Rectangle tileRect = tile.getRect();
+                Rect rect1 = new Rect(tileRect.getX(), tileRect.getY(), tileRect.getWidth(), tileRect.getHeight());
+
+                Rect rect2 = new Rect(rect.getX() + hitbox.getX(), newPosY + hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+
+                if (Globals.intersects(rect1, rect2)) {
+                    return true;
+                }
             }
         }
+
         return false;
     }
 

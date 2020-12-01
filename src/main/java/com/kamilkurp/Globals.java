@@ -1,7 +1,9 @@
 package com.kamilkurp;
 
+import com.kamilkurp.utils.Rect;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -60,5 +62,13 @@ public class Globals {
 
     public static String getAssetsLocation() {
         return assetsLocation;
+    }
+
+    public static boolean intersects(Rect rect1, Rect rect2){
+        if (rect1.getX() <= rect2.getX() + rect2.getWidth() && rect1.getX() + rect1.getWidth() >= rect2.getX()) {
+            return rect1.getY() <= rect2.getY() + rect2.getHeight() && rect1.getY() + rect1.getHeight() >= rect2.getY();
+        } else {
+            return false;
+        }
     }
 }

@@ -1,10 +1,13 @@
 package com.kamilkurp.projectile;
 
+import com.kamilkurp.Globals;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
+import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
+import com.kamilkurp.utils.Rect;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Rectangle;
@@ -33,7 +36,9 @@ public class Arrow {
 
     private final Creature shooter;
 
-    public Arrow(float x, float y, Vector2f facingVector, List<Arrow> arrowList, List<TerrainTile> tiles, Map<String, Creature> creatures, Creature shooter) {
+    private Area area;
+
+    public Arrow(float x, float y, Area area, Vector2f facingVector, List<Arrow> arrowList, List<TerrainTile> tiles, Map<String, Creature> creatures, Creature shooter) {
         posX = x;
         posY = y;
 
@@ -46,6 +51,8 @@ public class Arrow {
         hitbox = new Rectangle(19, 19, 2, 2);
 
         this.shooter = shooter;
+
+        this.area = area;
     }
 
     public void render(Graphics g, Camera camera) {
@@ -79,18 +86,34 @@ public class Arrow {
 
 
     public boolean isCollidingWithEnvironment(List<TerrainTile> tiles, float newPosX, float newPosY) {
-        for(TerrainTile tile : tiles) {
-            if (tile.isPassable()) continue;
 
-            Rectangle tileRect = tile.getRect();
-            Rectangle rect1 = new Rectangle(tileRect.getX(), tileRect.getY(), tileRect.getWidth(), tileRect.getHeight());
+        int tilesetColumns = area.getTerrainColumns();
+        int tilesetRows = area.getTerrainRows();
 
-            Rectangle rect2 = new Rectangle(newPosX + hitbox.getX(), newPosY + hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+        int startColumn = ((int)(newPosX / 64f) - 2) < 0f ? 0 : ((int)(newPosX / 64f) - 2);
+        int startRow = ((int)(newPosY / 64f) - 2) < 0f ? 0 : ((int)(newPosY / 64f) - 2);
 
-            if(rect1.intersects(rect2)) {
-                return true;
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                int column = startColumn + j >= tilesetColumns ? tilesetColumns - 1 : startColumn + j;
+                int row = startRow + i >= tilesetRows ? tilesetRows -1 : startRow + i;
+                TerrainTile tile = tiles.get(tilesetColumns * row + column);
+
+                if (tile.isPassable()) continue;
+
+                Rectangle tileRect = tile.getRect();
+                Rect rect1 = new Rect(tileRect.getX(), tileRect.getY(), tileRect.getWidth(), tileRect.getHeight());
+
+                Rect rect2 = new Rect(newPosX + hitbox.getX(), newPosY + hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+
+
+                if(Globals.intersects(rect1, rect2)) {
+                    return true;
+                }
             }
         }
+
         return false;
     }
 

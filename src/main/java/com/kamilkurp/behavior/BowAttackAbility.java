@@ -39,7 +39,7 @@ public class BowAttackAbility extends Ability {
         Map<String, Creature> areaCreatures = abilityCreature.getArea().getCreatures();
 
         if (!abilityCreature.getFacingVector().equals(new Vector2f(0.f, 0f))) {
-            Arrow arrow = new Arrow(abilityCreature.getRect().getX(), abilityCreature.getRect().getY(), abilityCreature.getFacingVector(), arrowList, tiles, areaCreatures, this.abilityCreature);
+            Arrow arrow = new Arrow(abilityCreature.getRect().getX(), abilityCreature.getRect().getY(), abilityCreature.getArea(), abilityCreature.getFacingVector(), arrowList, tiles, areaCreatures, this.abilityCreature);
             arrowList.add(arrow);
         }
 
