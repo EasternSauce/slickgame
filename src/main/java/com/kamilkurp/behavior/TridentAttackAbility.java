@@ -7,7 +7,6 @@ import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.utils.Camera;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Sound;
@@ -40,7 +39,7 @@ public class TridentAttackAbility extends Ability {
         tridentAttackAnimation = new AttackAnimation(Assets.tridentThrustSpriteSheet, 11, 25, true);
         tridentWindupAnimation = new AttackAnimation(Assets.tridentThrustWindupSpriteSheet, 7, 100, true);
         meleeAttackRect = new Rectangle(-999, -999, 1, 1);
-        meleeAttackPolygon = new Polygon(meleeAttackRect.getPoints());
+        meleeAttackHitbox = new Polygon(meleeAttackRect.getPoints());
 
         width = 64f;
         height = 32f;
@@ -68,7 +67,7 @@ public class TridentAttackAbility extends Ability {
         Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
         for (Creature creature : creatures) {
             if (creature == this.abilityCreature) continue;
-            if (meleeAttackRect.intersects(creature.getRect())) {
+            if (meleeAttackHitbox.intersects(creature.getRect())) {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
                     if (!creature.isImmune()) {
                         Item weapon = this.abilityCreature.getEquipmentItems().get(0);
@@ -110,10 +109,12 @@ public class TridentAttackAbility extends Ability {
         float attackRectX = attackShiftX + centerX;
         float attackRectY = attackShiftY + centerY;
 
-        meleeAttackRect = new Rectangle(attackRectX, attackRectY - 32 * scale, attackWidth, attackHeight);
-        meleeAttackPolygon = new Polygon(meleeAttackRect.getPoints());
+        meleeAttackRect = new Rectangle(attackRectX, attackRectY - height * scale, attackWidth, attackHeight);
+        meleeAttackHitbox = new Polygon(meleeAttackRect.getPoints());
 
-        meleeAttackPolygon = (Polygon)meleeAttackPolygon.transform(Transform.createRotateTransform((float) abilityCreature.getAttackingVector().getTheta() * 3.141593f/180f, meleeAttackRect.getX(), meleeAttackRect.getY() + 16 * scale));
+        meleeAttackHitbox = (Polygon) meleeAttackHitbox.transform(Transform.createRotateTransform((float) abilityCreature.getAttackingVector().getTheta() * 3.141593f/180f, meleeAttackRect.getX(), meleeAttackRect.getY() + height / 2 * scale));
+
+        meleeAttackHitbox = (Polygon) meleeAttackHitbox.transform(Transform.createTranslateTransform(0, height/2 * scale));
 
     }
 
@@ -125,9 +126,9 @@ public class TridentAttackAbility extends Ability {
     }
 
     public void render(Graphics g, Camera camera) {
-        Polygon polygonCopy = (Polygon)meleeAttackPolygon.transform(Transform.createTranslateTransform(-camera.getPosX(), -camera.getPosY() + height/2 * scale));
         //draw attack rect
-        g.fill(polygonCopy);
+        //polygonCopy = (Polygon)meleeAttackPolygon.transform(Transform.createTranslateTransform(-camera.getPosX(), -camera.getPosY()));
+        //g.fill(polygonCopy);
 
 
         if (state == AbilityState.ABILITY_CHANNELING) {

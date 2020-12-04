@@ -22,7 +22,7 @@ public class Ability {
     protected AbilityState state;
 
     protected Rectangle meleeAttackRect;
-    protected Polygon meleeAttackPolygon;
+    protected Polygon meleeAttackHitbox;
 
     Creature abilityCreature;
 
