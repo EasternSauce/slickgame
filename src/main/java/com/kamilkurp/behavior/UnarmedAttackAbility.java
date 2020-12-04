@@ -95,14 +95,14 @@ public class UnarmedAttackAbility extends Ability {
     }
 
     public void render(Graphics g, Camera camera) {
-        if (state == AbilityState.ABILITY_ACTIVE) {
-            Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
+        if (state == AbilityState.ABILITY_CHANNELING) {
+            Image image = swordWindupAnimation.getAnimation().getCurrentFrame();
             image.setRotation((float) abilityCreature.getAttackingVector().getTheta());
 
             g.drawImage(image, meleeAttackRect.getX() - camera.getPosX(), meleeAttackRect.getY() - camera.getPosY());
         }
-        if (state == AbilityState.ABILITY_CHANNELING) {
-            Image image = swordWindupAnimation.getAnimation().getCurrentFrame();
+        if (state == AbilityState.ABILITY_ACTIVE) {
+            Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
             image.setRotation((float) abilityCreature.getAttackingVector().getTheta());
 
             g.drawImage(image, meleeAttackRect.getX() - camera.getPosX(), meleeAttackRect.getY() - camera.getPosY());

@@ -78,6 +78,7 @@ public class ItemType {
         ItemType itemType9 = new ItemType("poisonDagger", "Poison Dagger", "-", itemIcons.getSprite(6, 5), "weapon", 350, 20f, null, false, false);
         itemType9.setPoisonChance(0.20f);
         ItemType itemType10 = new ItemType("healingPowder", "Healing Powder", "Quickly regenerates health", itemIcons.getSprite(5, 20), null, 30, null, null, true, true);
+        ItemType itemType11 = new ItemType("trident", "Trident", "-", itemIcons.getSprite(8, 5), "weapon", 300, 60f, null, false, false);
 
 
         itemTypes.put(itemType1.getId(), itemType1);
@@ -90,6 +91,7 @@ public class ItemType {
         itemTypes.put(itemType8.getId(), itemType8);
         itemTypes.put(itemType9.getId(), itemType9);
         itemTypes.put(itemType10.getId(), itemType10);
+        itemTypes.put(itemType11.getId(), itemType11);
     }
 
     public static ItemType getItemType(String itemTypeId) {

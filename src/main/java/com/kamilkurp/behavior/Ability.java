@@ -5,6 +5,7 @@ import com.kamilkurp.utils.Action;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 
 public class Ability {
@@ -21,6 +22,8 @@ public class Ability {
     protected AbilityState state;
 
     protected Rectangle meleeAttackRect;
+    protected Polygon meleeAttackPolygon;
+
     Creature abilityCreature;
 
     public Ability(Creature abilityCreature) {

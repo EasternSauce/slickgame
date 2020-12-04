@@ -21,6 +21,8 @@ public class Assets {
     public static SpriteSheet explosionSpriteSheet;
     public static SpriteSheet betterSlashSpriteSheet;
     public static SpriteSheet slashWindupSpriteSheet;
+    public static SpriteSheet tridentThrustSpriteSheet;
+    public static SpriteSheet tridentThrustWindupSpriteSheet;
     public static Sound stepSound;
     public static Sound gruntSound;
     public static Sound attackSound;
@@ -68,6 +70,10 @@ public class Assets {
         explosionSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/explosion.png", 64, 64);
         betterSlashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash_hd.png", 40, 40);
         slashWindupSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash_windup.png", 40, 40);
+        tridentThrustSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/trident_thrust.png", 64, 32);
+        tridentThrustWindupSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/trident_thrust_windup.png", 64, 32);
+
+
         stepSound = new Sound(Globals.getAssetsLocation() + "sounds/running.wav");
         gruntSound = new Sound(Globals.getAssetsLocation() + "sounds/grunt.wav");
         attackSound = new Sound(Globals.getAssetsLocation() + "sounds/swoosh.wav");

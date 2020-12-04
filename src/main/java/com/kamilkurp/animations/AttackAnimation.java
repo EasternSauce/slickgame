@@ -9,11 +9,22 @@ public class AttackAnimation {
     private Animation attackAnimation;
     private final int frames;
     private final int frameDuration;
+    private boolean rotatedSheet;
 
     public AttackAnimation(SpriteSheet spriteSheet, int numberOfFrames, int frameDuration) {
         this.spriteSheet = spriteSheet;
         this.frames = numberOfFrames;
         this.frameDuration = frameDuration;
+        rotatedSheet = false;
+
+        loadAnimations();
+    }
+
+    public AttackAnimation(SpriteSheet spriteSheet, int numberOfFrames, int frameDuration, boolean rotatedSheet) {
+        this.spriteSheet = spriteSheet;
+        this.frames = numberOfFrames;
+        this.frameDuration = frameDuration;
+        this.rotatedSheet = rotatedSheet;
 
         loadAnimations();
     }
@@ -25,7 +36,14 @@ public class AttackAnimation {
 
         attackAnimation = new Animation();
         for (int j = 0; j < frames; j++) {
-            Image image = spriteSheet.getSprite(j,0);
+            Image image;
+            if (rotatedSheet) {
+                image = spriteSheet.getSprite(0, j);
+            }
+            else {
+                image = spriteSheet.getSprite(j,0);
+            }
+            //image.
             //image.rotate(rotationAngles[i]);
             attackAnimation.addFrame(image, frameDuration);
         }

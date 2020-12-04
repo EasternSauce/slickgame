@@ -5,10 +5,7 @@ import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.behavior.Ability;
-import com.kamilkurp.behavior.BowAttackAbility;
-import com.kamilkurp.behavior.UnarmedAttackAbility;
-import com.kamilkurp.behavior.SwordAttackAbility;
+import com.kamilkurp.behavior.*;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
@@ -104,6 +101,7 @@ public abstract class Creature {
     protected BowAttackAbility bowAttackAbility;
     protected UnarmedAttackAbility unarmedAttackAbility;
     protected SwordAttackAbility swordAttackAbility;
+    protected TridentAttackAbility tridentAttackAbility;
 
     protected float unarmedDamage;
 
@@ -157,10 +155,13 @@ public abstract class Creature {
         abilityList = new LinkedList<>();
         bowAttackAbility = new BowAttackAbility(this);
         unarmedAttackAbility = new UnarmedAttackAbility(this);
-        swordAttackAbility = new SwordAttackAbility(this, false);
+        swordAttackAbility = new SwordAttackAbility(this, true);
+        tridentAttackAbility = new TridentAttackAbility(this, true);
+
         abilityList.add(bowAttackAbility);
         abilityList.add(unarmedAttackAbility);
         abilityList.add(swordAttackAbility);
+        abilityList.add(tridentAttackAbility);
 
         unarmedDamage = 15f;
 
@@ -482,6 +483,8 @@ public abstract class Creature {
                 swordAttackAbility.tryPerforming();
             } else if (currentAttackType == AttackType.BOW) {
                 bowAttackAbility.tryPerforming();
+            } else if (currentAttackType == AttackType.TRIDENT) {
+                tridentAttackAbility.tryPerforming();
             }
         }
     }
@@ -590,7 +593,7 @@ public abstract class Creature {
         staminaRegenActive = true;
     }
 
-    public enum AttackType {UNARMED, SWORD, BOW}
+    public enum AttackType {UNARMED, SWORD, BOW, TRIDENT}
 
 
     public void updateAttackType() {
@@ -604,6 +607,8 @@ public abstract class Creature {
             currentAttackType = AttackType.SWORD;
         } else if (currentWeaponName.equals("crossbow")) {
             currentAttackType = AttackType.BOW;
+        } else if (currentWeaponName.equals("trident")) {
+            currentAttackType = AttackType.TRIDENT;
         }
     }
 
