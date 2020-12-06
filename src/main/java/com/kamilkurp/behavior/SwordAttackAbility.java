@@ -60,7 +60,8 @@ public class SwordAttackAbility extends Ability {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
                     if (!creature.isImmune()) {
                         Item weapon = this.abilityCreature.getEquipmentItems().get(0);
-                        creature.takeDamage(weapon.getDamage(), true);
+                        creature.takeDamage(weapon.getDamage(), true, 0.35f, abilityCreature.getRect().getCenterX(), abilityCreature.getRect().getCenterY());
+
                         int random = Globals.random.nextInt(100);
                         if (random < weapon.getItemType().getPoisonChance() * 100f) {
                             creature.becomePoisoned();

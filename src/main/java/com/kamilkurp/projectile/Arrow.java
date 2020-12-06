@@ -130,7 +130,8 @@ public class Arrow {
                 if (creatureRect.intersects(arrowRect)) {
                     if (speedVector.equals(new Vector2f(0f, 0f)) || creature.getHealthPoints() <= 0.0f) return false;
                     if (!creature.isImmune()) {
-                        creature.takeDamage(shooter.getEquipmentItems().get(0).getItemType().getMaxDamage(), true);
+                        creature.takeDamage(shooter.getEquipmentItems().get(0).getItemType().getMaxDamage(), true, 0.4f, shooter.getRect().getCenterX(), shooter.getRect().getCenterY());
+
                     }
                     return true;
                 }

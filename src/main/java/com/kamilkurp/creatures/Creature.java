@@ -116,6 +116,7 @@ public abstract class Creature {
     protected int poisonTickTime = 1500;
 
     protected int poisonTime = 20000;
+    protected float knockbackPower;
 
     private Timer healingTimer;
     private Timer healingTickTimer;
@@ -127,6 +128,13 @@ public abstract class Creature {
     private float healingPower;
 
     private boolean staminaRegenActive = true;
+
+    protected boolean knockback = false;
+    protected Timer knockbackTimer;
+
+    protected Vector2f knockbackVector;
+
+    protected float knockbackSpeed;
 
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
@@ -140,6 +148,7 @@ public abstract class Creature {
         immunityTimer = new Timer();
         healthRegenTimer = new Timer();
         staminaRegenTimer = new Timer();
+        knockbackTimer = new Timer();
 
         facingVector = new Vector2f(0f, 0f);
 
@@ -184,6 +193,8 @@ public abstract class Creature {
         healing = false;
 
         healingPower = 0f;
+
+        knockbackPower = 0f;
     }
 
     public abstract void onInit();
@@ -347,6 +358,38 @@ public abstract class Creature {
 
             gruntSound.play(1.0f, 0.1f);
         }
+    }
+
+    public void takeDamage(float damage, boolean immunityFrames, float knockbackPower, float sourceX, float sourceY) {
+        if (isAlive()) {
+
+            float beforeHP = healthPoints;
+
+            float actualDamage = damage * 100f/(100f + getTotalArmor());
+
+            if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
+            else healthPoints = 0f;
+
+            if (beforeHP != healthPoints && healthPoints == 0f) {
+                onDeath();
+            }
+
+            if (immunityFrames) {
+                immunityTimer.reset();
+                immune = true;
+            }
+
+            if (!knockback && knockbackPower > 0f) {
+                this.knockbackPower = knockbackPower;
+
+                knockbackVector = new Vector2f(rect.getX() - sourceX, rect.getY() - sourceY).getNormal();
+                knockback = true;
+                knockbackTimer.reset();
+
+            }
+
+            gruntSound.play(1.0f, 0.1f);
+        }
 
     }
 
@@ -437,6 +480,8 @@ public abstract class Creature {
 
         totalDirections = 0;
 
+        knockbackSpeed = knockbackPower * i;
+
         dirX = 0;
         dirY = 0;
 
@@ -492,7 +537,7 @@ public abstract class Creature {
     public void executeMovementLogic() {
         List<TerrainTile> tiles = area.getTiles();
 
-        if (!immobilized) {
+        if (!immobilized && !knockback) {
             if (totalDirections > 1) {
                 speed /= Math.sqrt(2);
             }
@@ -511,6 +556,25 @@ public abstract class Creature {
             if (moving) {
                 runningTimer.reset();
                 running = true;
+            }
+        }
+
+        if (knockback) {
+
+            float newPosX = rect.getX() + knockbackSpeed * knockbackVector.getX();
+            float newPosY = rect.getY() + knockbackSpeed * knockbackVector.getY();
+
+            if (!isCollidingX(tiles, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
+                move(knockbackSpeed * knockbackVector.getX(), 0);
+            }
+
+            if (!isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
+                move(0, knockbackSpeed * knockbackVector.getY());
+
+            }
+
+            if (knockbackTimer.getTime() > 200f) {
+                knockback = false;
             }
         }
 

@@ -34,17 +34,17 @@ public class TridentAttackAbility extends Ability {
         this.aimed = aimed;
         cooldownTime = 800;
         activeTime = 275;
-        channelTime = 700;
+        channelTime = 840;
 
         tridentAttackAnimation = new AttackAnimation(Assets.tridentThrustSpriteSheet, 11, 25, true);
-        tridentWindupAnimation = new AttackAnimation(Assets.tridentThrustWindupSpriteSheet, 7, 100, true);
+        tridentWindupAnimation = new AttackAnimation(Assets.tridentThrustWindupSpriteSheet, 7, 120, true);
         meleeAttackRect = new Rectangle(-999, -999, 1, 1);
         meleeAttackHitbox = new Polygon(meleeAttackRect.getPoints());
 
         width = 64f;
         height = 32f;
-        scale = 2.0f;
-        attackRange = 60f;
+        scale = 1.5f;
+        attackRange = 30f;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class TridentAttackAbility extends Ability {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
                     if (!creature.isImmune()) {
                         Item weapon = this.abilityCreature.getEquipmentItems().get(0);
-                        creature.takeDamage(weapon.getDamage(), true);
+                        creature.takeDamage(weapon.getDamage(), true, 0.5f, abilityCreature.getRect().getCenterX(), abilityCreature.getRect().getCenterY());
                         int random = Globals.random.nextInt(100);
                         if (random < weapon.getItemType().getPoisonChance() * 100f) {
                             creature.becomePoisoned();

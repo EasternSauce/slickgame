@@ -11,6 +11,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.util.HashMap;
 
@@ -96,4 +97,35 @@ public class Skeleton extends Mob {
 
     }
 
+    public void takeDamage(float damage, boolean immunityFrames, float knockbackPower, float sourceX, float sourceY) {
+        if (isAlive()) {
+
+            float beforeHP = healthPoints;
+
+            float actualDamage = damage * 100f/(100f + getTotalArmor());
+
+            if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
+            else healthPoints = 0f;
+
+            if (beforeHP != healthPoints && healthPoints == 0f) {
+                onDeath();
+            }
+
+            if (immunityFrames) {
+                immunityTimer.reset();
+                immune = true;
+            }
+
+            if (!knockback && knockbackPower > 0f) {
+                this.knockbackPower = knockbackPower;
+                knockbackVector = new Vector2f(rect.getX() - sourceX, rect.getY() - sourceY).getNormal();
+                knockback = true;
+                knockbackTimer.reset();
+
+            }
+
+            boneClickSound.play(1.0f, 0.25f);
+        }
+
+    }
 }

@@ -124,6 +124,8 @@ public class PlayerCharacter extends Creature {
 
     @Override
     public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
+//        System.out.println("character pos: " + rect.getX() + " " + rect.getY());
+
         if (isAlive()) {
             onUpdateStart(i);
 
@@ -235,6 +237,8 @@ public class PlayerCharacter extends Creature {
         moving = false;
 
         totalDirections = 0;
+
+        knockbackSpeed = knockbackPower * i;
 
         dirX = 0;
         dirY = 0;
