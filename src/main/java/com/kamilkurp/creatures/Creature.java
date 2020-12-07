@@ -163,7 +163,7 @@ public abstract class Creature {
 
         abilityList = new LinkedList<>();
         bowAttackAbility = new BowAttackAbility(this);
-        unarmedAttackAbility = new UnarmedAttackAbility(this);
+        unarmedAttackAbility = new UnarmedAttackAbility(this, false);
         swordAttackAbility = new SwordAttackAbility(this, true);
         tridentAttackAbility = new TridentAttackAbility(this, true);
 
@@ -600,7 +600,7 @@ public abstract class Creature {
     }
 
     public float getMaxHealthPoints() {
-        if (equipmentItems.get(4) != null && equipmentItems.get(4).getItemType().getId().equals("lifeRing")) return maxHealthPoints * 1.1f;
+        if (equipmentItems.get(4) != null && equipmentItems.get(4).getItemType().getId().equals("lifeRing")) return maxHealthPoints * 1.35f;
         return maxHealthPoints;
     }
 

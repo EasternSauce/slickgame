@@ -2,6 +2,7 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
+import com.kamilkurp.behavior.Ability;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
@@ -64,6 +65,10 @@ public abstract class Mob extends Creature {
     @Override
     public void onDeath() {
         gameSystem.getLootSystem().spawnLootPile(area, rect.getCenterX(), rect.getCenterY(), dropTable);
+
+        for (Ability ability : abilityList) {
+            ability.stopAbility();
+        }
     }
 
     @Override

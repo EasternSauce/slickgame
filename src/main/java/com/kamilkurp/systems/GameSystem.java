@@ -66,12 +66,15 @@ public class GameSystem {
         playerCharacter = new PlayerCharacter(this, "Protagonist");
         areas.get("area1").addNewCreature(playerCharacter, 400f, 400f);
 
-        lootSystem.placeTreasure(areas.get("area1"), 850, 700, ItemType.getItemType("leatherArmor"));
+        lootSystem.placeTreasure(areas.get("area1"), 1920, 8, ItemType.getItemType("leatherArmor"));
         lootSystem.placeTreasure(areas.get("area1"), 3551, 3840, ItemType.getItemType("woodenSword"));
         lootSystem.placeTreasure(areas.get("area1"), 3145, 2952, ItemType.getItemType("lifeRing"));
         lootSystem.placeTreasure(areas.get("area1"), 1332, 2833, ItemType.getItemType("ironSword"));
         lootSystem.placeTreasure(areas.get("area2"), 3100, 2654, ItemType.getItemType("crossbow"));
         lootSystem.placeTreasure(areas.get("area2"), 168, 3024, ItemType.getItemType("trident"));
+        lootSystem.placeTreasure(areas.get("area1"), 500, 500, ItemType.getItemType("healingPowder"));
+        lootSystem.placeTreasure(areas.get("area1"), 600, 500, ItemType.getItemType("steelArmor"));
+
 
         cameraFocusedCreature = playerCharacter;
 

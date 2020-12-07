@@ -112,5 +112,10 @@ public class Ability {
     public void render(Graphics g, Camera camera) {
 
     }
+
+    public void stopAbility() {
+        state = AbilityState.ABILITY_INACTIVE;
+    }
+
 }
 

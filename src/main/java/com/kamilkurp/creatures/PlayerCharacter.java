@@ -44,6 +44,7 @@ public class PlayerCharacter extends Creature {
         abilityList.add(dashAbility);
 
         swordAttackAbility.setAimed(true);
+        unarmedAttackAbility.setAimed(true);
     }
 
 
@@ -114,6 +115,7 @@ public class PlayerCharacter extends Creature {
         respawning = false;
         respawnTimer = new Timer();
         setMaxHealthPoints(300f);
+        setHealthPoints(getMaxHealthPoints());
     }
 
     public void render(Graphics g, Camera camera) {
@@ -257,6 +259,10 @@ public class PlayerCharacter extends Creature {
     public void onDeath() {
         respawnTimer.reset();
         respawning = true;
+
+        for (Ability ability : abilityList) {
+            ability.stopAbility();
+        }
     }
 
 

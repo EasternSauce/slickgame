@@ -17,11 +17,13 @@ public class UnarmedAttackAbility extends Ability {
     protected AttackAnimation swordAttackAnimation;
     protected AttackAnimation swordWindupAnimation;
     private final Sound punchSound = Assets.punchSound;
+    private boolean aimed;
 
-    public UnarmedAttackAbility(Creature abilityCreature) {
+    public UnarmedAttackAbility(Creature abilityCreature, boolean aimed) {
         super(abilityCreature);
 
         this.abilityCreature = abilityCreature;
+        this.aimed = aimed;
         cooldownTime = 600;
         activeTime = 150;
         channelTime = 300;
@@ -56,7 +58,8 @@ public class UnarmedAttackAbility extends Ability {
             if (meleeAttackRect.intersects(creature.getRect())) {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
                     if (!creature.isImmune()) {
-                        creature.takeDamage(this.abilityCreature.getUnarmedDamage(), true);
+                        creature.takeDamage(this.abilityCreature.getUnarmedDamage(), true, 0.3f, abilityCreature.getRect().getCenterX(), abilityCreature.getRect().getCenterY());
+
                     }
                 }
             }
@@ -68,6 +71,10 @@ public class UnarmedAttackAbility extends Ability {
     protected void onUpdateChanneling(int i) {
         swordWindupAnimation.getAnimation().update(i);
         updateAttackRect(i);
+
+        if (aimed) {
+            abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
+        }
     }
 
 
@@ -108,4 +115,9 @@ public class UnarmedAttackAbility extends Ability {
             g.drawImage(image, meleeAttackRect.getX() - camera.getPosX(), meleeAttackRect.getY() - camera.getPosY());
         }
     }
+
+    public void setAimed(boolean aimed) {
+        this.aimed = aimed;
+    }
+
 }

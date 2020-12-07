@@ -43,7 +43,7 @@ public class TridentAttackAbility extends Ability {
 
         width = 64f;
         height = 32f;
-        scale = 1.5f;
+        scale = 2f;
         attackRange = 30f;
     }
 

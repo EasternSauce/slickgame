@@ -22,12 +22,13 @@ public class Goblin extends Mob {
         actionTimer = new Timer();
 
         dropTable = new HashMap<>();
-        dropTable.put("ringmailGreaves", 0.9f);
-        dropTable.put("leatherArmor", 0.2f);
-        dropTable.put("hideGloves", 0.1f);
-        dropTable.put("ironSword", 0.05f);
-        dropTable.put("leatherHelmet", 0.15f);
-        dropTable.put("poisonDagger", 0.05f);
+        dropTable.put("ironSword", 0.01f);
+        dropTable.put("poisonDagger", 0.01f);
+        dropTable.put("healingPowder", 0.1f);
+        dropTable.put("steelArmor", 0.01f);
+        dropTable.put("steelGreaves", 0.03f);
+        dropTable.put("steelGloves", 0.03f);
+        dropTable.put("steelHelmet", 0.02f);
 
 
         findNewDestinationTimer = new Timer();
@@ -40,7 +41,7 @@ public class Goblin extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(120f);
+        setMaxHealthPoints(500f);
         setHealthPoints(getMaxHealthPoints());
 
         equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));

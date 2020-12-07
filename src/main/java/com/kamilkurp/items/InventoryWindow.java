@@ -412,16 +412,42 @@ public class InventoryWindow {
                         }
                     } else {
                         if (traderInventoryItems.get(currentSelected) != null) {
-                            for (int i = 0; i < inventorySlots; i++) {
-                                if (inventoryItems.get(i) == null) {
-                                    if (gold - traderInventoryItems.get(currentSelected).getItemType().getWorth() >= 0) {
+
+                            if (gold - traderInventoryItems.get(currentSelected).getItemType().getWorth() >= 0) {
+
+                                boolean stackable = traderInventoryItems.get(currentSelected).getItemType().isStackable();
+
+                                if (stackable) {
+                                    int invPos = -1;
+                                    for (Map.Entry<Integer, Item> invItem : inventoryItems.entrySet()) {
+                                        if (invItem.getValue().getItemType() == traderInventoryItems.get(currentSelected).getItemType()) {
+                                            invPos = invItem.getKey();
+                                            break;
+                                        }
+                                    }
+                                    if (invPos != -1) {
                                         gold -= traderInventoryItems.get(currentSelected).getItemType().getWorth();
-                                        inventoryItems.put(i, traderInventoryItems.get(currentSelected));
+
+                                        // add quantity to existing item
+                                        inventoryItems.get(invPos).setQuantity(inventoryItems.get(invPos).getQuantity() + traderInventoryItems.get(currentSelected).getQuantity());
                                         traderInventoryItems.remove(currentSelected);
-                                        break;
+
                                     }
                                 }
+                                else {
+                                    for (int i = 0; i < inventorySlots; i++) {
+                                        if (inventoryItems.get(i) == null) {
+                                            gold -= traderInventoryItems.get(currentSelected).getItemType().getWorth();
+                                            inventoryItems.put(i, traderInventoryItems.get(currentSelected));
+                                            traderInventoryItems.remove(currentSelected);
+                                            break;
+
+                                        }
+                                    }
+                                }
+
                             }
+
                         }
                     }
 
@@ -542,6 +568,9 @@ public class InventoryWindow {
                 // add quantity to existing item
                 inventoryItems.get(invPos).setQuantity(inventoryItems.get(invPos).getQuantity() + item.getQuantity());
 
+                if (item.getLootPileBackref().itemList.size() == 1) {
+                    item.getLootPileBackref().setVisible(false);
+                }
                 item.removeFromLoot();
                 itemList.remove(item);
                 return true;
@@ -553,23 +582,24 @@ public class InventoryWindow {
 
                 inventoryItems.put(i, item);
 
+                if (item.getLootPileBackref() instanceof Treasure) {
+                    //register treasure picked up, dont spawn it again for this save
+                    try {
+                        FileWriter writer = new FileWriter("saves/treasure_collected.sav", true);
+
+                        Area area = item.getLootPileBackref().getArea();
+
+                        Treasure treasure = (Treasure)item.getLootPileBackref();
+                        writer.write("treasure " + area.getId() + " " + area.getTreasureList().indexOf(treasure) + "\n");
+
+                        writer.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 if (item.getLootPileBackref().itemList.size() == 1) {
                     item.getLootPileBackref().setVisible(false);
-                    if (item.getLootPileBackref() instanceof Treasure) {
-                        //register treasure picked up, dont spawn it again for this save
-                        try {
-                            FileWriter writer = new FileWriter("saves/treasure_collected.sav", true);
-
-                            Area area = item.getLootPileBackref().getArea();
-
-                            Treasure treasure = (Treasure)item.getLootPileBackref();
-                            writer.write("treasure " + area.getId() + " " + area.getTreasureList().indexOf(treasure) + "\n");
-
-                            writer.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
                 }
                 item.removeFromLoot();
                 itemList.remove(item);

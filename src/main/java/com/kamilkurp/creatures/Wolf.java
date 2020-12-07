@@ -29,13 +29,11 @@ public class Wolf extends Mob {
         actionTimer = new Timer();
 
         dropTable = new HashMap<>();
-        dropTable.put("ringmailGreaves", 0.9f);
-        dropTable.put("leatherArmor", 0.2f);
-        dropTable.put("hideGloves", 0.1f);
-        dropTable.put("ironSword", 0.05f);
-        dropTable.put("leatherHelmet", 0.15f);
-        dropTable.put("woodenSword", 0.05f);
-        dropTable.put("healingPowder", 0.3f);
+        dropTable.put("ringmailGreaves", 0.05f);
+        dropTable.put("leatherArmor", 0.05f);
+        dropTable.put("hideGloves", 0.05f);
+        dropTable.put("leatherHelmet", 0.05f);
+        dropTable.put("healingPowder", 0.25f);
 
         findNewDestinationTimer = new Timer();
 
@@ -47,7 +45,7 @@ public class Wolf extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(90f);
+        setMaxHealthPoints(200f);
         setHealthPoints(getMaxHealthPoints());
 
 
@@ -104,6 +102,7 @@ public class Wolf extends Mob {
 
     @Override
     public void takeDamage(float damage, boolean immunityFrames) {
+
         if (!immune && isAlive()) {
 
             float beforeHP = healthPoints;

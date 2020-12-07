@@ -4,6 +4,7 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.behavior.Ability;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.systems.GameSystem;
@@ -43,14 +44,15 @@ public class NonPlayerCharacter extends Creature {
 
 
         dropTable = new HashMap<>();
-        dropTable.put("ringmailGreaves", 0.9f);
-        dropTable.put("leatherArmor", 0.2f);
-        dropTable.put("hideGloves", 0.1f);
-        dropTable.put("crossbow", 0.35f);
+        dropTable.put("lifeRing", 0.05f);
+        dropTable.put("poisonDagger", 0.08f);
+        dropTable.put("healingPowder", 0.3f);
+        dropTable.put("ironSword", 0.1f);
+        dropTable.put("woodenSword", 0.1f);
 
         if (trader) {
             for (Map.Entry<String, Float> entry : dropTable.entrySet()) {
-                for (int i = 0; i < 6; i++) {
+                for (int i = 0; i < 12; i++) {
                     if (Globals.random.nextFloat() < entry.getValue()) {
                         Item item = new Item(ItemType.getItemType(entry.getKey()), null);
                         traderInventory.add(item);
@@ -110,7 +112,9 @@ public class NonPlayerCharacter extends Creature {
 
     @Override
     public void onDeath() {
-
+        for (Ability ability : abilityList) {
+            ability.stopAbility();
+        }
     }
 
     public void triggerDialogue() {

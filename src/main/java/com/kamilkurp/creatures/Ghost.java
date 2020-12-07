@@ -3,6 +3,7 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.behavior.Ability;
 import com.kamilkurp.behavior.ExplodeAbility;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
@@ -24,12 +25,14 @@ public class Ghost extends Mob {
         actionTimer = new Timer();
 
         dropTable = new HashMap<>();
-        dropTable.put("ringmailGreaves", 0.9f);
-        dropTable.put("leatherArmor", 0.2f);
-        dropTable.put("hideGloves", 0.1f);
-        dropTable.put("ironSword", 0.05f);
-        dropTable.put("leatherHelmet", 0.15f);
-        dropTable.put("lifeRing", 0.05f);
+
+        dropTable.put("healingPowder", 0.1f);
+        dropTable.put("steelArmor", 0.01f);
+        dropTable.put("steelGreaves", 0.03f);
+        dropTable.put("steelGloves", 0.03f);
+        dropTable.put("steelHelmet", 0.02f);
+        dropTable.put("ironSword", 0.01f);
+        dropTable.put("lifeRing", 0.008f);
 
 
         findNewDestinationTimer = new Timer();
@@ -42,7 +45,7 @@ public class Ghost extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(100f);
+        setMaxHealthPoints(800f);
         setHealthPoints(getMaxHealthPoints());
 
         equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));
@@ -84,6 +87,16 @@ public class Ghost extends Mob {
     @Override
     public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
         super.update(gc, i, keyInput, gameSystem);
+    }
+
+    @Override
+    public void onDeath() {
+        gameSystem.getLootSystem().spawnLootPile(area, rect.getCenterX(), rect.getCenterY(), dropTable);
+
+        for (Ability ability : abilityList) {
+            if (ability instanceof ExplodeAbility) continue;
+            ability.stopAbility();
+        }
     }
 
 

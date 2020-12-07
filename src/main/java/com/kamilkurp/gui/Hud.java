@@ -53,7 +53,7 @@ public class Hud {
             g.setColor(Color.red);
             g.fill(healthRect);
 
-            g.setColor(Color.cyan);
+            g.setColor(Color.orange);
             g.fill(maxStaminaRect);
 
             g.setColor(Color.green);

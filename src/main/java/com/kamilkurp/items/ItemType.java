@@ -67,18 +67,23 @@ public class ItemType {
 
         itemTypes = new HashMap<>();
 
-        ItemType itemType1 = new ItemType("leatherArmor", "Leather Armor", "-", itemIcons.getSprite(8,7), "body", 50, null, 7f, false, false);
-        ItemType itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", itemIcons.getSprite(3,8), "boots", 30, null, 3f, false, false);
-        ItemType itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", itemIcons.getSprite(0,8), "gloves", 25, null, 2f, false, false);
-        ItemType itemType4 = new ItemType("crossbow", "Crossbow", "-", itemIcons.getSprite(4,6), "weapon", 250, 75f, null, false, false);
-        ItemType itemType5 = new ItemType("ironSword", "Iron Sword", "-", itemIcons.getSprite(2, 5), "weapon", 200, 50f, null, false, false);
-        ItemType itemType6 = new ItemType("woodenSword", "Wooden Sword", "-", itemIcons.getSprite(0, 5), "weapon", 200, 35f, null, false, false);
-        ItemType itemType7 = new ItemType("leatherHelmet", "Leather Helmet", "-", itemIcons.getSprite(2, 7), "helmet", 70, null, 5f, false, false);
-        ItemType itemType8 = new ItemType("lifeRing", "Life Ring", "Increases life when worn", itemIcons.getSprite(5, 8), "ring", 300, null, null, false, false);
-        ItemType itemType9 = new ItemType("poisonDagger", "Poison Dagger", "-", itemIcons.getSprite(6, 5), "weapon", 350, 20f, null, false, false);
-        itemType9.setPoisonChance(0.20f);
-        ItemType itemType10 = new ItemType("healingPowder", "Healing Powder", "Quickly regenerates health", itemIcons.getSprite(5, 20), null, 30, null, null, true, true);
-        ItemType itemType11 = new ItemType("trident", "Trident", "-", itemIcons.getSprite(8, 5), "weapon", 300, 65f, null, false, false);
+        ItemType itemType1 = new ItemType("leatherArmor", "Leather Armor", "-", itemIcons.getSprite(8,7), "body", 150, null, 13f, false, false);
+        ItemType itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", itemIcons.getSprite(3,8), "boots", 50, null, 7f, false, false);
+        ItemType itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", itemIcons.getSprite(0,8), "gloves", 70, null, 5f, false, false);
+        ItemType itemType4 = new ItemType("crossbow", "Crossbow", "-", itemIcons.getSprite(4,6), "weapon", 500, 75f, null, false, false);
+        ItemType itemType5 = new ItemType("ironSword", "Iron Sword", "-", itemIcons.getSprite(2, 5), "weapon", 100, 50f, null, false, false);
+        ItemType itemType6 = new ItemType("woodenSword", "Wooden Sword", "-", itemIcons.getSprite(0, 5), "weapon", 70, 35f, null, false, false);
+        ItemType itemType7 = new ItemType("leatherHelmet", "Leather Helmet", "-", itemIcons.getSprite(2, 7), "helmet", 80, null, 9f, false, false);
+        ItemType itemType8 = new ItemType("lifeRing", "Life Ring", "Increases life when worn", itemIcons.getSprite(5, 8), "ring", 1000, null, null, false, false);
+        ItemType itemType9 = new ItemType("poisonDagger", "Poison Dagger", "-", itemIcons.getSprite(6, 5), "weapon", 500, 40f, null, false, false);
+        itemType9.setPoisonChance(0.5f);
+        ItemType itemType10 = new ItemType("healingPowder", "Healing Powder", "Quickly regenerates health", itemIcons.getSprite(5, 20), null, 45, null, null, true, true);
+        ItemType itemType11 = new ItemType("trident", "Trident", "-", itemIcons.getSprite(8, 5), "weapon", 900, 75f, null, false, false);
+
+        ItemType itemType12 = new ItemType("steelArmor", "Steel Armor", "-", itemIcons.getSprite(4,7), "body", 200, null, 20f, false, false);
+        ItemType itemType13 = new ItemType("steelGreaves", "Steel Greaves", "-", itemIcons.getSprite(4,8), "boots", 150, null, 13f, false, false);
+        ItemType itemType14 = new ItemType("steelGloves", "Steel Gloves", "-", itemIcons.getSprite(1,8), "gloves", 130, null, 10f, false, false);
+        ItemType itemType15 = new ItemType("steelHelmet", "Steel Helmet", "-", itemIcons.getSprite(1, 7), "helmet", 170, null, 15f, false, false);
 
 
         itemTypes.put(itemType1.getId(), itemType1);
@@ -92,6 +97,11 @@ public class ItemType {
         itemTypes.put(itemType9.getId(), itemType9);
         itemTypes.put(itemType10.getId(), itemType10);
         itemTypes.put(itemType11.getId(), itemType11);
+        itemTypes.put(itemType12.getId(), itemType12);
+        itemTypes.put(itemType13.getId(), itemType13);
+        itemTypes.put(itemType14.getId(), itemType14);
+        itemTypes.put(itemType15.getId(), itemType15);
+
     }
 
     public static ItemType getItemType(String itemTypeId) {

@@ -25,15 +25,13 @@ public class Skeleton extends Mob {
         actionTimer = new Timer();
 
         dropTable = new HashMap<>();
-        dropTable.put("ringmailGreaves", 0.9f);
-        dropTable.put("leatherArmor", 0.2f);
-        dropTable.put("hideGloves", 0.1f);
-        dropTable.put("ironSword", 0.07f);
-        dropTable.put("woodenSword", 0.2f);
-        dropTable.put("leatherHelmet", 0.15f);
-        dropTable.put("crossbow", 0.02f);
-        dropTable.put("healingPowder", 0.3f);
 
+        dropTable.put("ringmailGreaves", 0.05f);
+        dropTable.put("leatherArmor", 0.05f);
+        dropTable.put("hideGloves", 0.05f);
+        dropTable.put("leatherHelmet", 0.05f);
+        dropTable.put("woodenSword", 0.05f);
+        dropTable.put("healingPowder", 0.25f);
 
         findNewDestinationTimer = new Timer();
 
@@ -45,7 +43,7 @@ public class Skeleton extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(110f);
+        setMaxHealthPoints(300f);
         setHealthPoints(getMaxHealthPoints());
 
         equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));
@@ -98,6 +96,7 @@ public class Skeleton extends Mob {
     }
 
     public void takeDamage(float damage, boolean immunityFrames, float knockbackPower, float sourceX, float sourceY) {
+
         if (isAlive()) {
 
             float beforeHP = healthPoints;
