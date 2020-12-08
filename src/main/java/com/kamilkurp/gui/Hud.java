@@ -12,7 +12,6 @@ import org.newdawn.slick.geom.Rectangle;
 
 public class Hud {
     Rectangle bottomRect;
-    Rectangle rightRect;
     Rectangle maxHealthRect;
     Rectangle healthRect;
     Rectangle maxStaminaRect;
@@ -28,7 +27,6 @@ public class Hud {
         int h = Globals.SCREEN_HEIGHT;
         float proportion = Globals.SCREEN_PROPORTION;
         bottomRect = new Rectangle(0, h * proportion, w, h - h * proportion);
-        rightRect = new Rectangle(w * proportion, 0, w - w * proportion, h);
         color = new Color(20,15,20);
 
         if (gameSystem != null) {
@@ -44,7 +42,7 @@ public class Hud {
     public void render(Graphics g) {
         g.setColor(color);
         g.fill(bottomRect);
-        g.fill(rightRect);
+        //g.fill(rightRect);
 
         if (gameSystem != null && gameSystem.getPlayerCharacter() != null) {
             g.setColor(Color.orange);
@@ -87,7 +85,6 @@ public class Hud {
     }
 
     public void update() {
-        int w = Globals.SCREEN_WIDTH;
         int h = Globals.SCREEN_HEIGHT;
         float proportion = Globals.SCREEN_PROPORTION;
         PlayerCharacter pc = gameSystem.getPlayerCharacter();

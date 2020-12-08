@@ -15,7 +15,7 @@ public class Camera {
 
     public void update(GameContainer gc, Rectangle rect) {
         float gameplayScreenProportion = Globals.SCREEN_PROPORTION;
-        setPos(rect.getX() - Globals.SCREEN_WIDTH* gameplayScreenProportion/2f + rect.getWidth()/2f, rect.getY() - Globals.SCREEN_HEIGHT * gameplayScreenProportion/2f + rect.getHeight()/2f);
+        setPos(rect.getX() - Globals.SCREEN_WIDTH/2f + rect.getWidth()/2f, rect.getY() - Globals.SCREEN_HEIGHT * gameplayScreenProportion/2f + rect.getHeight()/2f);
     }
 
     public float getPosX() {

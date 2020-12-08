@@ -78,8 +78,6 @@ public class PlayerCharacter extends Creature {
 
         if (input.isKeyDown(Input.KEY_SPACE)) {
             if (walking) {
-                System.out.println("mov " + movementVector);
-                System.out.println("fac " + facingVector);
                 dashAbility.setDashVector(movementVector.getNormal());
                 dashAbility.tryPerforming();
             }
@@ -215,8 +213,8 @@ public class PlayerCharacter extends Creature {
         int mouseX = gc.getInput().getMouseX();
         int mouseY = gc.getInput().getMouseY();
 
-        float centerX = Globals.SCREEN_WIDTH * Globals.SCREEN_PROPORTION / 2;
-        float centerY = Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION / 2;
+        float centerX = Globals.SCREEN_WIDTH / 2f;
+        float centerY = Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION / 2f;
 
         facingVector = new Vector2f(mouseX - centerX, mouseY - centerY);
     }

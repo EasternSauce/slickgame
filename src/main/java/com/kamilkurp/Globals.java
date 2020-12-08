@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class Globals {
     public static float SCREEN_PROPORTION = 3 / 4f;
-    public static int SCREEN_WIDTH = 800;
+    public static int SCREEN_WIDTH = 1024;
     public static int SCREEN_HEIGHT = 600;
 
     public static Random random = new Random();

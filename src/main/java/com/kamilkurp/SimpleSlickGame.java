@@ -9,6 +9,7 @@ import com.kamilkurp.items.Treasure;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
+import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
 
 import java.io.BufferedReader;
@@ -50,15 +51,25 @@ public class SimpleSlickGame extends BasicGame {
 //        townMusic.loop(1.0f, 0.5f);
 
         gc.setMouseCursor(Assets.cursor, 0,0);
+
+        gc.setMouseGrabbed(true);
     }
 
     @Override
     public void update(GameContainer gc, int i) throws SlickException {
+
+
+
         gameSystem.update(gc, i, keyInput);
     }
 
     public void render(GameContainer gc, Graphics g) {
         gameSystem.render(g);
+
+        int mouseX = gc.getInput().getMouseX();
+        int mouseY = gc.getInput().getMouseY();
+
+        g.drawImage(Assets.cursor, mouseX, mouseY);
     }
 
     public static void main(String[] args) {
