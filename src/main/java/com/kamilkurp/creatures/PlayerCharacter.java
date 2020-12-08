@@ -23,6 +23,8 @@ import java.util.List;
 
 public class PlayerCharacter extends Creature {
     private final Sound stepSound = Assets.stepSound;
+    private final Sound flybySound = Assets.flybySound;
+
 
     private boolean walking = false;
 
@@ -41,6 +43,7 @@ public class PlayerCharacter extends Creature {
         super(gameSystem, id);
 
         dashAbility = new DashAbility(this);
+        dashAbility.onStartActiveAction(() -> { flybySound.play(1.0f, 0.1f); });
         abilityList.add(dashAbility);
 
         swordAttackAbility.setAimed(true);
@@ -74,8 +77,12 @@ public class PlayerCharacter extends Creature {
         }
 
         if (input.isKeyDown(Input.KEY_SPACE)) {
-            dashAbility.setDashVector(facingVector.normalise());
-            dashAbility.tryPerforming();
+            if (walking) {
+                System.out.println("mov " + movementVector);
+                System.out.println("fac " + facingVector);
+                dashAbility.setDashVector(movementVector.getNormal());
+                dashAbility.tryPerforming();
+            }
         }
 
         sprinting = input.isKeyDown(Input.KEY_LSHIFT);

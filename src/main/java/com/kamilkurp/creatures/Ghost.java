@@ -11,11 +11,13 @@ import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.HashMap;
 
 public class Ghost extends Mob {
+    private Sound darkLaughSound = Assets.darkLaughSound;
 
     ExplodeAbility explodeAbility;
 
@@ -51,6 +53,7 @@ public class Ghost extends Mob {
         equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));
 
         explodeAbility = new ExplodeAbility(this);
+        explodeAbility.onStartChannelAction(() -> { darkLaughSound.play(1.0f, 0.1f); });
         abilityList.add(explodeAbility);
 
 

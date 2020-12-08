@@ -136,6 +136,8 @@ public abstract class Creature {
 
     protected float knockbackSpeed;
 
+    protected Vector2f movementVector;
+
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
         this.id = id;
@@ -195,6 +197,8 @@ public abstract class Creature {
         healingPower = 0f;
 
         knockbackPower = 0f;
+
+        movementVector = new Vector2f(0f,0f);
     }
 
     public abstract void onInit();
@@ -547,10 +551,18 @@ public abstract class Creature {
 
             if (!isCollidingX(tiles, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
                 move(speed * dirX, 0);
+                movementVector.x = speed * dirX;
+            }
+            else {
+                movementVector.x = 0;
             }
 
             if (!isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
                 move(0, speed * dirY);
+                movementVector.y = speed * dirY;
+            }
+            else {
+                movementVector.y = 0;
             }
 
             if (moving) {

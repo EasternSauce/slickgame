@@ -23,7 +23,7 @@ public class ExplodeAbility extends Ability {
         this.abilityCreature = abilityCreature;
         cooldownTime = 800;
         activeTime = 1800;
-        channelTime = 2000;
+        channelTime = 1300;
 
         explosionAnimation = new AttackAnimation(Assets.explosionSpriteSheet, 20, 100);
 

@@ -38,6 +38,8 @@ public class Ability {
         state = AbilityState.ABILITY_INACTIVE;
 
         onPerformAction = () -> {};
+        onChannelAction = () -> {};
+
         activeTimer.setTime(cooldownTime);
         channelTimer.setTime(channelTime);
     }
@@ -75,6 +77,10 @@ public class Ability {
         onPerformAction = action;
     }
 
+    public void onStartChannelAction(Action action) {
+        onChannelAction = action;
+    }
+
     public void onChannel() {
 
     }
@@ -84,6 +90,8 @@ public class Ability {
             channelTimer.reset();
             state = AbilityState.ABILITY_CHANNELING;
             onChannel();
+            onChannelAction.execute();
+
             abilityCreature.stopStaminaRegen();
         }
     }

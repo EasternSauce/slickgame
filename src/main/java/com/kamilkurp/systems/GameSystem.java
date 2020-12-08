@@ -72,8 +72,7 @@ public class GameSystem {
         lootSystem.placeTreasure(areas.get("area1"), 1332, 2833, ItemType.getItemType("ironSword"));
         lootSystem.placeTreasure(areas.get("area2"), 3100, 2654, ItemType.getItemType("crossbow"));
         lootSystem.placeTreasure(areas.get("area2"), 168, 3024, ItemType.getItemType("trident"));
-        lootSystem.placeTreasure(areas.get("area1"), 500, 500, ItemType.getItemType("healingPowder"));
-        lootSystem.placeTreasure(areas.get("area1"), 600, 500, ItemType.getItemType("steelArmor"));
+        lootSystem.placeTreasure(areas.get("area1"), 600, 500, ItemType.getItemType("healingPowder"));
 
 
         cameraFocusedCreature = playerCharacter;

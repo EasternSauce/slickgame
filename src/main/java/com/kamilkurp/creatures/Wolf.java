@@ -89,7 +89,7 @@ public class Wolf extends Mob {
         if (aggroed != null) {
             if (hasDestination) {
                 if (Globals.distance(aggroed.rect, rect) < dashDistance) {
-                    dashAbility.setDashVector(new Vector2f(destinationX - rect.getX(), destinationY - rect.getY()).normalise());
+                    dashAbility.setDashVector(new Vector2f(destinationX - rect.getX(), destinationY - rect.getY()).getNormal());
                     dashAbility.tryPerforming();
                 }
             }
