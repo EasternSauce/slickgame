@@ -251,10 +251,16 @@ public class InventoryWindow {
                 closeInventory();
             }
         }
-        if (keyInput.isKeyPressed(KeyInput.Key.ESC)) {
-            closeInventory();
-        }
-        else if (inventoryOpen) {
+
+        if (inventoryOpen) {
+
+            if (keyInput.isKeyPressed(KeyInput.Key.ESC)) {
+                if (!gameSystem.isEscRecently()) {
+                    closeInventory();
+                    gameSystem.setEscRecently(true);
+                }
+
+            }
             if (keyInput.isKeyPressed(KeyInput.Key.W)) {
                 if (inEquipment) {
                     if (currentSelected > 0) {

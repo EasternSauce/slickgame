@@ -10,7 +10,7 @@ public class KeyInput {
     private final Map<Key, Boolean> keyPressed;
 
     public enum Key {
-        W,S,A,D,E,SPACE,ESC,I,F5,ALT
+        W,S,A,D,E,SPACE,ESC,I,F5,ALT,ENTER
     }
 
     public KeyInput() {
@@ -39,6 +39,7 @@ public class KeyInput {
 
         keyPressed.put(Key.ALT, input.isKeyPressed(Input.KEY_LALT));
 
+        keyPressed.put(Key.ENTER, input.isKeyPressed(Input.KEY_ENTER));
     }
 
     public boolean isKeyPressed(Key key) {

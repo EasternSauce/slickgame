@@ -77,8 +77,12 @@ public class LootOptionWindow {
                     }
                 }
                 if (keyInput.isKeyPressed(KeyInput.Key.ESC)) {
-                    activated = false;
-                    currentSelected = 0;
+                    if (!gameSystem.isEscRecently()) {
+                        activated = false;
+                        currentSelected = 0;
+                        gameSystem.setEscRecently(true);
+                    }
+
                 }
             }
             else {
