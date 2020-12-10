@@ -70,6 +70,9 @@ public class EnemySpawnPoint {
                 area.moveInCreature(spawnedCreature, posX, posY);
             }
 
+            spawnedCreature.setStartingPosX(posX);
+            spawnedCreature.setStartingPosY(posY);
+
             spawnedCreature.updateAttackType();
             spawnedCreature.moveToArea(area, posX, posY);
 

@@ -21,12 +21,21 @@ public class MainMenu {
 
     private boolean startMenu;
 
+    private boolean prompt;
+    private String promptOption;
+    private String promptText;
+    private List<String> savedOptionList;
+
     public MainMenu(GameSystem gameSystem) {
         this.gameSystem = gameSystem;
 
         optionList = new LinkedList<>();
 
         startMenu = true;
+
+        prompt = false;
+        promptOption = "";
+        promptText = "";
 
         String contents = null;
         File f = new File("saves/savegame.sav");
@@ -49,9 +58,19 @@ public class MainMenu {
 
     public void render(Graphics g) {
 
-        for (int i = 0; i < Math.min(4, optionList.size()); i++) {
-            g.drawString((currentSelected == i ? ">" : "") + optionList.get(i), 100, 100 + 30 * i);
+        if (!prompt) {
+            for (int i = 0; i < Math.min(4, optionList.size()); i++) {
+                g.drawString((currentSelected == i ? ">" : "") + optionList.get(i), 100, 100 + 30 * i);
+            }
         }
+        else {
+            g.drawString(promptText, 100, 100);
+
+            for (int i = 0; i < Math.min(4, optionList.size()); i++) {
+                g.drawString((currentSelected == i ? ">" : "") + optionList.get(i), 100, 130 + 30 * i);
+            }
+        }
+
 
     }
 
@@ -117,8 +136,39 @@ public class MainMenu {
 
             }
             else if (optionList.get(currentSelected).equals("Exit")) {
-                System.exit(0);
+                if (!prompt) {
+                    prompt = true;
+                    promptOption = "Exit";
+
+                    savedOptionList = optionList;
+
+                    optionList = new LinkedList<>();
+                    optionList.add("No");
+                    optionList.add("Yes");
+
+                    promptText = "Quit without saving?";
+
+
+                    currentSelected = 0;
+                }
+
             }
+            else if (optionList.get(currentSelected).equals("Yes") || optionList.get(currentSelected).equals("No")) {
+                String option = optionList.get(currentSelected);
+
+                if (option.equals("Yes")) {
+                    if (promptOption.equals("Exit")) {
+                        System.exit(0);
+                    }
+                }
+                else {
+                    optionList = savedOptionList;
+                    prompt = false;
+                    currentSelected = 0;
+                }
+
+            }
+
         }
         if (keyInput.isKeyPressed(KeyInput.Key.W)) {
             if (currentSelected > 0) {

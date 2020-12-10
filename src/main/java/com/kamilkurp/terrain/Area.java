@@ -1,6 +1,7 @@
 package com.kamilkurp.terrain;
 
 import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.items.LootPile;
 import com.kamilkurp.items.Treasure;
 import com.kamilkurp.projectile.Arrow;
@@ -263,6 +264,14 @@ public class Area {
 
     public List<Treasure> getRemainingTreasureList() {
         return remainingTreasureList;
+    }
+
+    public void softReset() {
+        for (Creature creature : creaturesManager.getCreatures().values()) {
+            if (creature.isAlive() && !(creature instanceof PlayerCharacter)) {
+                creature.reset();
+            }
+        }
     }
 }
 

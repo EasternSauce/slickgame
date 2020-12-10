@@ -29,11 +29,11 @@ public class Wolf extends Mob {
         actionTimer = new Timer();
 
         dropTable = new HashMap<>();
-        dropTable.put("ringmailGreaves", 0.05f);
-        dropTable.put("leatherArmor", 0.05f);
-        dropTable.put("hideGloves", 0.05f);
-        dropTable.put("leatherHelmet", 0.05f);
-        dropTable.put("healingPowder", 0.25f);
+        dropTable.put("ringmailGreaves", 0.15f);
+        dropTable.put("leatherArmor", 0.15f);
+        dropTable.put("hideGloves", 0.15f);
+        dropTable.put("leatherHelmet", 0.15f);
+        dropTable.put("healingPowder", 0.6f);
 
         findNewDestinationTimer = new Timer();
 

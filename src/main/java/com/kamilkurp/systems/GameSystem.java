@@ -436,6 +436,7 @@ public class GameSystem {
                         }
                         creature.getRect().setX(Float.parseFloat(s[1]));
                         creature.getRect().setY(Float.parseFloat(s[2]));
+
                     }
 
                 }

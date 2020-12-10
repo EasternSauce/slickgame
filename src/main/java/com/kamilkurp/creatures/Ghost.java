@@ -28,13 +28,13 @@ public class Ghost extends Mob {
 
         dropTable = new HashMap<>();
 
-        dropTable.put("healingPowder", 0.1f);
-        dropTable.put("steelArmor", 0.01f);
-        dropTable.put("steelGreaves", 0.03f);
-        dropTable.put("steelGloves", 0.03f);
-        dropTable.put("steelHelmet", 0.02f);
-        dropTable.put("ironSword", 0.01f);
-        dropTable.put("lifeRing", 0.008f);
+        dropTable.put("healingPowder", 0.4f);
+        dropTable.put("steelArmor", 0.1f);
+        dropTable.put("steelGreaves", 0.3f);
+        dropTable.put("steelGloves", 0.3f);
+        dropTable.put("steelHelmet", 0.2f);
+        dropTable.put("ironSword", 0.1f);
+        dropTable.put("lifeRing", 0.07f);
 
 
         findNewDestinationTimer = new Timer();

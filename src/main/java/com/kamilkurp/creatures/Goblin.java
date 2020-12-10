@@ -22,13 +22,13 @@ public class Goblin extends Mob {
         actionTimer = new Timer();
 
         dropTable = new HashMap<>();
-        dropTable.put("ironSword", 0.01f);
-        dropTable.put("poisonDagger", 0.01f);
-        dropTable.put("healingPowder", 0.1f);
-        dropTable.put("steelArmor", 0.01f);
-        dropTable.put("steelGreaves", 0.03f);
-        dropTable.put("steelGloves", 0.03f);
-        dropTable.put("steelHelmet", 0.02f);
+        dropTable.put("ironSword", 0.1f);
+        dropTable.put("poisonDagger", 0.1f);
+        dropTable.put("healingPowder", 0.4f);
+        dropTable.put("steelArmor", 0.1f);
+        dropTable.put("steelGreaves", 0.2f);
+        dropTable.put("steelGloves", 0.2f);
+        dropTable.put("steelHelmet", 0.2f);
 
 
         findNewDestinationTimer = new Timer();

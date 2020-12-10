@@ -138,6 +138,9 @@ public abstract class Creature {
 
     protected Vector2f movementVector;
 
+    protected float startingPosX;
+    protected float startingPosY;
+
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
         this.id = id;
@@ -669,6 +672,12 @@ public abstract class Creature {
         staminaRegenActive = true;
     }
 
+    public void reset() {
+        setHealthPoints(getMaxHealthPoints());
+        rect.setX(startingPosX);
+        rect.setY(startingPosY);
+    }
+
     public enum AttackType {UNARMED, SWORD, BOW, TRIDENT}
 
 
@@ -768,5 +777,13 @@ public abstract class Creature {
 
     public boolean isImmune() {
         return immune;
+    }
+
+    public void setStartingPosX(float startingPosX) {
+        this.startingPosX = startingPosX;
+    }
+
+    public void setStartingPosY(float startingPosY) {
+        this.startingPosY = startingPosY;
     }
 }

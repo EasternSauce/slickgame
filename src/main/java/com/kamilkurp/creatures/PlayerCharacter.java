@@ -43,7 +43,7 @@ public class PlayerCharacter extends Creature {
         super(gameSystem, id);
 
         dashAbility = new DashAbility(this);
-        dashAbility.onStartActiveAction(() -> { flybySound.play(1.0f, 0.1f); });
+        dashAbility.onStartChannelAction(() -> { flybySound.play(1.0f, 0.1f); });
         abilityList.add(dashAbility);
 
         swordAttackAbility.setAimed(true);
@@ -234,6 +234,11 @@ public class PlayerCharacter extends Creature {
                 if (rect.intersects(playerRespawnPoint.getRect())) {
                     currentRespawnPoint = playerRespawnPoint;
                     currentRespawnPoint.onRespawnSet();
+                    if (getHealthPoints() < getMaxHealthPoints() / 2) {
+                        setHealthPoints(getMaxHealthPoints() / 2);
+                    }
+
+                    gameSystem.getCurrentArea().softReset();
                 }
             }
         }
