@@ -1,6 +1,7 @@
 package com.kamilkurp.terrain;
 
 import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.creatures.NonPlayerCharacter;
 import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.items.LootPile;
 import com.kamilkurp.items.Treasure;
@@ -245,6 +246,9 @@ public class Area {
         creature.getRect().setX(x);
         creature.getRect().setY(y);
 
+        creature.setStartingPosX(x);
+        creature.setStartingPosY(y);
+
         creature.onInit();
     }
 
@@ -268,7 +272,7 @@ public class Area {
 
     public void softReset() {
         for (Creature creature : creaturesManager.getCreatures().values()) {
-            if (creature.isAlive() && !(creature instanceof PlayerCharacter)) {
+            if (creature.isAlive() && !(creature instanceof PlayerCharacter) && !(creature instanceof NonPlayerCharacter)) {
                 creature.reset();
             }
         }

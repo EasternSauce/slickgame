@@ -81,7 +81,7 @@ public class ItemType {
         ItemType itemType11 = new ItemType("trident", "Trident", "-", itemIcons.getSprite(8, 5), "weapon", 900, 85f, null, false, false);
 
         ItemType itemType12 = new ItemType("steelArmor", "Steel Armor", "-", itemIcons.getSprite(4,7), "body", 200, null, 20f, false, false);
-        ItemType itemType13 = new ItemType("steelGreaves", "Steel Greaves", "-", itemIcons.getSprite(4,8), "boots", 150, null, 13f, false, false);
+        ItemType itemType13 = new ItemType("steelGreaves", "Steel Greaves", "-", itemIcons.getSprite(3,8), "boots", 150, null, 13f, false, false);
         ItemType itemType14 = new ItemType("steelGloves", "Steel Gloves", "-", itemIcons.getSprite(1,8), "gloves", 130, null, 10f, false, false);
         ItemType itemType15 = new ItemType("steelHelmet", "Steel Helmet", "-", itemIcons.getSprite(1, 7), "helmet", 170, null, 15f, false, false);
 

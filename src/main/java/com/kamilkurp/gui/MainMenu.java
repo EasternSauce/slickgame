@@ -97,38 +97,22 @@ public class MainMenu {
 
             }
             else if (optionList.get(currentSelected).equals("New game")) {
-                gameSystem.setState(GameState.GAMEPLAY);
 
-                if (startMenu) {
-                    startMenu = false;
+                if (!prompt) {
+                    prompt = true;
+                    promptOption = "New game";
+
+                    savedOptionList = optionList;
 
                     optionList = new LinkedList<>();
+                    optionList.add("No");
+                    optionList.add("Yes");
 
-                    optionList.add("Continue");
-                    optionList.add("New game");
-                    optionList.add("Save game");
-                    optionList.add("Exit");
+                    promptText = "Start new game?";
+
+
+                    currentSelected = 0;
                 }
-
-                try {
-                    BufferedWriter writer = Files.newBufferedWriter(Paths.get("saves/savegame.sav"));
-                    writer.write("");
-                    writer.flush();
-                    writer = Files.newBufferedWriter(Paths.get("saves/inventory.sav"));
-                    writer.write("");
-                    writer.flush();
-                    writer = Files.newBufferedWriter(Paths.get("saves/respawn_points.sav"));
-                    writer.write("");
-                    writer.flush();
-                    writer = Files.newBufferedWriter(Paths.get("saves/treasure_collected.sav"));
-                    writer.write("");
-                    writer.flush();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                gameSystem.loadGame();
 
             }
             else if (optionList.get(currentSelected).equals("Save game")) {
@@ -158,7 +142,49 @@ public class MainMenu {
 
                 if (option.equals("Yes")) {
                     if (promptOption.equals("Exit")) {
+                        prompt = false;
                         System.exit(0);
+                    }
+                    else if (promptOption.equals("New game")) {
+
+                        try {
+                            BufferedWriter writer = Files.newBufferedWriter(Paths.get("saves/savegame.sav"));
+                            writer.write("");
+                            writer.flush();
+                            writer = Files.newBufferedWriter(Paths.get("saves/inventory.sav"));
+                            writer.write("");
+                            writer.flush();
+                            writer = Files.newBufferedWriter(Paths.get("saves/respawn_points.sav"));
+                            writer.write("");
+                            writer.flush();
+                            writer = Files.newBufferedWriter(Paths.get("saves/treasure_collected.sav"));
+                            writer.write("");
+                            writer.flush();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        gameSystem.loadGame();
+
+                        gameSystem.setState(GameState.GAMEPLAY);
+
+                        if (startMenu) {
+                            startMenu = false;
+
+                            optionList = new LinkedList<>();
+
+                            optionList.add("Continue");
+                            optionList.add("New game");
+                            optionList.add("Save game");
+                            optionList.add("Exit");
+                        }
+                        else {
+                           optionList = savedOptionList;
+                        }
+
+                        prompt = false;
+                        currentSelected = 0;
                     }
                 }
                 else {
@@ -166,6 +192,7 @@ public class MainMenu {
                     prompt = false;
                     currentSelected = 0;
                 }
+
 
             }
 

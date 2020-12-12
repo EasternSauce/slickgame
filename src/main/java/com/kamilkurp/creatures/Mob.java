@@ -79,7 +79,7 @@ public abstract class Mob extends Creature {
         int aggroDistance = 400;
         aggroed = null;
         for (Creature creature : areaCreatures.values()) {
-            if (creature instanceof Mob) continue;
+            if (creature instanceof Mob || creature instanceof NonPlayerCharacter) continue;
             if (Globals.distance(creature.rect, rect) < aggroDistance && creature.healthPoints > 0) {
                 aggroed = creature;
                 break;
