@@ -32,8 +32,24 @@ public abstract class Mob extends Creature {
     protected float destinationY;
     protected boolean hasDestination;
 
+    protected Timer attackOrHoldTimer;
+    protected float attackOrHoldTime = 500f;
+    protected boolean hold;
+
+    protected Timer circlingDirectionTimer;
+    protected float circlingDirectionTime = 500f;
+    protected boolean circling;
+    protected int circlingDir;
+
     public Mob(GameSystem gameSystem, String id) {
         super(gameSystem, id);
+
+        attackOrHoldTimer = new Timer();
+        hold = false;
+
+        circlingDirectionTimer = new Timer();
+        circling = false;
+        circlingDir = 0;
     }
 
     @Override
@@ -86,7 +102,7 @@ public abstract class Mob extends Creature {
             }
         }
 
-        if (actionTimer.getTime() > 1500) {
+        if (actionTimer.getTime() > 500f) {
             currentDirection = Math.abs(random.nextInt())%4;
             stayInPlace = Math.abs(random.nextInt()) % 10 < 8;
             actionTimer.reset();
@@ -109,27 +125,90 @@ public abstract class Mob extends Creature {
             }
         }
         else {
+
+            if (attackOrHoldTimer.getTime() > attackOrHoldTime) {
+                hold = Globals.randFloat() < 0.8f;
+                attackOrHoldTimer.reset();
+            }
+
+            if (circlingDirectionTimer.getTime() > circlingDirectionTime) {
+                circling = Globals.randFloat() < 0.8f;
+                if (circling) {
+                    if (Globals.randFloat() < 0.5f) {
+                        circlingDir = 0;
+                    }
+                    else {
+                        circlingDir = 1;
+                    }
+                }
+                circlingDirectionTimer.reset();
+            }
+
             float walkUpDistance = 0f;
 
             float attackDistance = 0f;
+            float holdDistance = 0f;
             if (currentAttackType == AttackType.UNARMED) {
                 attackDistance = 100f;
-                walkUpDistance = 100f;
+                walkUpDistance = 300f;
+                holdDistance = 175f;
             } else
             if (currentAttackType == AttackType.SWORD) {
                 attackDistance = 100f;
-                walkUpDistance = 100f;
+                walkUpDistance = 300f;
+                holdDistance = 175f;
             }
             else if (currentAttackType == AttackType.BOW) {
                 attackDistance = 300f;
                 walkUpDistance = 300f;
+                holdDistance = 300f;
             }
 
-            if (findNewDestinationTimer.getTime() > 300f) {
+            if (findNewDestinationTimer.getTime() > 200f) {
 
                 float dist = Globals.distance(this.rect, aggroed.rect);
 
-                if (dist > walkUpDistance) {
+
+                if (dist < holdDistance) {
+                    if (hold) {
+                        if (circling) {
+                            if (circlingDir == 0) {
+                                destinationX = aggroed.rect.getCenterX();
+                                destinationY = aggroed.rect.getCenterY();
+                                Vector2f destinationVector = new Vector2f(destinationX - rect.getCenterX(), destinationY - rect.getCenterY());
+
+                                Vector2f perpendicular = destinationVector.getPerpendicular();
+
+                                destinationX = aggroed.rect.getCenterX() + perpendicular.getX();
+                                destinationY = aggroed.rect.getCenterY() + perpendicular.getY();
+
+                                hasDestination = true;
+                            }
+                            else {
+                                destinationX = aggroed.rect.getCenterX();
+                                destinationY = aggroed.rect.getCenterY();
+                                Vector2f destinationVector = new Vector2f(destinationX - rect.getCenterX(), destinationY - rect.getCenterY());
+
+                                Vector2f perpendicular = destinationVector.getPerpendicular().negate();
+
+                                destinationX = rect.getCenterX() + perpendicular.getX();
+                                destinationY = rect.getCenterY() + perpendicular.getY();
+
+                                hasDestination = true;
+                            }
+                        }
+                        else {
+                            hasDestination = false;
+                        }
+                    }
+                    else {
+                        destinationX = aggroed.rect.getCenterX();
+                        destinationY = aggroed.rect.getCenterY();
+                        hasDestination = true;
+                    }
+                }
+                else if (dist < walkUpDistance) {
+                    System.out.println("at walk up dist");
                     destinationX = aggroed.rect.getCenterX();
                     destinationY = aggroed.rect.getCenterY();
                     hasDestination = true;
