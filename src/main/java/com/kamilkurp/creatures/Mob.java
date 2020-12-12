@@ -146,22 +146,26 @@ public abstract class Mob extends Creature {
 
             float walkUpDistance = 0f;
 
+            float minimumDistance = 0f;
             float attackDistance = 0f;
             float holdDistance = 0f;
             if (currentAttackType == AttackType.UNARMED) {
-                attackDistance = 100f;
+                minimumDistance = 100f;
                 walkUpDistance = 300f;
                 holdDistance = 175f;
+                attackDistance = 130f;
             } else
             if (currentAttackType == AttackType.SWORD) {
-                attackDistance = 100f;
+                minimumDistance = 100f;
                 walkUpDistance = 300f;
                 holdDistance = 175f;
+                attackDistance = 130f;
             }
             else if (currentAttackType == AttackType.BOW) {
-                attackDistance = 300f;
+                minimumDistance = 300f;
                 walkUpDistance = 300f;
                 holdDistance = 300f;
+                attackDistance = 300f;
             }
 
             if (findNewDestinationTimer.getTime() > 200f) {
@@ -225,6 +229,10 @@ public abstract class Mob extends Creature {
             }
 
             if (Globals.distance(aggroed.rect, rect) < attackDistance) {
+                attack();
+            }
+
+            if (Globals.distance(aggroed.rect, rect) < minimumDistance) {
                 float maxDist = 0.0f;
                 int dir = 0;
                 if (rect.getCenterX() < aggroed.rect.getCenterX()) {
@@ -259,7 +267,7 @@ public abstract class Mob extends Creature {
                 }
                 direction = dir;
 
-                attack();
+
             }
 
         }
