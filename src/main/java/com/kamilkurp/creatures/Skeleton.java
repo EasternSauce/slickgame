@@ -50,6 +50,7 @@ public class Skeleton extends Mob {
         equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));
 
         updateAttackType();
+        defineAbilities();
 
 
 

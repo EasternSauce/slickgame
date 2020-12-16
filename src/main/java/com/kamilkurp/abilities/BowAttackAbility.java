@@ -1,4 +1,4 @@
-package com.kamilkurp.behavior;
+package com.kamilkurp.abilities;
 
 import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.assets.Assets;
@@ -25,10 +25,13 @@ public class BowAttackAbility extends Ability {
         cooldownTime = 1500;
         activeTime = 300;
         channelTime = 500;
+
+        setTimerStartingPosition();
+
     }
 
     @Override
-    protected void onAbilityStart() {
+    protected void onActiveStart() {
 
         activeTimer.reset();
 
@@ -54,7 +57,7 @@ public class BowAttackAbility extends Ability {
     }
 
     @Override
-    public void onChannel() {
+    public void onChannellingStart() {
         bowPullSound.play(1.0f, 0.3f);
     }
 }

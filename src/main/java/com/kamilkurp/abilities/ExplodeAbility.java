@@ -1,4 +1,4 @@
-package com.kamilkurp.behavior;
+package com.kamilkurp.abilities;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.animations.AttackAnimation;
@@ -8,7 +8,6 @@ import com.kamilkurp.creatures.Mob;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.geom.Rectangle;
 
 import java.util.Collection;
 
@@ -28,10 +27,13 @@ public class ExplodeAbility extends Ability {
         explosionAnimation = new AttackAnimation(Assets.explosionSpriteSheet, 20, 100);
 
         explosionRange = 200f;
+
+        setTimerStartingPosition();
+
     }
 
     @Override
-    protected void onAbilityStart() {
+    protected void onActiveStart() {
         activeTimer.reset();
         explosionAnimation.restart();
 
@@ -63,7 +65,7 @@ public class ExplodeAbility extends Ability {
     }
 
     @Override
-    public void onChannel() {
+    public void onChannellingStart() {
         abilityCreature.setImmobilized(true);
 
     }

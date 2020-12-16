@@ -3,8 +3,8 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.behavior.Ability;
-import com.kamilkurp.behavior.ExplodeAbility;
+import com.kamilkurp.abilities.Ability;
+import com.kamilkurp.abilities.ExplodeAbility;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.systems.GameSystem;
@@ -58,6 +58,7 @@ public class Ghost extends Mob {
 
 
         updateAttackType();
+        defineAbilities();
 
 
 

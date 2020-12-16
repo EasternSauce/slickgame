@@ -1,4 +1,4 @@
-package com.kamilkurp.behavior;
+package com.kamilkurp.abilities;
 
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.terrain.TerrainTile;
@@ -32,6 +32,8 @@ public class DashAbility extends Ability {
 
         activeTime = 200;
 
+        setTimerStartingPosition();
+
     }
 
 
@@ -57,7 +59,7 @@ public class DashAbility extends Ability {
     }
 
     @Override
-     protected void onAbilityStart() {
+     protected void onActiveStart() {
         abilityCreature.setImmobilized(true);
 
         activeTimer.reset();
@@ -67,7 +69,7 @@ public class DashAbility extends Ability {
     }
 
     @Override
-    protected void onAbilityStop() {
+    protected void onStop() {
         abilityCreature.setImmobilized(false);
     }
 

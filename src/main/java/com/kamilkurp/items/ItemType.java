@@ -17,6 +17,7 @@ public class ItemType {
     private final Float maxDamage;
     private final Float maxArmor;
 
+    private Float weaponSpeed;
     private float poisonChance;
 
     private boolean stackable;
@@ -33,6 +34,9 @@ public class ItemType {
         this.maxArmor = maxArmor;
         this.stackable = stackable;
         this.consumable = consumable;
+
+        weaponSpeed = 1.0f;
+        poisonChance = 0.0f;
     }
 
 
@@ -85,6 +89,8 @@ public class ItemType {
         ItemType itemType14 = new ItemType("steelGloves", "Steel Gloves", "-", itemIcons.getSprite(1,8), "gloves", 130, null, 10f, false, false);
         ItemType itemType15 = new ItemType("steelHelmet", "Steel Helmet", "-", itemIcons.getSprite(1, 7), "helmet", 170, null, 15f, false, false);
 
+        ItemType itemType16 = new ItemType("demonTrident", "Demon Trident", "-", itemIcons.getSprite(8, 5), "weapon", 900, 85f, null, false, false);
+        itemType16.setWeaponSpeed(1.5f);
 
         itemTypes.put(itemType1.getId(), itemType1);
         itemTypes.put(itemType2.getId(), itemType2);
@@ -101,8 +107,11 @@ public class ItemType {
         itemTypes.put(itemType13.getId(), itemType13);
         itemTypes.put(itemType14.getId(), itemType14);
         itemTypes.put(itemType15.getId(), itemType15);
+        itemTypes.put(itemType16.getId(), itemType16);
 
     }
+
+
 
     public static ItemType getItemType(String itemTypeId) {
         ItemType itemType = itemTypes.get(itemTypeId);
@@ -140,5 +149,17 @@ public class ItemType {
 
     public void setConsumable(boolean consumable) {
         this.consumable = consumable;
+    }
+
+    public static void setItemTypes(Map<String, ItemType> itemTypes) {
+        ItemType.itemTypes = itemTypes;
+    }
+
+    public void setWeaponSpeed(float weaponSpeed) {
+        this.weaponSpeed = weaponSpeed;
+    }
+
+    public Float getWeaponSpeed() {
+        return weaponSpeed;
     }
 }

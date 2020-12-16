@@ -70,6 +70,11 @@ public class EnemySpawnPoint {
                 area.moveInCreature(spawnedCreature, posX, posY);
             }
 
+            if (creatureType.equals("fireDemon")) {
+                spawnedCreature = new FireDemon(gameSystem, "firedemon"+Math.abs(Globals.random.nextInt()), "demonTrident");
+                area.moveInCreature(spawnedCreature, posX, posY);
+            }
+
             spawnedCreature.setStartingPosX(posX);
             spawnedCreature.setStartingPosY(posY);
 

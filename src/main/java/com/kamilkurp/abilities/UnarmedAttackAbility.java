@@ -1,4 +1,4 @@
-package com.kamilkurp.behavior;
+package com.kamilkurp.abilities;
 
 import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.assets.Assets;
@@ -24,18 +24,35 @@ public class UnarmedAttackAbility extends Ability {
 
         this.abilityCreature = abilityCreature;
         this.aimed = aimed;
-        cooldownTime = 600;
-        activeTime = 150;
-        channelTime = 300;
 
-        swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, 6, 25);
-        swordWindupAnimation = new AttackAnimation(Assets.slashWindupSpriteSheet, 6, 50);
+        float weaponSpeed = 1.0f;
+        if (this.abilityCreature.getEquipmentItems().get(0) != null) {
+            weaponSpeed = this.abilityCreature.getEquipmentItems().get(0).getItemType().getWeaponSpeed();
+        }
+
+        float baseChannelTime = 200f;
+        float baseActiveTime = 300f;
+        int numOfChannelFrames = 6;
+        int numOfFrames = 6;
+        int channelFrameDuration = (int)(baseChannelTime/numOfChannelFrames);
+        int frameDuration = (int)(baseActiveTime/numOfFrames);
+
+        channelTime = (int)(baseChannelTime * 1f/weaponSpeed);
+        activeTime = (int)(baseActiveTime * 1f/weaponSpeed);
+
+        cooldownTime = 800;
+
+        swordWindupAnimation = new AttackAnimation(Assets.slashWindupSpriteSheet, numOfChannelFrames, channelFrameDuration);
+        swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, numOfFrames, frameDuration);
+
         meleeAttackRect = new Rectangle(-999, -999, 1, 1);
+
+        setTimerStartingPosition();
 
     }
 
     @Override
-    protected void onAbilityStart() {
+    protected void onActiveStart() {
         activeTimer.reset();
         swordAttackAnimation.restart();
 
@@ -95,7 +112,7 @@ public class UnarmedAttackAbility extends Ability {
     }
 
     @Override
-    public void onChannel() {
+    public void onChannellingStart() {
         abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
 
         swordWindupAnimation.restart();

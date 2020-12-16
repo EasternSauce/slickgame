@@ -1,6 +1,7 @@
-package com.kamilkurp.behavior;
+package com.kamilkurp.abilities;
 
 import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.creatures.FireDemon;
 import com.kamilkurp.utils.Action;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
@@ -40,6 +41,11 @@ public class Ability {
         onPerformAction = () -> {};
         onChannelAction = () -> {};
 
+        setTimerStartingPosition();
+
+    }
+
+    public void setTimerStartingPosition() {
         activeTimer.setTime(cooldownTime);
         channelTimer.setTime(channelTime);
     }
@@ -47,14 +53,14 @@ public class Ability {
     public void update(int i) {
         if (state == AbilityState.ABILITY_CHANNELING && channelTimer.getTime() > channelTime) {
             state = AbilityState.ABILITY_ACTIVE;
-            onAbilityStart();
+            onActiveStart();
             onPerformAction.execute();
             abilityCreature.startStaminaRegen();
 
         }
         if (state == AbilityState.ABILITY_ACTIVE && activeTimer.getTime() > activeTime) {
             state = AbilityState.ABILITY_INACTIVE;
-            onAbilityStop();
+            onStop();
         }
 
         if (state == AbilityState.ABILITY_CHANNELING) {
@@ -81,26 +87,30 @@ public class Ability {
         onChannelAction = action;
     }
 
-    public void onChannel() {
+    public void onChannellingStart() {
 
     }
 
     public void tryPerforming() {
+        if (abilityCreature instanceof FireDemon) {
+//            activeTimer.getTime() > cooldownTime
+        }
+
         if (abilityCreature.getStaminaPoints() != 0 && state == AbilityState.ABILITY_INACTIVE && activeTimer.getTime() > cooldownTime) {
             channelTimer.reset();
             state = AbilityState.ABILITY_CHANNELING;
-            onChannel();
+            onChannellingStart();
             onChannelAction.execute();
 
             abilityCreature.stopStaminaRegen();
         }
     }
 
-    protected void onAbilityStart() {
+    protected void onActiveStart() {
 
     }
 
-    protected void onAbilityStop() {
+    protected void onStop() {
 
     }
 

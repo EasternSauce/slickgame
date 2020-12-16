@@ -2,7 +2,7 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.behavior.Ability;
+import com.kamilkurp.abilities.Ability;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
@@ -144,11 +144,11 @@ public abstract class Mob extends Creature {
                 circlingDirectionTimer.reset();
             }
 
-            float walkUpDistance = 0f;
+            float walkUpDistance = 300f;
+            float minimumDistance = 100f;
+            float attackDistance = 130f;
+            float holdDistance = 175f;
 
-            float minimumDistance = 0f;
-            float attackDistance = 0f;
-            float holdDistance = 0f;
             if (currentAttackType == AttackType.UNARMED) {
                 minimumDistance = 100f;
                 walkUpDistance = 300f;
@@ -166,6 +166,12 @@ public abstract class Mob extends Creature {
                 walkUpDistance = 300f;
                 holdDistance = 300f;
                 attackDistance = 300f;
+            }
+            else if (currentAttackType == AttackType.TRIDENT) {
+                minimumDistance = 180f;
+                walkUpDistance = 400f;
+                holdDistance = 220f;
+                attackDistance = 200f;
             }
 
             if (findNewDestinationTimer.getTime() > 200f) {
@@ -212,7 +218,6 @@ public abstract class Mob extends Creature {
                     }
                 }
                 else if (dist < walkUpDistance) {
-                    System.out.println("at walk up dist");
                     destinationX = aggroed.rect.getCenterX();
                     destinationY = aggroed.rect.getCenterY();
                     hasDestination = true;

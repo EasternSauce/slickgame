@@ -5,7 +5,7 @@ import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.behavior.*;
+import com.kamilkurp.abilities.*;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
@@ -15,7 +15,6 @@ import com.kamilkurp.utils.Rect;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.LinkedList;
@@ -141,6 +140,8 @@ public abstract class Creature {
     protected float startingPosX;
     protected float startingPosY;
 
+    protected float scale;
+
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
         this.id = id;
@@ -161,21 +162,12 @@ public abstract class Creature {
 
         equipmentItems = new TreeMap<>();
 
+        abilityList = new LinkedList<>();
+
         toBeRemoved = false;
 
         pendingX = 0.0f;
         pendingY = 0.0f;
-
-        abilityList = new LinkedList<>();
-        bowAttackAbility = new BowAttackAbility(this);
-        unarmedAttackAbility = new UnarmedAttackAbility(this, false);
-        swordAttackAbility = new SwordAttackAbility(this, true);
-        tridentAttackAbility = new TridentAttackAbility(this, true);
-
-        abilityList.add(bowAttackAbility);
-        abilityList.add(unarmedAttackAbility);
-        abilityList.add(swordAttackAbility);
-        abilityList.add(tridentAttackAbility);
 
         unarmedDamage = 15f;
 
@@ -202,6 +194,20 @@ public abstract class Creature {
         knockbackPower = 0f;
 
         movementVector = new Vector2f(0f,0f);
+
+        scale = 1.0f;
+    }
+
+    public void defineAbilities() {
+        bowAttackAbility = new BowAttackAbility(this);
+        unarmedAttackAbility = new UnarmedAttackAbility(this, false);
+        swordAttackAbility = new SwordAttackAbility(this, false);
+        tridentAttackAbility = new TridentAttackAbility(this, false);
+
+        abilityList.add(bowAttackAbility);
+        abilityList.add(unarmedAttackAbility);
+        abilityList.add(swordAttackAbility);
+        abilityList.add(tridentAttackAbility);
     }
 
     public abstract void onInit();
@@ -213,8 +219,13 @@ public abstract class Creature {
             if (!isAlive()) {
                 sprite.rotate(90f);
             }
-            sprite.draw((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight());
+            sprite.draw(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight());
         } else {
+
+//            Image currentFrame = walkAnimation.getAnimation(direction).getCurrentFrame();
+//
+//            currentFrame.draw(rect.getX() - camera.getPosX() + rect.getWidth()/2 * scale, rect.getY() - camera.getPosY() + rect.getHeight()/2 * scale, scale);
+
             walkAnimation.getAnimation(direction).draw((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight());
         }
 
@@ -228,8 +239,15 @@ public abstract class Creature {
     }
 
     public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
+        walkAnimation.getAnimation(direction).update(i);
+
+//        if (wa) {
+//
+//        }
 
         if (isAlive()) {
+
+
             onUpdateStart(i);
 
             for (Ability ability : abilityList) {
@@ -424,11 +442,11 @@ public abstract class Creature {
         int tilesetRows = area.getTerrainRows();
 
 
-        int startColumn = ((int)(newPosX / 64f) - 1) < 0f ? 0 : ((int)(newPosX / 64f) - 1);
-        int startRow = ((int)(newPosY / 64f) - 1) < 0f ? 0 : ((int)(newPosY / 64f) - 1);
+        int startColumn = ((int)(newPosX / 64f) - 4) < 0f ? 0 : ((int)(newPosX / 64f) - 4);
+        int startRow = ((int)(newPosY / 64f) - 4) < 0f ? 0 : ((int)(newPosY / 64f) - 4);
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
                 int column = startColumn + j >= tilesetColumns ? tilesetColumns - 1 : startColumn + j;
                 int row = startRow + i >= tilesetRows ? tilesetRows -1 : startRow + i;
                 TerrainTile tile = tiles.get(tilesetColumns * row + column);
@@ -454,12 +472,12 @@ public abstract class Creature {
         int tilesetColumns = area.getTerrainColumns();
         int tilesetRows = area.getTerrainRows();
 
-        int startColumn = ((int)(newPosX / 64f) - 1) < 0f ? 0 : ((int)(newPosX / 64f) - 1);
-        int startRow = ((int)(newPosY / 64f) - 1) < 0f ? 0 : ((int)(newPosY / 64f) - 1);
+        int startColumn = ((int)(newPosX / 64f) - 4) < 0f ? 0 : ((int)(newPosX / 64f) - 4);
+        int startRow = ((int)(newPosY / 64f) - 4) < 0f ? 0 : ((int)(newPosY / 64f) - 4);
 
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
                 int column = startColumn + j >= tilesetColumns ? tilesetColumns - 1 : startColumn + j;
                 int row = startRow + i >= tilesetRows ? tilesetRows -1 : startRow + i;
                 TerrainTile tile = tiles.get(tilesetColumns * row + column);
@@ -692,7 +710,7 @@ public abstract class Creature {
             currentAttackType = AttackType.SWORD;
         } else if (currentWeaponName.equals("crossbow")) {
             currentAttackType = AttackType.BOW;
-        } else if (currentWeaponName.equals("trident")) {
+        } else if (currentWeaponName.equals("trident") || currentWeaponName.equals("demonTrident")) {
             currentAttackType = AttackType.TRIDENT;
         }
     }

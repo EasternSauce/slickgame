@@ -47,6 +47,7 @@ public class Goblin extends Mob {
         equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));
 
         updateAttackType();
+        defineAbilities();
 
 
 

@@ -3,13 +3,11 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
-import com.kamilkurp.assets.Assets;
-import com.kamilkurp.behavior.Ability;
+import com.kamilkurp.abilities.Ability;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
-import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SpriteSheet;
 

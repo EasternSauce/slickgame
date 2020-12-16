@@ -3,8 +3,8 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.behavior.Ability;
-import com.kamilkurp.behavior.DashAbility;
+import com.kamilkurp.abilities.Ability;
+import com.kamilkurp.abilities.DashAbility;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.systems.GameSystem;
@@ -16,6 +16,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.LinkedList;
@@ -42,12 +43,24 @@ public class PlayerCharacter extends Creature {
     public PlayerCharacter(GameSystem gameSystem, String id) {
         super(gameSystem, id);
 
+        scale = 1.0f;
+
+        rect = new Rectangle(0, 0, 64 * scale, 64 * scale);
+        hitbox = new Rectangle(0, 0, 64 * scale, 64 * scale);
+
+
+
+        defineAbilities();
+
+
         dashAbility = new DashAbility(this);
         dashAbility.onStartChannelAction(() -> { flybySound.play(1.0f, 0.1f); });
         abilityList.add(dashAbility);
 
+
         swordAttackAbility.setAimed(true);
         unarmedAttackAbility.setAimed(true);
+        tridentAttackAbility.setAimed(true);
     }
 
 

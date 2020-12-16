@@ -4,7 +4,7 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.behavior.DashAbility;
+import com.kamilkurp.abilities.DashAbility;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
@@ -53,12 +53,14 @@ public class Wolf extends Mob {
 
         unarmedDamage = 30f;
 
+
+
+        updateAttackType();
+        defineAbilities();
+
         dashAbility = new DashAbility(this);
         dashAbility.onStartActiveAction(() -> { dogBarkSound.play(1.0f, 0.1f); });
         abilityList.add(dashAbility);
-
-        updateAttackType();
-
 
 
     }

@@ -2,6 +2,7 @@ package com.kamilkurp.spawn;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.creatures.FireDemon;
 import com.kamilkurp.creatures.Skeleton;
 import com.kamilkurp.creatures.Wolf;
 import com.kamilkurp.systems.GameSystem;
@@ -71,6 +72,10 @@ public class EnemyRespawnArea {
 
         if (creatureType.equals("wolf")) {
             spawnedCreature = new Wolf(gameSystem, "wolfie"+Math.abs(Globals.random.nextInt()));
+        }
+
+        if (creatureType.equals("fireDemon")) {
+            spawnedCreature = new FireDemon(gameSystem, "firedemon"+Math.abs(Globals.random.nextInt()), "demonTrident");
         }
 
         area.moveInCreature(spawnedCreature, randX, randY);

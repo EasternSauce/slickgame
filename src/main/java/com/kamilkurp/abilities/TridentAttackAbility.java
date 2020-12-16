@@ -1,4 +1,4 @@
-package com.kamilkurp.behavior;
+package com.kamilkurp.abilities;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.animations.AttackAnimation;
@@ -26,29 +26,50 @@ public class TridentAttackAbility extends Ability {
     private float scale;
     private float attackRange;
 
+    private float weaponSpeed;
+
 
     public TridentAttackAbility(Creature abilityCreature, boolean aimed) {
         super(abilityCreature);
 
         this.abilityCreature = abilityCreature;
         this.aimed = aimed;
-        cooldownTime = 800;
-        activeTime = 275;
-        channelTime = 840;
 
-        tridentAttackAnimation = new AttackAnimation(Assets.tridentThrustSpriteSheet, 11, 25, true);
-        tridentWindupAnimation = new AttackAnimation(Assets.tridentThrustWindupSpriteSheet, 7, 120, true);
+        float weaponSpeed = 1.0f;
+        if (this.abilityCreature.getEquipmentItems().get(0) != null) {
+            weaponSpeed = this.abilityCreature.getEquipmentItems().get(0).getItemType().getWeaponSpeed();
+        }
+
+        float baseChannelTime = 840;
+        float baseActiveTime = 275;
+        int numOfChannelFrames = 7;
+        int numOfFrames = 11;
+        int channelFrameDuration = (int)(baseChannelTime/numOfChannelFrames);
+        int frameDuration = (int)(baseActiveTime/numOfFrames);
+
+        channelTime = (int)(baseChannelTime * 1f/weaponSpeed);
+        activeTime = (int)(baseActiveTime * 1f/weaponSpeed);
+
+        cooldownTime = 800;
+
+        tridentWindupAnimation = new AttackAnimation(Assets.tridentThrustWindupSpriteSheet, numOfChannelFrames, channelFrameDuration, true);
+        tridentAttackAnimation = new AttackAnimation(Assets.tridentThrustSpriteSheet, numOfFrames, frameDuration, true);
+
         meleeAttackRect = new Rectangle(-999, -999, 1, 1);
+
         meleeAttackHitbox = new Polygon(meleeAttackRect.getPoints());
 
         width = 64f;
         height = 32f;
         scale = 2f;
         attackRange = 30f;
+
+        setTimerStartingPosition();
+
     }
 
     @Override
-    protected void onAbilityStart() {
+    protected void onActiveStart() {
         activeTimer.reset();
         tridentAttackAnimation.restart();
 
@@ -119,7 +140,7 @@ public class TridentAttackAbility extends Ability {
     }
 
     @Override
-    public void onChannel() {
+    public void onChannellingStart() {
         abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
 
         tridentWindupAnimation.restart();
@@ -151,5 +172,13 @@ public class TridentAttackAbility extends Ability {
 
     public void setAimed(boolean aimed) {
         this.aimed = aimed;
+    }
+
+    public void setAttackRange(float attackRange) {
+        this.attackRange = attackRange;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 }
