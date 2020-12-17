@@ -22,14 +22,13 @@ public class Goblin extends Mob {
         actionTimer = new Timer();
 
         dropTable = new HashMap<>();
-        dropTable.put("ironSword", 0.1f);
-        dropTable.put("poisonDagger", 0.1f);
-        dropTable.put("healingPowder", 0.4f);
-        dropTable.put("steelArmor", 0.1f);
-        dropTable.put("steelGreaves", 0.2f);
-        dropTable.put("steelGloves", 0.2f);
-        dropTable.put("steelHelmet", 0.2f);
-
+        dropTable.put("ironSword", 0.03f);
+        dropTable.put("poisonDagger", 0.005f);
+        dropTable.put("healingPowder", 0.3f);
+        dropTable.put("steelArmor", 0.03f);
+        dropTable.put("steelGreaves", 0.05f);
+        dropTable.put("steelGloves", 0.05f);
+        dropTable.put("steelHelmet", 0.05f);
 
         findNewDestinationTimer = new Timer();
 
@@ -41,13 +40,12 @@ public class Goblin extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(500f);
+        setMaxHealthPoints(300f);
         setHealthPoints(getMaxHealthPoints());
 
         equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));
 
-        updateAttackType();
-        defineAbilities();
+
 
 
 
@@ -55,7 +53,8 @@ public class Goblin extends Mob {
 
     @Override
     public void onInit() {
-
+        defineAbilities();
+        updateAttackType();
     }
 
     @Override

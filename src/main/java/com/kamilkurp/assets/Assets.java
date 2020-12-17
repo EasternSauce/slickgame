@@ -24,6 +24,7 @@ public class Assets {
     public static SpriteSheet tridentThrustSpriteSheet;
     public static SpriteSheet tridentThrustWindupSpriteSheet;
     public static SpriteSheet fireDemonSpriteSheet;
+    public static SpriteSheet explosionWindupSpriteSheet;
 
     public static Sound stepSound;
     public static Sound gruntSound;
@@ -73,6 +74,7 @@ public class Assets {
         goblinSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/goblin.png", 32, 32);
         slashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash.png", 40, 40);
         explosionSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/explosion.png", 64, 64);
+        explosionWindupSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/explosion_windup.png", 64, 64);
         betterSlashSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash_hd.png", 40, 40);
         slashWindupSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/slash_windup.png", 40, 40);
         tridentThrustSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/trident_thrust.png", 64, 32);

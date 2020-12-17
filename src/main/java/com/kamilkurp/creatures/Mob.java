@@ -109,7 +109,7 @@ public abstract class Mob extends Creature {
         }
 
         if (aggroed == null) {
-            if (!stayInPlace) {
+            if (!stayInPlace && !immobilized) {
                 if (currentDirection == 0) {
                     moveUp();
                 }

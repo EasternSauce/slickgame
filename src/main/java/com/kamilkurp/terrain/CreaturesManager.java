@@ -108,9 +108,9 @@ public class CreaturesManager {
         creatures.put(creature.getId(), creature);
     }
 
-    public void updateAttackTypes() {
+    public void initializeCreatures() {
         for (Creature creature : creatures.values()) {
-            creature.updateAttackType();
+            creature.onInit();
         }
     }
 

@@ -46,21 +46,12 @@ public class PlayerCharacter extends Creature {
         scale = 1.0f;
 
         rect = new Rectangle(0, 0, 64 * scale, 64 * scale);
-        hitbox = new Rectangle(0, 0, 64 * scale, 64 * scale);
+        //hitbox = new Rectangle(0, 0, 64 * scale, 64 * scale);
 
+        hitbox = new Rectangle(17 * scale, 15 * scale, 30 * scale, 46 * scale);
 
+        respawnTimer = new Timer();
 
-        defineAbilities();
-
-
-        dashAbility = new DashAbility(this);
-        dashAbility.onStartChannelAction(() -> { flybySound.play(1.0f, 0.1f); });
-        abilityList.add(dashAbility);
-
-
-        swordAttackAbility.setAimed(true);
-        unarmedAttackAbility.setAimed(true);
-        tridentAttackAbility.setAimed(true);
     }
 
 
@@ -131,9 +122,21 @@ public class PlayerCharacter extends Creature {
     public void onInit() {
         currentRespawnPoint = area.getRespawnList().get(0);
         respawning = false;
-        respawnTimer = new Timer();
         setMaxHealthPoints(300f);
         setHealthPoints(getMaxHealthPoints());
+
+        defineAbilities();
+
+        dashAbility = new DashAbility(this);
+        dashAbility.onStartChannelAction(() -> { flybySound.play(1.0f, 0.1f); });
+        abilityList.add(dashAbility);
+
+
+        swordAttackAbility.setAimed(true);
+        unarmedAttackAbility.setAimed(true);
+        tridentAttackAbility.setAimed(true);
+
+        updateAttackType();
     }
 
     public void render(Graphics g, Camera camera) {

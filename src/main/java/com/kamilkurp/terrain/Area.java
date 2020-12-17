@@ -209,6 +209,8 @@ public class Area {
 
         reset();
 
+        getCreaturesManager().initializeCreatures();
+
     }
 
     public List<Arrow> getArrowList() {
@@ -248,8 +250,6 @@ public class Area {
 
         creature.setStartingPosX(x);
         creature.setStartingPosY(y);
-
-        creature.onInit();
     }
 
     public void reset() {
@@ -260,6 +260,9 @@ public class Area {
         for (EnemySpawnPoint enemySpawnPoint : enemySpawnPointList) {
             enemySpawnPoint.markForRespawn();
         }
+
+        getCreaturesManager().initializeCreatures();
+
     }
 
     public List<Treasure> getTreasureList() {

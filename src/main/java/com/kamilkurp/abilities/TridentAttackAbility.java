@@ -40,6 +40,7 @@ public class TridentAttackAbility extends Ability {
             weaponSpeed = this.abilityCreature.getEquipmentItems().get(0).getItemType().getWeaponSpeed();
         }
 
+
         float baseChannelTime = 840;
         float baseActiveTime = 275;
         int numOfChannelFrames = 7;
@@ -61,7 +62,7 @@ public class TridentAttackAbility extends Ability {
 
         width = 64f;
         height = 32f;
-        scale = 2f;
+        scale = 1.5f;
         attackRange = 30f;
 
         setTimerStartingPosition();

@@ -90,7 +90,7 @@ public class ItemType {
         ItemType itemType15 = new ItemType("steelHelmet", "Steel Helmet", "-", itemIcons.getSprite(1, 7), "helmet", 170, null, 15f, false, false);
 
         ItemType itemType16 = new ItemType("demonTrident", "Demon Trident", "-", itemIcons.getSprite(8, 5), "weapon", 900, 85f, null, false, false);
-        itemType16.setWeaponSpeed(1.5f);
+        itemType16.setWeaponSpeed(1.3f);
 
         itemTypes.put(itemType1.getId(), itemType1);
         itemTypes.put(itemType2.getId(), itemType2);

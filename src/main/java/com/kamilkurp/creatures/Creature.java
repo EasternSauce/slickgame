@@ -142,6 +142,8 @@ public abstract class Creature {
 
     protected float scale;
 
+    protected String creatureType;
+
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
         this.id = id;
@@ -196,9 +198,14 @@ public abstract class Creature {
         movementVector = new Vector2f(0f,0f);
 
         scale = 1.0f;
+
+        creatureType = "regular";
     }
 
     public void defineAbilities() {
+
+        abilityList = new LinkedList<>();
+
         bowAttackAbility = new BowAttackAbility(this);
         unarmedAttackAbility = new UnarmedAttackAbility(this, false);
         swordAttackAbility = new SwordAttackAbility(this, false);

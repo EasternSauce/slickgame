@@ -555,7 +555,7 @@ public class GameSystem {
             getCurrentAreaHolder().setCurrentArea(getAreas().get("area1"));
         }
 
-        getCurrentArea().getCreaturesManager().updateAttackTypes();
+        getCurrentArea().onEntry();
 
     }
 }

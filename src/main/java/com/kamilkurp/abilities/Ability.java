@@ -135,5 +135,8 @@ public class Ability {
         state = AbilityState.ABILITY_INACTIVE;
     }
 
+    public AbilityState getState() {
+        return state;
+    }
 }
 

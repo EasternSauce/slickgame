@@ -81,6 +81,8 @@ public class EnemySpawnPoint {
             spawnedCreature.updateAttackType();
             spawnedCreature.moveToArea(area, posX, posY);
 
+            spawnedCreature.onInit();
+
             isToBeRespawned = false;
         }
 

@@ -29,11 +29,11 @@ public class Wolf extends Mob {
         actionTimer = new Timer();
 
         dropTable = new HashMap<>();
-        dropTable.put("ringmailGreaves", 0.15f);
-        dropTable.put("leatherArmor", 0.15f);
-        dropTable.put("hideGloves", 0.15f);
-        dropTable.put("leatherHelmet", 0.15f);
-        dropTable.put("healingPowder", 0.6f);
+        dropTable.put("ringmailGreaves", 0.07f);
+        dropTable.put("leatherArmor", 0.05f);
+        dropTable.put("hideGloves", 0.07f);
+        dropTable.put("leatherHelmet", 0.07f);
+        dropTable.put("healingPowder", 0.5f);
 
         findNewDestinationTimer = new Timer();
 
@@ -45,7 +45,7 @@ public class Wolf extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(200f);
+        setMaxHealthPoints(150f);
         setHealthPoints(getMaxHealthPoints());
 
 
@@ -55,19 +55,18 @@ public class Wolf extends Mob {
 
 
 
-        updateAttackType();
+
+    }
+
+    @Override
+    public void onInit() {
         defineAbilities();
 
         dashAbility = new DashAbility(this);
         dashAbility.onStartActiveAction(() -> { dogBarkSound.play(1.0f, 0.1f); });
         abilityList.add(dashAbility);
 
-
-    }
-
-    @Override
-    public void onInit() {
-
+        updateAttackType();
     }
 
     @Override

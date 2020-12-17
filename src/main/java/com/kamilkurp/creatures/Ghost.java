@@ -28,13 +28,13 @@ public class Ghost extends Mob {
 
         dropTable = new HashMap<>();
 
-        dropTable.put("healingPowder", 0.4f);
-        dropTable.put("steelArmor", 0.1f);
-        dropTable.put("steelGreaves", 0.3f);
-        dropTable.put("steelGloves", 0.3f);
-        dropTable.put("steelHelmet", 0.2f);
-        dropTable.put("ironSword", 0.1f);
-        dropTable.put("lifeRing", 0.07f);
+        dropTable.put("healingPowder", 0.3f);
+        dropTable.put("steelArmor", 0.03f);
+        dropTable.put("steelGreaves", 0.05f);
+        dropTable.put("steelGloves", 0.05f);
+        dropTable.put("steelHelmet", 0.05f);
+        dropTable.put("ironSword", 0.03f);
+        dropTable.put("lifeRing", 0.01f);
 
 
         findNewDestinationTimer = new Timer();
@@ -47,18 +47,12 @@ public class Ghost extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(800f);
+        setMaxHealthPoints(600f);
         setHealthPoints(getMaxHealthPoints());
 
         equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));
 
-        explodeAbility = new ExplodeAbility(this);
-        explodeAbility.onStartChannelAction(() -> { darkLaughSound.play(1.0f, 0.1f); });
-        abilityList.add(explodeAbility);
 
-
-        updateAttackType();
-        defineAbilities();
 
 
 
@@ -67,7 +61,7 @@ public class Ghost extends Mob {
     @Override
     public void attack() {
 
-        if (healthPoints > maxHealthPoints * 0.70) {
+        if (healthPoints > maxHealthPoints * 0.30) {
             if (staminaPoints > 0f) {
                 if (currentAttackType == AttackType.UNARMED) {
                     unarmedAttackAbility.tryPerforming();
@@ -85,7 +79,13 @@ public class Ghost extends Mob {
 
     @Override
     public void onInit() {
+        explodeAbility = new ExplodeAbility(this);
+        explodeAbility.onStartChannelAction(() -> { darkLaughSound.play(1.0f, 0.1f); });
+        abilityList.add(explodeAbility);
 
+        defineAbilities();
+
+        updateAttackType();
     }
 
     @Override

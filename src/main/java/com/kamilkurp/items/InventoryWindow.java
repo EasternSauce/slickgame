@@ -565,7 +565,7 @@ public class InventoryWindow {
         if (stackable) {
             int invPos = -1;
             for (Map.Entry<Integer, Item> invItem : inventoryItems.entrySet()) {
-                if (invItem.getValue().getItemType() == itemType) {
+                if (invItem.getValue() != null && invItem.getValue().getItemType() == itemType) {
                     invPos = invItem.getKey();
                     break;
                 }

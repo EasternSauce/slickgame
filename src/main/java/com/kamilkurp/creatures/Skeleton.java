@@ -26,12 +26,12 @@ public class Skeleton extends Mob {
 
         dropTable = new HashMap<>();
 
-        dropTable.put("ringmailGreaves", 0.15f);
-        dropTable.put("leatherArmor", 0.15f);
-        dropTable.put("hideGloves", 0.15f);
-        dropTable.put("leatherHelmet", 0.15f);
-        dropTable.put("woodenSword", 0.1f);
-        dropTable.put("healingPowder", 0.6f);
+        dropTable.put("ringmailGreaves", 0.07f);
+        dropTable.put("leatherArmor", 0.05f);
+        dropTable.put("hideGloves", 0.07f);
+        dropTable.put("leatherHelmet", 0.07f);
+        dropTable.put("woodenSword", 0.04f);
+        dropTable.put("healingPowder", 0.5f);
 
 
         findNewDestinationTimer = new Timer();
@@ -44,13 +44,11 @@ public class Skeleton extends Mob {
 
         hitbox = new Rectangle(17, 15, 30, 46);
 
-        setMaxHealthPoints(300f);
+        setMaxHealthPoints(200f);
         setHealthPoints(getMaxHealthPoints());
 
         equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));
 
-        updateAttackType();
-        defineAbilities();
 
 
 
@@ -58,7 +56,9 @@ public class Skeleton extends Mob {
 
     @Override
     public void onInit() {
+        defineAbilities();
 
+        updateAttackType();
     }
 
     @Override

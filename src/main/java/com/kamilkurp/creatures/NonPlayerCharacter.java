@@ -79,7 +79,7 @@ public class NonPlayerCharacter extends Creature {
 
     @Override
     public void onInit() {
-
+        updateAttackType();
     }
 
     @Override

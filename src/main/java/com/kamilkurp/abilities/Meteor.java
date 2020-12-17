@@ -21,7 +21,7 @@ public class Meteor {
     protected boolean started;
 
     protected AttackAnimation explosionAnimation;
-
+    protected AttackAnimation explosionWindupAnimation;
 
     public Meteor(int startTime, Rectangle rect) {
         this.startTime = startTime;
@@ -31,9 +31,11 @@ public class Meteor {
         channelTimer = new Timer();
 
         activeTime = 1800;
-        channelTime = 1300;
+        channelTime = 1200;
 
-        explosionAnimation = new AttackAnimation(Assets.explosionSpriteSheet, 20, 88);
+        explosionAnimation = new AttackAnimation(Assets.explosionSpriteSheet, 20, 92);
+        explosionWindupAnimation = new AttackAnimation(Assets.explosionWindupSpriteSheet, 6, 200);
+
 
         pos = rect;
 
@@ -55,6 +57,7 @@ public class Meteor {
         started = true;
         state = AbilityState.ABILITY_CHANNELING;
         channelTimer.reset();
+        explosionWindupAnimation.restart();
     }
 
     public AbilityState getState() {
@@ -87,5 +90,9 @@ public class Meteor {
 
     public AttackAnimation getExplosionAnimation() {
         return explosionAnimation;
+    }
+
+    public AttackAnimation getExplosionWindupAnimation() {
+        return explosionWindupAnimation;
     }
 }
