@@ -12,18 +12,17 @@ import org.newdawn.slick.geom.Vector2f;
 import java.util.List;
 
 public class DashAbility extends Ability {
-
-    private Creature abilityCreature;
     protected float dashSpeed;
 
     protected Timer dashTimer;
     protected Vector2f dashVector;
 
-    public DashAbility(Creature abilityCreature) {
+    private DashAbility(Creature abilityCreature) {
         super(abilityCreature);
+    }
 
-        this.abilityCreature = abilityCreature;
-
+    @Override
+    public void init() {
         dashTimer = new Timer();
         dashVector = new Vector2f(0f, 0f);
 
@@ -32,9 +31,6 @@ public class DashAbility extends Ability {
         channelTime = 0;
 
         activeTime = 200;
-
-        setTimerStartingPosition();
-
     }
 
 
@@ -87,5 +83,12 @@ public class DashAbility extends Ability {
 
     public void render(Graphics g, Camera camera) {
 
+    }
+
+    public static DashAbility newInstance(Creature abilityCreature) {
+        DashAbility ability = new DashAbility(abilityCreature);
+        ability.init();
+        ability.setTimerStartingPosition();
+        return ability;
     }
 }

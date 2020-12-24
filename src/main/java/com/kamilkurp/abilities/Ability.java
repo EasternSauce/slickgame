@@ -27,21 +27,19 @@ public class Ability {
 
     Creature abilityCreature;
 
-    public Ability(Creature abilityCreature) {
+    protected Ability(Creature abilityCreature) {
         this.abilityCreature = abilityCreature;
 
         activeTimer = new Timer();
         channelTimer = new Timer();
-        cooldownTime = 3000;
-        activeTime = 200;
-        channelTime = 500;
 
         state = AbilityState.ABILITY_INACTIVE;
 
         onPerformAction = () -> {};
         onChannelAction = () -> {};
+    }
 
-        setTimerStartingPosition();
+    public void init() {
 
     }
 
@@ -135,5 +133,6 @@ public class Ability {
     public AbilityState getState() {
         return state;
     }
+
 }
 

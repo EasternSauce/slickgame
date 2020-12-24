@@ -15,18 +15,17 @@ import org.newdawn.slick.geom.Rectangle;
 import java.util.Collection;
 
 public class SwordAttackAbility extends Ability {
-    Creature abilityCreature;
     protected AttackAnimation swordAttackAnimation;
     protected AttackAnimation swordWindupAnimation;
     private final Sound swordAttackSound = Assets.attackSound;
     private boolean aimed;
 
-    public SwordAttackAbility(Creature abilityCreature, boolean aimed) {
+    private SwordAttackAbility(Creature abilityCreature) {
         super(abilityCreature);
+    }
 
-        this.abilityCreature = abilityCreature;
-        this.aimed = aimed;
-
+    @Override
+    public void init() {
         float weaponSpeed = 1.0f;
         if (this.abilityCreature.getEquipmentItems().get(0) != null) {
             weaponSpeed = this.abilityCreature.getEquipmentItems().get(0).getItemType().getWeaponSpeed();
@@ -49,8 +48,7 @@ public class SwordAttackAbility extends Ability {
 
         meleeAttackRect = new Rectangle(-999, -999, 1, 1);
 
-        setTimerStartingPosition();
-
+        aimed = false;
     }
 
     @Override
@@ -139,5 +137,12 @@ public class SwordAttackAbility extends Ability {
 
     public void setAimed(boolean aimed) {
         this.aimed = aimed;
+    }
+
+    public static SwordAttackAbility newInstance(Creature abilityCreature) {
+        SwordAttackAbility ability = new SwordAttackAbility(abilityCreature);
+        ability.init();
+        ability.setTimerStartingPosition();
+        return ability;
     }
 }

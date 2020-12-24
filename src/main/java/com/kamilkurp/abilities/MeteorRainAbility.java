@@ -17,24 +17,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MeteorRainAbility extends Ability {
-    Creature abilityCreature;
     protected float explosionRange;
 
     protected List<Meteor> meteors;
 
     public MeteorRainAbility(Creature abilityCreature) {
         super(abilityCreature);
+    }
 
-        this.abilityCreature = abilityCreature;
+    @Override
+    public void init() {
         cooldownTime = 35000;
         activeTime = 13000;
         channelTime = 300;
 
         explosionRange = 250f;
-
-
-        setTimerStartingPosition();
-
     }
 
     @Override
@@ -142,5 +139,12 @@ public class MeteorRainAbility extends Ability {
     @Override
     protected void onStop() {
         abilityCreature.setImmobilized(false);
+    }
+
+    public static MeteorRainAbility newInstance(Creature abilityCreature) {
+        MeteorRainAbility ability = new MeteorRainAbility(abilityCreature);
+        ability.init();
+        ability.setTimerStartingPosition();
+        return ability;
     }
 }

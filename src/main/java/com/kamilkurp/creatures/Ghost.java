@@ -84,7 +84,7 @@ public class Ghost extends Mob {
     public void onInit() {
         defineAbilities();
 
-        explodeAbility = new ExplodeAbility(this);
+        explodeAbility = ExplodeAbility.newInstance(this);
         explodeAbility.onStartChannelAction(() -> { darkLaughSound.play(1.0f, 0.1f); });
         abilityList.add(explodeAbility);
 

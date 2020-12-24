@@ -2,6 +2,7 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
+import com.kamilkurp.abilities.Ability;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.abilities.DashAbility;
@@ -63,7 +64,7 @@ public class Wolf extends Mob {
     public void onInit() {
         defineAbilities();
 
-        dashAbility = new DashAbility(this);
+        dashAbility = DashAbility.newInstance(this);
         dashAbility.onStartActiveAction(() -> { dogBarkSound.play(1.0f, 0.1f); });
         abilityList.add(dashAbility);
 

@@ -15,7 +15,6 @@ import org.newdawn.slick.geom.*;
 import java.util.Collection;
 
 public class TridentAttackAbility extends Ability {
-    Creature abilityCreature;
     protected AttackAnimation tridentAttackAnimation;
     protected AttackAnimation tridentWindupAnimation;
     private final Sound swordAttackSound = Assets.attackSound;
@@ -26,15 +25,12 @@ public class TridentAttackAbility extends Ability {
     private float scale;
     private float attackRange;
 
-    private float weaponSpeed;
-
-
-    public TridentAttackAbility(Creature abilityCreature, boolean aimed) {
+    private TridentAttackAbility(Creature abilityCreature) {
         super(abilityCreature);
+    }
 
-        this.abilityCreature = abilityCreature;
-        this.aimed = aimed;
-
+    @Override
+    public void init() {
         float weaponSpeed = 1.0f;
         if (this.abilityCreature.getEquipmentItems().get(0) != null) {
             weaponSpeed = this.abilityCreature.getEquipmentItems().get(0).getItemType().getWeaponSpeed();
@@ -65,8 +61,7 @@ public class TridentAttackAbility extends Ability {
         scale = 1.5f;
         attackRange = 30f;
 
-        setTimerStartingPosition();
-
+        aimed = false;
     }
 
     @Override
@@ -182,5 +177,12 @@ public class TridentAttackAbility extends Ability {
 
     public void setScale(float scale) {
         this.scale = scale;
+    }
+
+    public static TridentAttackAbility newInstance(Creature abilityCreature) {
+        TridentAttackAbility ability = new TridentAttackAbility(abilityCreature);
+        ability.init();
+        ability.setTimerStartingPosition();
+        return ability;
     }
 }

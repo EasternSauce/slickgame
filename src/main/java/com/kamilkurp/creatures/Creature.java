@@ -207,10 +207,10 @@ public abstract class Creature {
 
         abilityList = new LinkedList<>();
 
-        bowAttackAbility = new BowAttackAbility(this);
-        unarmedAttackAbility = new UnarmedAttackAbility(this, false);
-        swordAttackAbility = new SwordAttackAbility(this, false);
-        tridentAttackAbility = new TridentAttackAbility(this, false);
+        bowAttackAbility = BowAttackAbility.newInstance(this);
+        unarmedAttackAbility = UnarmedAttackAbility.newInstance(this);
+        swordAttackAbility = SwordAttackAbility.newInstance(this);
+        tridentAttackAbility = TridentAttackAbility.newInstance(this);
 
         abilityList.add(bowAttackAbility);
         abilityList.add(unarmedAttackAbility);

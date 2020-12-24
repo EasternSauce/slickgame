@@ -126,7 +126,7 @@ public class PlayerCharacter extends Creature {
 
         defineAbilities();
 
-        dashAbility = new DashAbility(this);
+        dashAbility = DashAbility.newInstance(this);
         dashAbility.onStartChannelAction(() -> { flybySound.play(1.0f, 0.1f); });
         abilityList.add(dashAbility);
 

@@ -19,15 +19,15 @@ public class BowAttackAbility extends Ability {
     private final Sound bowPullSound = Assets.bowPullSound;
 
 
-    public BowAttackAbility(Creature abilityCreature) {
+    private BowAttackAbility(Creature abilityCreature) {
         super(abilityCreature);
+    }
 
+    @Override
+    public void init() {
         cooldownTime = 1500;
         activeTime = 300;
         channelTime = 500;
-
-        setTimerStartingPosition();
-
     }
 
     @Override
@@ -59,5 +59,12 @@ public class BowAttackAbility extends Ability {
     @Override
     public void onChannellingStart() {
         bowPullSound.play(1.0f, 0.3f);
+    }
+
+    public static BowAttackAbility newInstance(Creature abilityCreature) {
+        BowAttackAbility ability = new BowAttackAbility(abilityCreature);
+        ability.init();
+        ability.setTimerStartingPosition();
+        return ability;
     }
 }

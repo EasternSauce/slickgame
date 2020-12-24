@@ -4,30 +4,31 @@ import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
+import com.kamilkurp.items.Item;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.Collection;
 
 public class UnarmedAttackAbility extends Ability {
-    Creature abilityCreature;
     protected AttackAnimation swordAttackAnimation;
     protected AttackAnimation swordWindupAnimation;
     private final Sound punchSound = Assets.punchSound;
     private boolean aimed;
 
-    public UnarmedAttackAbility(Creature abilityCreature, boolean aimed) {
+    protected UnarmedAttackAbility(Creature abilityCreature) {
         super(abilityCreature);
+    }
 
-        this.abilityCreature = abilityCreature;
-        this.aimed = aimed;
-
+    @Override
+    public void init() {
         float weaponSpeed = 1.0f;
-        if (this.abilityCreature.getEquipmentItems().get(0) != null) {
-            weaponSpeed = this.abilityCreature.getEquipmentItems().get(0).getItemType().getWeaponSpeed();
+        if (getCreatureWeapon() != null) {
+            weaponSpeed = getCreatureWeapon().getItemType().getWeaponSpeed();
         }
 
         float baseChannelTime = 200f;
@@ -47,8 +48,11 @@ public class UnarmedAttackAbility extends Ability {
 
         meleeAttackRect = new Rectangle(-999, -999, 1, 1);
 
-        setTimerStartingPosition();
+        aimed = false;
+    }
 
+    public Item getCreatureWeapon() {
+        return this.abilityCreature.getEquipmentItems().get(0);
     }
 
     @Override
@@ -137,4 +141,14 @@ public class UnarmedAttackAbility extends Ability {
         this.aimed = aimed;
     }
 
+    public static UnarmedAttackAbility newInstance(Creature abilityCreature) {
+        if (abilityCreature == null) throw new RuntimeException();
+        UnarmedAttackAbility ability = new UnarmedAttackAbility(abilityCreature);
+
+        ability.init();
+        ability.setTimerStartingPosition();
+
+
+        return ability;
+    }
 }

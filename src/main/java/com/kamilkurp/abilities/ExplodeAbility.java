@@ -6,20 +6,23 @@ import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
 import com.kamilkurp.utils.Camera;
+import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.util.Collection;
 
 public class ExplodeAbility extends Ability {
-    Creature abilityCreature;
     protected AttackAnimation explosionAnimation;
     protected float explosionRange;
 
-    public ExplodeAbility(Creature abilityCreature) {
+    private ExplodeAbility(Creature abilityCreature) {
         super(abilityCreature);
+    }
 
-        this.abilityCreature = abilityCreature;
+    @Override
+    public void init() {
         cooldownTime = 800;
         activeTime = 1800;
         channelTime = 1300;
@@ -27,9 +30,6 @@ public class ExplodeAbility extends Ability {
         explosionAnimation = new AttackAnimation(Assets.explosionSpriteSheet, 20, 100);
 
         explosionRange = 200f;
-
-        setTimerStartingPosition();
-
     }
 
     @Override
@@ -80,5 +80,12 @@ public class ExplodeAbility extends Ability {
 
             image.draw(abilityCreature.getRect().getCenterX() - camera.getPosX() - explosionRange, abilityCreature.getRect().getCenterY() - camera.getPosY() - explosionRange, scale);
         }
+    }
+
+    public static ExplodeAbility newInstance(Creature abilityCreature) {
+        ExplodeAbility ability = new ExplodeAbility(abilityCreature);
+        ability.init();
+        ability.setTimerStartingPosition();
+        return ability;
     }
 }
