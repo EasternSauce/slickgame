@@ -5,6 +5,7 @@ import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
+import com.kamilkurp.spawn.MobSpawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
@@ -19,18 +20,18 @@ public class Skeleton extends Mob {
 
     private Sound boneClickSound = Assets.boneClickSound;
 
-    public Skeleton(GameSystem gameSystem, String id, String weapon) throws SlickException {
-        super(gameSystem, id);
+    public Skeleton(GameSystem gameSystem, MobSpawnPoint mobSpawnPoint, String id, String weapon) throws SlickException {
+        super(gameSystem, mobSpawnPoint, id);
 
         actionTimer = new Timer();
 
         dropTable = new HashMap<>();
 
-        dropTable.put("ringmailGreaves", 0.07f);
+        dropTable.put("ringmailGreaves", 0.1f);
         dropTable.put("leatherArmor", 0.05f);
-        dropTable.put("hideGloves", 0.07f);
-        dropTable.put("leatherHelmet", 0.07f);
-        dropTable.put("woodenSword", 0.04f);
+        dropTable.put("hideGloves", 0.1f);
+        dropTable.put("leatherHelmet", 0.1f);
+        dropTable.put("woodenSword", 0.1f);
         dropTable.put("healingPowder", 0.5f);
 
 
@@ -72,31 +73,8 @@ public class Skeleton extends Mob {
         return "skeleton";
     }
 
+
     @Override
-    public void takeDamage(float damage, boolean immunityFrames) {
-        if (isAlive()) {
-
-            float beforeHP = healthPoints;
-
-            float actualDamage = damage * 100f/(100f + getTotalArmor());
-
-            if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
-            else healthPoints = 0f;
-
-            if (beforeHP != healthPoints && healthPoints == 0f) {
-                onDeath();
-            }
-
-            if (immunityFrames) {
-                immunityTimer.reset();
-                immune = true;
-            }
-
-            boneClickSound.play(1.0f, 0.25f);
-        }
-
-    }
-
     public void takeDamage(float damage, boolean immunityFrames, float knockbackPower, float sourceX, float sourceY) {
 
         if (isAlive()) {
@@ -119,13 +97,14 @@ public class Skeleton extends Mob {
 
             if (!knockback && knockbackPower > 0f) {
                 this.knockbackPower = knockbackPower;
+
                 knockbackVector = new Vector2f(rect.getX() - sourceX, rect.getY() - sourceY).getNormal();
                 knockback = true;
                 knockbackTimer.reset();
 
             }
 
-            boneClickSound.play(1.0f, 0.25f);
+            boneClickSound.play(1.0f, 0.1f);
         }
 
     }

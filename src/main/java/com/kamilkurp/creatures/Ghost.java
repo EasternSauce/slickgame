@@ -7,22 +7,25 @@ import com.kamilkurp.abilities.Ability;
 import com.kamilkurp.abilities.ExplodeAbility;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
+import com.kamilkurp.spawn.MobSpawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.util.HashMap;
 
 public class Ghost extends Mob {
     private Sound darkLaughSound = Assets.darkLaughSound;
+    private Sound evilYellingSound = Assets.evilYellingSound;
 
     ExplodeAbility explodeAbility;
 
-    public Ghost(GameSystem gameSystem, String id, String weapon) throws SlickException {
-        super(gameSystem, id);
+    public Ghost(GameSystem gameSystem, MobSpawnPoint mobSpawnPoint, String id, String weapon) throws SlickException {
+        super(gameSystem, mobSpawnPoint, id);
 
         actionTimer = new Timer();
 
@@ -79,11 +82,11 @@ public class Ghost extends Mob {
 
     @Override
     public void onInit() {
+        defineAbilities();
+
         explodeAbility = new ExplodeAbility(this);
         explodeAbility.onStartChannelAction(() -> { darkLaughSound.play(1.0f, 0.1f); });
         abilityList.add(explodeAbility);
-
-        defineAbilities();
 
         updateAttackType();
     }
@@ -103,6 +106,55 @@ public class Ghost extends Mob {
         }
     }
 
+    @Override
+    public void takeDamage(float damage, boolean immunityFrames, float knockbackPower, float sourceX, float sourceY) {
+
+        if (isAlive()) {
+
+            float beforeHP = healthPoints;
+
+            float actualDamage = damage * 100f/(100f + getTotalArmor());
+
+            if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
+            else healthPoints = 0f;
+
+            if (beforeHP != healthPoints && healthPoints == 0f) {
+                onDeath();
+            }
+
+            if (immunityFrames) {
+                immunityTimer.reset();
+                immune = true;
+            }
+
+            if (!knockback && knockbackPower > 0f) {
+                this.knockbackPower = knockbackPower;
+
+                knockbackVector = new Vector2f(rect.getX() - sourceX, rect.getY() - sourceY).getNormal();
+                knockback = true;
+                knockbackTimer.reset();
+
+            }
+
+            evilYellingSound.play(1.0f, 0.1f);
+        }
+
+    }
+
+    @Override
+    public void onUpdateStart(int i) {
+        moving = false;
+
+        totalDirections = 0;
+
+        knockbackSpeed = knockbackPower * i;
+
+        dirX = 0;
+        dirY = 0;
+
+        speed = 0.25f * i;
+
+    }
 
     @Override
     public String getCreatureType() {

@@ -7,6 +7,7 @@ import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.abilities.*;
 import com.kamilkurp.items.Item;
+import com.kamilkurp.spawn.Blockade;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.TerrainTile;
@@ -34,7 +35,7 @@ public abstract class Creature {
 
 //    protected boolean attacking = false;
 
-    private final Sound gruntSound = Assets.gruntSound;
+    private final Sound gruntSound = Assets.painSound;
 
     protected int direction = 0;
 
@@ -123,7 +124,7 @@ public abstract class Creature {
 
     protected int healingTickTime = 300;
 
-    protected int healingTime = 15000;
+    protected int healingTime = 8000;
     private float healingPower;
 
     private boolean staminaRegenActive = true;
@@ -248,12 +249,7 @@ public abstract class Creature {
     public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
         walkAnimation.getAnimation(direction).update(i);
 
-//        if (wa) {
-//
-//        }
-
         if (isAlive()) {
-
 
             onUpdateStart(i);
 
@@ -270,6 +266,8 @@ public abstract class Creature {
             setFacingDirection(gc);
 
         }
+
+
 
         for (Ability ability : abilityList) {
             ability.update(i);
@@ -320,7 +318,7 @@ public abstract class Creature {
 
         if (poisoned) {
             if (poisonTickTimer.getTime() > poisonTickTime) {
-                takeDamage(15f, false);
+                takeDamage(15f, false, 0, 0, 0);
                 poisonTickTimer.reset();
             }
             if (poisonTimer.getTime() > poisonTime) {
@@ -369,30 +367,8 @@ public abstract class Creature {
         poisonTimer.reset();
     }
 
-    public void takeDamage(float damage, boolean immunityFrames) {
-        if (isAlive()) {
-
-            float beforeHP = healthPoints;
-
-            float actualDamage = damage * 100f/(100f + getTotalArmor());
-
-            if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
-            else healthPoints = 0f;
-
-            if (beforeHP != healthPoints && healthPoints == 0f) {
-                onDeath();
-            }
-
-            if (immunityFrames) {
-                immunityTimer.reset();
-                immune = true;
-            }
-
-            gruntSound.play(1.0f, 0.1f);
-        }
-    }
-
     public void takeDamage(float damage, boolean immunityFrames, float knockbackPower, float sourceX, float sourceY) {
+
         if (isAlive()) {
 
             float beforeHP = healthPoints;
@@ -443,7 +419,7 @@ public abstract class Creature {
         rect.setY(rect.getY() + dy);
     }
 
-    public boolean isCollidingX(List<TerrainTile> tiles, float newPosX, float newPosY) {
+    public boolean isCollidingX(List<TerrainTile> tiles, List<Blockade> blockadeList, float newPosX, float newPosY) {
 
         int tilesetColumns = area.getTerrainColumns();
         int tilesetRows = area.getTerrainRows();
@@ -471,10 +447,20 @@ public abstract class Creature {
             }
         }
 
+        Rect creatureRect = new Rect(newPosX + hitbox.getX(), rect.getY() + hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+
+        for (Blockade blockade : blockadeList) {
+            if (blockade.isActive()) {
+                if (Globals.intersects(blockade.getRect(), creatureRect)) {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
-    public boolean isCollidingY(List<TerrainTile> tiles, float newPosX, float newPosY) {
+    public boolean isCollidingY(List<TerrainTile> tiles, List<Blockade> blockadeList, float newPosX, float newPosY) {
 
         int tilesetColumns = area.getTerrainColumns();
         int tilesetRows = area.getTerrainRows();
@@ -501,6 +487,17 @@ public abstract class Creature {
                 }
             }
         }
+
+        Rect creatureRect = new Rect(rect.getX() + hitbox.getX(), newPosY + hitbox.getY(), hitbox.getWidth(), hitbox.getHeight());
+
+        for (Blockade blockade : blockadeList) {
+            if (blockade.isActive()) {
+                if (Globals.intersects(blockade.getRect(), creatureRect)) {
+                    return true;
+                }
+            }
+        }
+
 
         return false;
     }
@@ -577,7 +574,9 @@ public abstract class Creature {
             float newPosX = rect.getX() + speed * dirX;
             float newPosY = rect.getY() + speed * dirY;
 
-            if (!isCollidingX(tiles, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
+            List<Blockade> blockadeList = gameSystem.getCurrentArea().getBlockadeList();
+
+            if (!isCollidingX(tiles, blockadeList, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
                 move(speed * dirX, 0);
                 movementVector.x = speed * dirX;
             }
@@ -585,7 +584,7 @@ public abstract class Creature {
                 movementVector.x = 0;
             }
 
-            if (!isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
+            if (!isCollidingY(tiles, blockadeList, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
                 move(0, speed * dirY);
                 movementVector.y = speed * dirY;
             }
@@ -604,11 +603,13 @@ public abstract class Creature {
             float newPosX = rect.getX() + knockbackSpeed * knockbackVector.getX();
             float newPosY = rect.getY() + knockbackSpeed * knockbackVector.getY();
 
-            if (!isCollidingX(tiles, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
+            List<Blockade> blockadeList = gameSystem.getCurrentArea().getBlockadeList();
+
+            if (!isCollidingX(tiles, blockadeList, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
                 move(knockbackSpeed * knockbackVector.getX(), 0);
             }
 
-            if (!isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
+            if (!isCollidingY(tiles, blockadeList, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
                 move(0, knockbackSpeed * knockbackVector.getY());
 
             }
@@ -701,6 +702,12 @@ public abstract class Creature {
         setHealthPoints(getMaxHealthPoints());
         rect.setX(startingPosX);
         rect.setY(startingPosY);
+    }
+
+    public void onAttack() {
+        if (equipmentItems.get(4) != null && equipmentItems.get(4).getItemType().getId().equals("thiefRing")) {
+            heal(7f);
+        }
     }
 
     public enum AttackType {UNARMED, SWORD, BOW, TRIDENT}

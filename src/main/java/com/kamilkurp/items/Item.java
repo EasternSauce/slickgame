@@ -15,8 +15,8 @@ public class Item {
         this.itemType = itemType;
         this.lootPileBackref = lootPileBackref;
 
-        if (itemType.getMaxDamage() != null) this.damage = (float)Math.ceil(itemType.getMaxDamage() * (0.7f + 0.3f * Globals.randFloat()));
-        if (itemType.getMaxArmor() != null) this.armor = (float)Math.ceil(itemType.getMaxArmor() * (0.7f + 0.3f * Globals.randFloat()));
+        if (itemType.getMaxDamage() != null) this.damage = (float)Math.ceil(itemType.getMaxDamage() * (0.5f + 0.5f * Globals.randFloat()));
+        if (itemType.getMaxArmor() != null) this.armor = (float)Math.ceil(itemType.getMaxArmor() * (0.5f + 0.5f * Globals.randFloat()));
 
         quantity = 1;
     }

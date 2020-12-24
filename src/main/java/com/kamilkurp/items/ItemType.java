@@ -89,8 +89,11 @@ public class ItemType {
         ItemType itemType14 = new ItemType("steelGloves", "Steel Gloves", "-", itemIcons.getSprite(1,8), "gloves", 130, null, 10f, false, false);
         ItemType itemType15 = new ItemType("steelHelmet", "Steel Helmet", "-", itemIcons.getSprite(1, 7), "helmet", 170, null, 15f, false, false);
 
-        ItemType itemType16 = new ItemType("demonTrident", "Demon Trident", "-", itemIcons.getSprite(8, 5), "weapon", 900, 85f, null, false, false);
-        itemType16.setWeaponSpeed(1.3f);
+        ItemType itemType16 = new ItemType("demonTrident", "Demon Trident", "-", itemIcons.getSprite(8, 5), "weapon", 900, 100f, null, false, false);
+        //itemType16.setWeaponSpeed(1.1f);
+
+        ItemType itemType17 = new ItemType("thiefRing", "Thief Ring", "Gain life on hit", itemIcons.getSprite(5, 8), "ring", 1400, null, null, false, false);
+
 
         itemTypes.put(itemType1.getId(), itemType1);
         itemTypes.put(itemType2.getId(), itemType2);
@@ -108,6 +111,7 @@ public class ItemType {
         itemTypes.put(itemType14.getId(), itemType14);
         itemTypes.put(itemType15.getId(), itemType15);
         itemTypes.put(itemType16.getId(), itemType16);
+        itemTypes.put(itemType17.getId(), itemType17);
 
     }
 

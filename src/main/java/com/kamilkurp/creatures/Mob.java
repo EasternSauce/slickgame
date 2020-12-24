@@ -3,6 +3,7 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.abilities.Ability;
+import com.kamilkurp.spawn.MobSpawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
@@ -40,8 +41,9 @@ public abstract class Mob extends Creature {
     protected float circlingDirectionTime = 500f;
     protected boolean circling;
     protected int circlingDir;
+    protected MobSpawnPoint mobSpawnPoint;
 
-    public Mob(GameSystem gameSystem, String id) {
+    public Mob(GameSystem gameSystem, MobSpawnPoint mobSpawnPoint, String id) {
         super(gameSystem, id);
 
         attackOrHoldTimer = new Timer();
@@ -50,6 +52,7 @@ public abstract class Mob extends Creature {
         circlingDirectionTimer = new Timer();
         circling = false;
         circlingDir = 0;
+        this.mobSpawnPoint = mobSpawnPoint;
     }
 
     @Override
@@ -309,5 +312,9 @@ public abstract class Mob extends Creature {
                 direction = 1;
             }
         }
+    }
+
+    public MobSpawnPoint getMobSpawnPoint() {
+        return mobSpawnPoint;
     }
 }

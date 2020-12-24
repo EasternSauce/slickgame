@@ -10,7 +10,6 @@ public class SpawnLocationsContainer {
 
     private final List <SpawnLocation> spawnLocationList;
 
-
     public SpawnLocationsContainer(String enemyFileLocation) {
 
         spawnLocationList = new LinkedList<>();
@@ -27,7 +26,17 @@ public class SpawnLocationsContainer {
                 int posX = Integer.parseInt(s[2]);
                 int posY = Integer.parseInt(s[3]);
 
-                spawnLocationList.add(new SpawnLocation(spawnType, enemyType, posX, posY));
+                if (s.length > 4) {
+                    int blockadePosX = Integer.parseInt(s[4]);
+                    int blockadePosY = Integer.parseInt(s[5]);
+
+                    spawnLocationList.add(new SpawnLocation(spawnType, enemyType, posX, posY, blockadePosX, blockadePosY));
+                }
+                else {
+                    spawnLocationList.add(new SpawnLocation(spawnType, enemyType, posX, posY));
+
+                }
+
 
                 line = reader.readLine();
 
@@ -43,34 +52,6 @@ public class SpawnLocationsContainer {
         return spawnLocationList;
     }
 
-    public static class SpawnLocation {
-        String spawnType;
-        String creatureType;
-        int posX;
-        int posY;
 
-        public SpawnLocation(String spawnType, String creatureType, int posX, int posY) {
-            this.spawnType = spawnType;
-            this.creatureType = creatureType;
-            this.posX = posX;
-            this.posY = posY;
-        }
-
-        public String getSpawnType() {
-            return spawnType;
-        }
-
-        public String getCreatureType() {
-            return creatureType;
-        }
-
-        public int getPosX() {
-            return posX;
-        }
-
-        public int getPosY() {
-            return posY;
-        }
-    }
 
 }

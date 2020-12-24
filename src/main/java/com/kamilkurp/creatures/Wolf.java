@@ -5,6 +5,7 @@ import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.abilities.DashAbility;
+import com.kamilkurp.spawn.MobSpawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
@@ -23,16 +24,16 @@ public class Wolf extends Mob {
 
     private DashAbility dashAbility;
 
-    public Wolf(GameSystem gameSystem, String id) throws SlickException {
-        super(gameSystem, id);
+    public Wolf(GameSystem gameSystem, MobSpawnPoint mobSpawnPoint, String id) throws SlickException {
+        super(gameSystem, mobSpawnPoint, id);
 
         actionTimer = new Timer();
 
         dropTable = new HashMap<>();
-        dropTable.put("ringmailGreaves", 0.07f);
+        dropTable.put("ringmailGreaves", 0.1f);
         dropTable.put("leatherArmor", 0.05f);
-        dropTable.put("hideGloves", 0.07f);
-        dropTable.put("leatherHelmet", 0.07f);
+        dropTable.put("hideGloves", 0.1f);
+        dropTable.put("leatherHelmet", 0.1f);
         dropTable.put("healingPowder", 0.5f);
 
         findNewDestinationTimer = new Timer();
@@ -102,38 +103,13 @@ public class Wolf extends Mob {
     }
 
     @Override
-    public void takeDamage(float damage, boolean immunityFrames) {
-
-        if (!immune && isAlive()) {
-
-            float beforeHP = healthPoints;
-
-            float postMitigationDamage = damage * 100f/(100f + getTotalArmor());
-
-            if (healthPoints - postMitigationDamage > 0) healthPoints -= postMitigationDamage;
-            else healthPoints = 0f;
-
-            if (beforeHP != healthPoints && healthPoints == 0f) {
-                onDeath();
-            }
-
-            if (immunityFrames) {
-                immunityTimer.reset();
-                immune = true;
-            }
-
-            dogWhimperSound.play(1.0f, 0.1f);
-        }
-
-    }
-
     public void takeDamage(float damage, boolean immunityFrames, float knockbackPower, float sourceX, float sourceY) {
 
         if (isAlive()) {
 
             float beforeHP = healthPoints;
 
-            float actualDamage = damage * 100f / (100f + getTotalArmor());
+            float actualDamage = damage * 100f/(100f + getTotalArmor());
 
             if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
             else healthPoints = 0f;
@@ -158,5 +134,6 @@ public class Wolf extends Mob {
 
             dogWhimperSound.play(1.0f, 0.1f);
         }
+
     }
 }

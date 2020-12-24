@@ -41,6 +41,8 @@ public class Assets {
     public static Sound darkLaughSound;
 
     public static Music townMusic;
+    public static Music abandonedPlains;
+    public static Music fireDemon;
     public static SpriteSheet itemIcons;
     public static SpriteSheet male1SpriteSheet;
     public static SpriteSheet male2SpriteSheet;
@@ -54,6 +56,9 @@ public class Assets {
 
     public static Sound arrowWhizzSound;
     public static Sound boneCrushSound;
+    public static Sound painSound;
+    public static Sound roarSound;
+    public static Sound evilYellingSound;
 
     public static SpawnLocationsContainer area1Enemies;
     public static SpawnLocationsContainer area2Enemies;
@@ -87,6 +92,8 @@ public class Assets {
         dogBarkSound = new Sound(Globals.getAssetsLocation() + "sounds/dogbark.wav");
         dogWhimperSound = new Sound(Globals.getAssetsLocation() + "sounds/dogwhine.wav");
         townMusic = new Music(Globals.getAssetsLocation() + "music/town_song.wav");
+        abandonedPlains = new Music(Globals.getAssetsLocation() + "music/abandoned_plains.wav");
+        fireDemon = new Music(Globals.getAssetsLocation() + "music/fire_demon.wav");
         itemIcons = new SpriteSheet(Globals.getAssetsLocation() + "items/item_icons.png", 40, 40);
         arrowWhizzSound = new Sound(Globals.getAssetsLocation() + "sounds/arrow-whizz.wav");
         punchSound = new Sound(Globals.getAssetsLocation() + "sounds/punch.wav");
@@ -98,6 +105,10 @@ public class Assets {
         boneClickSound = new Sound(Globals.getAssetsLocation() + "sounds/bone-click.wav");
         flybySound = new Sound(Globals.getAssetsLocation() + "sounds/flyby.wav");
         darkLaughSound = new Sound(Globals.getAssetsLocation() + "sounds/dark-laugh.wav");
+        painSound = new Sound(Globals.getAssetsLocation() + "sounds/pain.wav");
+        roarSound = new Sound(Globals.getAssetsLocation() + "sounds/roar.wav");
+        evilYellingSound = new Sound(Globals.getAssetsLocation() + "sounds/evil-yelling.wav");
+
 
         male1SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male1.png", 32, 32);
         male2SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male2.png", 32, 32);

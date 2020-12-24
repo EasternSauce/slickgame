@@ -60,7 +60,7 @@ public class MeteorRainAbility extends Ability {
                 if (meteor.getState() == AbilityState.ABILITY_CHANNELING) {
                     if (meteor.getChannelTimer().getTime() > meteor.getChannelTime()) {
                         meteor.setState(AbilityState.ABILITY_ACTIVE);
-                        Assets.explosionSound.play(1.0f, 0.4f);
+                        Assets.explosionSound.play(1.0f, 0.1f);
                         meteor.getExplosionAnimation().restart();
 
                         meteor.getActiveTimer().reset();
@@ -85,7 +85,7 @@ public class MeteorRainAbility extends Ability {
                 if (meteor.getState() == AbilityState.ABILITY_ACTIVE && Globals.distance(meteor.getPos(), creature.getRect()) < explosionRange + creature.getRect().getWidth() / 2f && meteor.getActiveTimer().getTime() < 200f) {
                     if (!(this.abilityCreature instanceof Mob && creature instanceof Mob) && creature.isAlive()) { // mob can't hurt a mob?
                         if (!creature.isImmune()) {
-                            creature.takeDamage(50f, true);
+                            creature.takeDamage(50f, true, 0, 0, 0);
                         }
 
                     }

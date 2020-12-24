@@ -94,6 +94,7 @@ public class TridentAttackAbility extends Ability {
                     if (!creature.isImmune()) {
                         Item weapon = this.abilityCreature.getEquipmentItems().get(0);
                         creature.takeDamage(weapon.getDamage(), true, 0.5f, abilityCreature.getRect().getCenterX(), abilityCreature.getRect().getCenterY());
+                        abilityCreature.onAttack();
                         int random = Globals.random.nextInt(100);
                         if (random < weapon.getItemType().getPoisonChance() * 100f) {
                             creature.becomePoisoned();

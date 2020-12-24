@@ -25,8 +25,6 @@ public class SimpleSlickGame extends BasicGame {
 
     private KeyInput keyInput;
 
-    private Music townMusic;
-
     private GameSystem gameSystem;
 
 
@@ -44,9 +42,6 @@ public class SimpleSlickGame extends BasicGame {
 
         keyInput = new KeyInput();
 
-        townMusic = Assets.townMusic;
-
-//        townMusic.loop(1.0f, 0.5f);
 
         gc.setMouseCursor(Assets.cursor, 0,0);
 
@@ -85,8 +80,6 @@ public class SimpleSlickGame extends BasicGame {
 
     @Override
     public boolean closeRequested() {
-
-        gameSystem.saveGame();
 
         System.exit(0);
         return true;

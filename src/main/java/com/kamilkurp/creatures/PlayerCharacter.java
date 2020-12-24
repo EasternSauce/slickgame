@@ -12,10 +12,7 @@ import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
 import org.lwjgl.input.Mouse;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.Sound;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -36,6 +33,8 @@ public class PlayerCharacter extends Creature {
     private PlayerRespawnPoint currentRespawnPoint;
 
     private DashAbility dashAbility;
+
+    private Music fireDemonMusic = Assets.fireDemon;
 
 
     private float staminaDrain = 0.0f;
@@ -289,6 +288,8 @@ public class PlayerCharacter extends Creature {
         for (Ability ability : abilityList) {
             ability.stopAbility();
         }
+
+        fireDemonMusic.stop();
     }
 
 

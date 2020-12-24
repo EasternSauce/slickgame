@@ -1,25 +1,25 @@
 package com.kamilkurp.terrain;
 
+import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.NonPlayerCharacter;
 import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.items.LootPile;
 import com.kamilkurp.items.Treasure;
 import com.kamilkurp.projectile.Arrow;
-import com.kamilkurp.spawn.EnemyRespawnArea;
-import com.kamilkurp.spawn.EnemySpawnPoint;
-import com.kamilkurp.spawn.PlayerRespawnPoint;
-import com.kamilkurp.spawn.SpawnLocationsContainer;
+import com.kamilkurp.spawn.*;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class Area {
     private final SpawnLocationsContainer spawnLocationsContainer;
 
     private final List<EnemyRespawnArea> enemyRespawnAreaList;
-    private final List<EnemySpawnPoint> enemySpawnPointList;
+    private final List<MobSpawnPoint> mobSpawnPointList;
 
     private final CreaturesManager creaturesManager;
 
@@ -52,6 +52,11 @@ public class Area {
 
     private GameSystem gameSystem;
 
+    private Music abandonedPlains;
+
+    private List<Blockade> blockadeList;
+
+
     public Area(GameSystem gameSystem, String id, TerrainTileset terrainTileset, TerrainLayout terrainLayout, SpawnLocationsContainer spawnsContainer) throws SlickException {
         this.gameSystem = gameSystem;
         this.terrainTileset = terrainTileset;
@@ -63,10 +68,10 @@ public class Area {
 
         creaturesManager = new CreaturesManager(this, gameSystem);
 
-        tiles = new LinkedList<>();
+        tiles = new ArrayList<>();
 
         enemyRespawnAreaList = new LinkedList<>();
-        enemySpawnPointList = new LinkedList<>();
+        mobSpawnPointList = new LinkedList<>();
         respawnList = new LinkedList<>();
         arrowList = new LinkedList<>();
         lootPileList = new LinkedList<>();
@@ -75,15 +80,20 @@ public class Area {
 
         loadLayoutTiles();
 
+        blockadeList = new LinkedList<>();
+
+        
         if (gameSystem != null && gameSystem.getLootSystem() != null) {
             loadSpawns();
 
         }
 
+        abandonedPlains = Assets.abandonedPlains;
+
     }
 
     private void loadSpawns() throws SlickException {
-        for (SpawnLocationsContainer.SpawnLocation spawnLocation : spawnLocationsContainer.getSpawnLocationList()) {
+        for (SpawnLocation spawnLocation : spawnLocationsContainer.getSpawnLocationList()) {
             int posX = spawnLocation.getPosX();
             int posY = spawnLocation.getPosY();
 
@@ -92,7 +102,13 @@ public class Area {
 
 
             } else if (spawnLocation.getSpawnType().equals("spawnPoint")) {
-                enemySpawnPointList.add(new EnemySpawnPoint(gameSystem, posX, posY, this, spawnLocation.getCreatureType()));
+
+                MobSpawnPoint mobSpawnPoint = new MobSpawnPoint(gameSystem, posX, posY, this, spawnLocation.getCreatureType());
+                mobSpawnPointList.add(mobSpawnPoint);
+
+                if (spawnLocation.isHasBlockade()) {
+                    addBlockade(mobSpawnPoint, spawnLocation.getBlockadePosX(), spawnLocation.getBlockadePosY());
+                }
             }
         }
     }
@@ -102,6 +118,10 @@ public class Area {
         g.setColor(Color.white);
         for(TerrainTile tile : tiles) {
             tile.render(g, camera);
+        }
+
+        for (Blockade blockade : blockadeList) {
+            blockade.render(g, camera);
         }
     }
 
@@ -116,8 +136,8 @@ public class Area {
             enemyRespawnArea.update();
         }
 
-        for (EnemySpawnPoint enemySpawnPoint : enemySpawnPointList) {
-            enemySpawnPoint.update();
+        for (MobSpawnPoint mobSpawnPoint : mobSpawnPointList) {
+            mobSpawnPoint.update();
         }
     }
 
@@ -195,8 +215,8 @@ public class Area {
         arrowList.clear();
         lootPileList.clear();
 
-        for (EnemySpawnPoint enemySpawnPoint : enemySpawnPointList) {
-            enemySpawnPoint.markForRespawn();
+        for (MobSpawnPoint mobSpawnPoint : mobSpawnPointList) {
+            mobSpawnPoint.markForRespawn();
         }
 
 
@@ -204,6 +224,10 @@ public class Area {
     }
 
     public void onEntry() {
+        abandonedPlains.stop();
+        if (id.equals("area1")) {
+            abandonedPlains.loop(1.0f, 0.3f);
+        }
 
         creaturesManager.onAreaChange();
 
@@ -257,8 +281,12 @@ public class Area {
         lootPileList.clear();
         creaturesManager.clearRespawnableCreatures();
 
-        for (EnemySpawnPoint enemySpawnPoint : enemySpawnPointList) {
-            enemySpawnPoint.markForRespawn();
+        for (MobSpawnPoint mobSpawnPoint : mobSpawnPointList) {
+            mobSpawnPoint.markForRespawn();
+        }
+
+        for (Blockade blockade : blockadeList) {
+            blockade.setActive(false);
         }
 
         getCreaturesManager().initializeCreatures();
@@ -279,6 +307,17 @@ public class Area {
                 creature.reset();
             }
         }
+    }
+
+    public void addBlockade(MobSpawnPoint mobSpawnPoint, int blockadePosX, int blockadePosY) {
+        Blockade blockade = new Blockade(mobSpawnPoint, blockadePosX, blockadePosY);
+        blockadeList.add(blockade);
+        mobSpawnPoint.setBlockade(blockade);
+
+    }
+
+    public List<Blockade> getBlockadeList() {
+        return blockadeList;
     }
 }
 

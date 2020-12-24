@@ -558,4 +558,6 @@ public class GameSystem {
         getCurrentArea().onEntry();
 
     }
+
+
 }

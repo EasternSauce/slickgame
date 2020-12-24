@@ -76,7 +76,7 @@ public class UnarmedAttackAbility extends Ability {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
                     if (!creature.isImmune()) {
                         creature.takeDamage(this.abilityCreature.getUnarmedDamage(), true, 0.3f, abilityCreature.getRect().getCenterX(), abilityCreature.getRect().getCenterY());
-
+                        abilityCreature.onAttack();
                     }
                 }
             }

@@ -32,12 +32,9 @@ public class LootOptionWindow {
 
 
             for (int i = 0; i < Math.min(4, itemList.size()); i++) {
-                if (i + scroll >= itemList.size()) {
-                    System.out.println("trying to access non existent item on the loot pile!");
-                }
-                else {
-                    g.drawString((currentSelected == (i + scroll) && activated ? ">" : "") + itemList.get(i + scroll).getName(), 10, Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION + 10 + 30 * i);
-                }
+
+                g.drawString((currentSelected == (i + scroll) && activated ? ">" : "") + itemList.get(i + scroll).getName(), 10, Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION + 10 + 30 * i);
+
             }
 
 

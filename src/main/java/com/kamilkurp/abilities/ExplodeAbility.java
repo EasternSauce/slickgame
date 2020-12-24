@@ -40,9 +40,9 @@ public class ExplodeAbility extends Ability {
         abilityCreature.takeStaminaDamage(25f);
 
 
-        abilityCreature.takeDamage(700f, false);
+        abilityCreature.takeDamage(700f, false, 0, 0, 0);
 
-        Assets.explosionSound.play(1.0f, 0.4f);
+        Assets.explosionSound.play(1.0f, 0.3f);
 
     }
 
@@ -56,7 +56,7 @@ public class ExplodeAbility extends Ability {
             if (Globals.distance(abilityCreature.getRect(), creature.getRect()) < explosionRange && activeTimer.getTime() < 350f) {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob) && creature.isAlive()) { // mob can't hurt a mob?
                     if (!creature.isImmune()) {
-                        creature.takeDamage(700f, true);
+                        creature.takeDamage(700f, true, 0, 0, 0);
                     }
 
                 }
@@ -71,6 +71,7 @@ public class ExplodeAbility extends Ability {
     }
 
     public void render(Graphics g, Camera camera) {
+
         if (state == AbilityState.ABILITY_ACTIVE) {
             int spriteWidth = 64;
             float scale = explosionRange * 2 / spriteWidth;

@@ -26,6 +26,7 @@ public class MainMenu {
     private String promptText;
     private List<String> savedOptionList;
 
+
     public MainMenu(GameSystem gameSystem) {
         this.gameSystem = gameSystem;
 
@@ -54,6 +55,7 @@ public class MainMenu {
 
         optionList.add("New game");
         optionList.add("Exit");
+
     }
 
     public void render(Graphics g) {

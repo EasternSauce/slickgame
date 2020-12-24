@@ -1,6 +1,7 @@
 package com.kamilkurp.abilities;
 
 import com.kamilkurp.creatures.Creature;
+import com.kamilkurp.spawn.Blockade;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
@@ -46,11 +47,13 @@ public class DashAbility extends Ability {
              float newPosX = rect.getX() + dashSpeed * dashVector.getX();
              float newPosY = rect.getY() + dashSpeed * dashVector.getY();
 
-             if (!abilityCreature.isCollidingX(tiles, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
+             List<Blockade> blockadeList = abilityCreature.getArea().getBlockadeList();
+
+             if (!abilityCreature.isCollidingX(tiles, blockadeList, newPosX, newPosY) && newPosX >= 0 && newPosX < tiles.get(tiles.size() - 1).getRect().getX()) {
                  abilityCreature.move(dashSpeed * dashVector.getX(), 0);
              }
 
-            if (!abilityCreature.isCollidingY(tiles, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
+            if (!abilityCreature.isCollidingY(tiles, blockadeList, newPosX, newPosY) && newPosY >= 0 && newPosY < tiles.get(tiles.size() - 1).getRect().getY()) {
                 abilityCreature.move(0, dashSpeed * dashVector.getY());
 
             }

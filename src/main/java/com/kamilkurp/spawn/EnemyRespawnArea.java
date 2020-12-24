@@ -62,21 +62,21 @@ public class EnemyRespawnArea {
         int randY = Globals.randInt(posY - range, posY + range);
 
         Creature spawnedCreature = null;
-        if (creatureType.equals("skeletonSword")) {
-            spawnedCreature = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()), "woodenSword");
-        }
-
-        if (creatureType.equals("skeletonCrossbow")) {
-            spawnedCreature = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()), "crossbow");
-        }
-
-        if (creatureType.equals("wolf")) {
-            spawnedCreature = new Wolf(gameSystem, "wolfie"+Math.abs(Globals.random.nextInt()));
-        }
-
-        if (creatureType.equals("fireDemon")) {
-            spawnedCreature = new FireDemon(gameSystem, "firedemon"+Math.abs(Globals.random.nextInt()), "demonTrident");
-        }
+//        if (creatureType.equals("skeletonSword")) {
+//            spawnedCreature = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()), "woodenSword");
+//        }
+//
+//        if (creatureType.equals("skeletonCrossbow")) {
+//            spawnedCreature = new Skeleton(gameSystem, "skellie"+Math.abs(Globals.random.nextInt()), "crossbow");
+//        }
+//
+//        if (creatureType.equals("wolf")) {
+//            spawnedCreature = new Wolf(gameSystem, "wolfie"+Math.abs(Globals.random.nextInt()));
+//        }
+//
+//        if (creatureType.equals("fireDemon")) {
+//            spawnedCreature = new FireDemon(gameSystem, "firedemon"+Math.abs(Globals.random.nextInt()), "demonTrident");
+//        }
 
         area.moveInCreature(spawnedCreature, randX, randY);
         spawnedCreature.updateAttackType();
