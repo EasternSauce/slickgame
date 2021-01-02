@@ -155,6 +155,8 @@ public class PlayerCharacter extends Creature {
                 ability.performOnUpdateStart(i);
             }
 
+            currentAttack.performOnUpdateStart(i);
+
 
             regenerate();
 
@@ -174,6 +176,8 @@ public class PlayerCharacter extends Creature {
         for (Ability ability : abilityList) {
             ability.update(i);
         }
+
+        currentAttack.update(i);
 
         if (runningTimer.getTime() > 200) {
             running = false;
@@ -202,6 +206,10 @@ public class PlayerCharacter extends Creature {
             pendingY = (float)currentRespawnPoint.getPosY();
 
             setHealthPoints(getMaxHealthPoints());
+            setStaminaPoints(getMaxStaminaPoints());
+
+            staminaOveruse = false;
+            startStaminaRegen();
 
 
             gameSystem.getCurrentAreaHolder().setCurrentArea(currentRespawnPoint.getArea());
@@ -292,6 +300,8 @@ public class PlayerCharacter extends Creature {
         for (Ability ability : abilityList) {
             ability.stopAbility();
         }
+
+        currentAttack.stopAbility();
 
         fireDemonMusic.stop();
     }

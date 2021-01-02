@@ -1,5 +1,6 @@
 package com.kamilkurp.abilities;
 
+import com.kamilkurp.creatures.AttackType;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.FireDemon;
 import com.kamilkurp.utils.Action;
@@ -28,6 +29,8 @@ public class Ability {
     Creature abilityCreature;
 
     protected boolean onCooldown;
+
+    protected AttackType attackType;
 
     protected Ability(Creature abilityCreature) {
         this.abilityCreature = abilityCreature;
@@ -146,5 +149,8 @@ public class Ability {
         return state;
     }
 
+    public AttackType getAttackType() {
+        return attackType;
+    }
 }
 

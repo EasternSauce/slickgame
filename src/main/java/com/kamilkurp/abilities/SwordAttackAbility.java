@@ -3,6 +3,7 @@ package com.kamilkurp.abilities;
 import com.kamilkurp.Globals;
 import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.creatures.AttackType;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
 import com.kamilkurp.items.Item;
@@ -22,6 +23,8 @@ public class SwordAttackAbility extends Ability {
 
     private SwordAttackAbility(Creature abilityCreature) {
         super(abilityCreature);
+
+        attackType = AttackType.SWORD;
     }
 
     @Override

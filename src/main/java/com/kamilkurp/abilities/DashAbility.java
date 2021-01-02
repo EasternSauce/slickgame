@@ -14,7 +14,6 @@ import java.util.List;
 public class DashAbility extends Ability {
     protected float dashSpeed;
 
-    protected Timer dashTimer;
     protected Vector2f dashVector;
 
     private DashAbility(Creature abilityCreature) {
@@ -23,14 +22,14 @@ public class DashAbility extends Ability {
 
     @Override
     public void init() {
-        dashTimer = new Timer();
         dashVector = new Vector2f(0f, 0f);
 
         cooldownTime = 2000;
         dashSpeed = 0.0f;
         channelTime = 0;
 
-        activeTime = 200;
+        activeTime = 100;
+
     }
 
 
@@ -60,8 +59,6 @@ public class DashAbility extends Ability {
     @Override
      protected void onActiveStart() {
         abilityCreature.setImmobilized(true);
-
-        dashTimer.reset();
 
         abilityCreature.takeStaminaDamage(30f);
     }

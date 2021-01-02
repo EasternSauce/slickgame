@@ -81,7 +81,6 @@ public class MobSpawnPoint {
             spawnedCreature.setStartingPosX(posX);
             spawnedCreature.setStartingPosY(posY);
 
-            spawnedCreature.updateAttackType();
             spawnedCreature.moveToArea(area, posX, posY);
 
             spawnedCreature.onInit();

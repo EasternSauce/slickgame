@@ -2,6 +2,7 @@ package com.kamilkurp.abilities;
 
 import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.creatures.AttackType;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
 import com.kamilkurp.items.Item;
@@ -22,6 +23,8 @@ public class UnarmedAttackAbility extends Ability {
 
     protected UnarmedAttackAbility(Creature abilityCreature) {
         super(abilityCreature);
+
+        attackType = AttackType.UNARMED;
     }
 
     @Override

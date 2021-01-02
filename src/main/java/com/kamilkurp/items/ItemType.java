@@ -1,6 +1,8 @@
 package com.kamilkurp.items;
 
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.creatures.AttackType;
+import com.kamilkurp.creatures.Creature;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
@@ -22,6 +24,8 @@ public class ItemType {
 
     private boolean stackable;
     private boolean consumable;
+
+    private AttackType attackType;
 
     public ItemType(String id, String name, String description, Image image, String equipmentType, int worth, Float maxDamage, Float maxArmor, boolean stackable, boolean consumable) {
         this.id = id;
@@ -75,14 +79,23 @@ public class ItemType {
         ItemType itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", itemIcons.getSprite(3,8), "boots", 50, null, 7f, false, false);
         ItemType itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", itemIcons.getSprite(0,8), "gloves", 70, null, 5f, false, false);
         ItemType itemType4 = new ItemType("crossbow", "Crossbow", "-", itemIcons.getSprite(4,6), "weapon", 500, 75f, null, false, false);
+        itemType4.setAttackType(AttackType.BOW);
+
         ItemType itemType5 = new ItemType("ironSword", "Iron Sword", "-", itemIcons.getSprite(2, 5), "weapon", 100, 60f, null, false, false);
+        itemType5.setAttackType(AttackType.SWORD);
+
         ItemType itemType6 = new ItemType("woodenSword", "Wooden Sword", "-", itemIcons.getSprite(0, 5), "weapon", 70, 45f, null, false, false);
+        itemType6.setAttackType(AttackType.SWORD);
+
         ItemType itemType7 = new ItemType("leatherHelmet", "Leather Helmet", "-", itemIcons.getSprite(2, 7), "helmet", 80, null, 9f, false, false);
         ItemType itemType8 = new ItemType("lifeRing", "Life Ring", "Increases life when worn", itemIcons.getSprite(5, 8), "ring", 1000, null, null, false, false);
         ItemType itemType9 = new ItemType("poisonDagger", "Poison Dagger", "-", itemIcons.getSprite(6, 5), "weapon", 500, 40f, null, false, false);
         itemType9.setPoisonChance(0.5f);
+        itemType9.setAttackType(AttackType.SWORD);
+
         ItemType itemType10 = new ItemType("healingPowder", "Healing Powder", "Quickly regenerates health", itemIcons.getSprite(5, 20), null, 45, null, null, true, true);
         ItemType itemType11 = new ItemType("trident", "Trident", "-", itemIcons.getSprite(8, 5), "weapon", 900, 85f, null, false, false);
+        itemType11.setAttackType(AttackType.TRIDENT);
 
         ItemType itemType12 = new ItemType("steelArmor", "Steel Armor", "-", itemIcons.getSprite(4,7), "body", 200, null, 20f, false, false);
         ItemType itemType13 = new ItemType("steelGreaves", "Steel Greaves", "-", itemIcons.getSprite(3,8), "boots", 150, null, 13f, false, false);
@@ -91,6 +104,7 @@ public class ItemType {
 
         ItemType itemType16 = new ItemType("demonTrident", "Demon Trident", "-", itemIcons.getSprite(8, 5), "weapon", 900, 100f, null, false, false);
         //itemType16.setWeaponSpeed(1.1f);
+        itemType16.setAttackType(AttackType.TRIDENT);
 
         ItemType itemType17 = new ItemType("thiefRing", "Thief Ring", "Gain life on hit", itemIcons.getSprite(5, 8), "ring", 1400, null, null, false, false);
 
@@ -165,5 +179,13 @@ public class ItemType {
 
     public Float getWeaponSpeed() {
         return weaponSpeed;
+    }
+
+    public void setAttackType(AttackType attackType) {
+        this.attackType = attackType;
+    }
+
+    public AttackType getAttackType() {
+        return attackType;
     }
 }

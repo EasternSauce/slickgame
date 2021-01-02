@@ -79,6 +79,8 @@ public class NonPlayerCharacter extends Creature {
 
     @Override
     public void onInit() {
+        defineAbilities();
+
         updateAttackType();
     }
 
@@ -113,6 +115,8 @@ public class NonPlayerCharacter extends Creature {
         for (Ability ability : abilityList) {
             ability.stopAbility();
         }
+
+        currentAttack.stopAbility();
     }
 
     public void triggerDialogue() {

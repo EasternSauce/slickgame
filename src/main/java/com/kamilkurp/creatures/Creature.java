@@ -7,6 +7,7 @@ import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.abilities.*;
 import com.kamilkurp.items.Item;
+import com.kamilkurp.items.ItemType;
 import com.kamilkurp.spawn.Blockade;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
@@ -67,9 +68,6 @@ public abstract class Creature {
 
     protected WalkAnimation walkAnimation;
 
-
-    protected AttackType currentAttackType;
-
     protected Map<Integer, Item> equipmentItems;
 
     protected float healthRegen = 0.3f;
@@ -97,6 +95,9 @@ public abstract class Creature {
     protected boolean immobilized = false;
 
     protected List<Ability> abilityList;
+    protected List<Ability> regularAttackList;
+
+    protected Ability currentAttack;
 
     protected BowAttackAbility bowAttackAbility;
     protected UnarmedAttackAbility unarmedAttackAbility;
@@ -165,8 +166,6 @@ public abstract class Creature {
 
         facingVector = new Vector2f(0f, 0f);
 
-        currentAttackType = AttackType.UNARMED;
-
         equipmentItems = new TreeMap<>();
 
         abilityList = new LinkedList<>();
@@ -210,16 +209,20 @@ public abstract class Creature {
     public void defineAbilities() {
 
         abilityList = new LinkedList<>();
+        regularAttackList = new LinkedList<>();
+
 
         bowAttackAbility = BowAttackAbility.newInstance(this);
         unarmedAttackAbility = UnarmedAttackAbility.newInstance(this);
         swordAttackAbility = SwordAttackAbility.newInstance(this);
         tridentAttackAbility = TridentAttackAbility.newInstance(this);
 
-        abilityList.add(bowAttackAbility);
-        abilityList.add(unarmedAttackAbility);
-        abilityList.add(swordAttackAbility);
-        abilityList.add(tridentAttackAbility);
+        regularAttackList.add(bowAttackAbility);
+        regularAttackList.add(unarmedAttackAbility);
+        regularAttackList.add(swordAttackAbility);
+        regularAttackList.add(tridentAttackAbility);
+
+        currentAttack = unarmedAttackAbility;
     }
 
     public abstract void onInit();
@@ -248,6 +251,7 @@ public abstract class Creature {
         for (Ability ability : abilityList) {
             ability.render(g, camera);
         }
+        currentAttack.render(g, camera);
     }
 
     public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
@@ -260,6 +264,7 @@ public abstract class Creature {
             for (Ability ability : abilityList) {
                 ability.performOnUpdateStart(i);
             }
+            currentAttack.performOnUpdateStart(i);
 
             performActions(gc, keyInput);
 
@@ -276,6 +281,7 @@ public abstract class Creature {
         for (Ability ability : abilityList) {
             ability.update(i);
         }
+        currentAttack.update(i);
     }
 
     public void onPassedGate(List<AreaGate> gatesList) {
@@ -350,6 +356,11 @@ public abstract class Creature {
                 break;
             }
         }
+
+        if (currentAttack.isActive()) {
+            return true;
+        }
+
         return abilityActive;
     }
 
@@ -559,15 +570,7 @@ public abstract class Creature {
     public void attack() {
 
         if (staminaPoints > 0f) {
-            if (currentAttackType == AttackType.UNARMED) {
-                unarmedAttackAbility.tryPerforming();
-            } else if (currentAttackType == AttackType.SWORD) {
-                swordAttackAbility.tryPerforming();
-            } else if (currentAttackType == AttackType.BOW) {
-                bowAttackAbility.tryPerforming();
-            } else if (currentAttackType == AttackType.TRIDENT) {
-                tridentAttackAbility.tryPerforming();
-            }
+            currentAttack.tryPerforming();
         }
     }
 
@@ -630,6 +633,8 @@ public abstract class Creature {
         for (Ability ability : abilityList) {
             ability.performMovement();
         }
+
+        currentAttack.performMovement();
 
     }
 
@@ -715,25 +720,6 @@ public abstract class Creature {
     public void onAttack() {
         if (equipmentItems.get(4) != null && equipmentItems.get(4).getItemType().getId().equals("thiefRing")) {
             heal(7f);
-        }
-    }
-
-    public enum AttackType {UNARMED, SWORD, BOW, TRIDENT}
-
-
-    public void updateAttackType() {
-        if (equipmentItems.get(0) == null) {
-            currentAttackType = AttackType.UNARMED;
-            return;
-        };
-
-        String currentWeaponName = equipmentItems.get(0).getItemType().getId();
-        if (currentWeaponName.equals("woodenSword") || currentWeaponName.equals("ironSword") || currentWeaponName.equals("poisonDagger")) {
-            currentAttackType = AttackType.SWORD;
-        } else if (currentWeaponName.equals("crossbow")) {
-            currentAttackType = AttackType.BOW;
-        } else if (currentWeaponName.equals("trident") || currentWeaponName.equals("demonTrident")) {
-            currentAttackType = AttackType.TRIDENT;
         }
     }
 
@@ -837,5 +823,22 @@ public abstract class Creature {
 
     public boolean isStaminaOveruse() {
         return staminaOveruse;
+    }
+
+    public void setStaminaPoints(float staminaPoints) {
+        this.staminaPoints = staminaPoints;
+    }
+
+    public void updateAttackType() {
+        Item weapon = equipmentItems.get(0);
+        if (weapon != null) {
+            ItemType weaponItemType = weapon.getItemType();
+            Ability attackAbility = regularAttackList.stream().filter(attack -> attack.getAttackType().equals(weaponItemType.getAttackType())).findAny().get();
+            currentAttack = attackAbility;
+        }
+        else {
+            Ability attackAbility = regularAttackList.stream().filter(attack -> attack.getAttackType().equals(AttackType.UNARMED)).findAny().get();
+            currentAttack = attackAbility;
+        }
     }
 }

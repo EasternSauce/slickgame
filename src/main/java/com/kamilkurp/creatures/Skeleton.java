@@ -48,10 +48,7 @@ public class Skeleton extends Mob {
         setMaxHealthPoints(200f);
         setHealthPoints(getMaxHealthPoints());
 
-        equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));
-
-
-
+        grantWeapon(weapon);
 
     }
 

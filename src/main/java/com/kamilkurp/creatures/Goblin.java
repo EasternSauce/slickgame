@@ -47,8 +47,7 @@ public class Goblin extends Mob {
         setMaxHealthPoints(300f);
         setHealthPoints(getMaxHealthPoints());
 
-        equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));
-
+        grantWeapon(weapon);
 
 
 

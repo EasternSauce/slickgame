@@ -3,6 +3,7 @@ package com.kamilkurp.abilities;
 import com.kamilkurp.Globals;
 import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.creatures.AttackType;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
 import com.kamilkurp.items.Item;
@@ -27,6 +28,8 @@ public class TridentAttackAbility extends Ability {
 
     private TridentAttackAbility(Creature abilityCreature) {
         super(abilityCreature);
+
+        attackType = AttackType.TRIDENT;
     }
 
     @Override

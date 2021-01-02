@@ -5,8 +5,6 @@ import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.abilities.Ability;
 import com.kamilkurp.abilities.ExplodeAbility;
-import com.kamilkurp.items.Item;
-import com.kamilkurp.items.ItemType;
 import com.kamilkurp.spawn.MobSpawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
@@ -53,8 +51,7 @@ public class Ghost extends Mob {
         setMaxHealthPoints(600f);
         setHealthPoints(getMaxHealthPoints());
 
-        equipmentItems.put(0, new Item(ItemType.getItemType(weapon), null));
-
+        grantWeapon(weapon);
 
 
 
@@ -66,11 +63,11 @@ public class Ghost extends Mob {
 
         if (healthPoints > maxHealthPoints * 0.30) {
             if (staminaPoints > 0f) {
-                if (currentAttackType == AttackType.UNARMED) {
+                if (currentAttack.getAttackType() == AttackType.UNARMED) {
                     unarmedAttackAbility.tryPerforming();
-                } else if (currentAttackType == AttackType.SWORD) {
+                } else if (currentAttack.getAttackType() == AttackType.SWORD) {
                     swordAttackAbility.tryPerforming();
-                } else if (currentAttackType == AttackType.BOW) {
+                } else if (currentAttack.getAttackType() == AttackType.BOW) {
                     bowAttackAbility.tryPerforming();
                 }
             }
@@ -104,6 +101,8 @@ public class Ghost extends Mob {
             if (ability instanceof ExplodeAbility) continue;
             ability.stopAbility();
         }
+
+        currentAttack.stopAbility();
     }
 
     @Override

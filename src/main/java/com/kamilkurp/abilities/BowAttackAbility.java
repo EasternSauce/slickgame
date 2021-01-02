@@ -2,6 +2,7 @@ package com.kamilkurp.abilities;
 
 import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.creatures.AttackType;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
@@ -21,6 +22,8 @@ public class BowAttackAbility extends Ability {
 
     private BowAttackAbility(Creature abilityCreature) {
         super(abilityCreature);
+
+        attackType = AttackType.BOW;
     }
 
     @Override

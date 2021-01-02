@@ -3,6 +3,8 @@ package com.kamilkurp.creatures;
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.abilities.Ability;
+import com.kamilkurp.items.Item;
+import com.kamilkurp.items.ItemType;
 import com.kamilkurp.spawn.MobSpawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
@@ -88,6 +90,8 @@ public abstract class Mob extends Creature {
         for (Ability ability : abilityList) {
             ability.stopAbility();
         }
+
+        currentAttack.stopAbility();
     }
 
     @Override
@@ -152,25 +156,25 @@ public abstract class Mob extends Creature {
             float attackDistance = 130f;
             float holdDistance = 175f;
 
-            if (currentAttackType == AttackType.UNARMED) {
+            if (currentAttack.getAttackType() == AttackType.UNARMED) {
                 minimumDistance = 100f;
                 walkUpDistance = 300f;
                 holdDistance = 175f;
                 attackDistance = 130f;
             } else
-            if (currentAttackType == AttackType.SWORD) {
+            if (currentAttack.getAttackType() == AttackType.SWORD) {
                 minimumDistance = 100f;
                 walkUpDistance = 300f;
                 holdDistance = 175f;
                 attackDistance = 130f;
             }
-            else if (currentAttackType == AttackType.BOW) {
+            else if (currentAttack.getAttackType() == AttackType.BOW) {
                 minimumDistance = 300f;
                 walkUpDistance = 300f;
                 holdDistance = 300f;
                 attackDistance = 300f;
             }
-            else if (currentAttackType == AttackType.TRIDENT) {
+            else if (currentAttack.getAttackType() == AttackType.TRIDENT) {
                 minimumDistance = 180f;
                 walkUpDistance = 400f;
                 holdDistance = 220f;
@@ -316,5 +320,10 @@ public abstract class Mob extends Creature {
 
     public MobSpawnPoint getMobSpawnPoint() {
         return mobSpawnPoint;
+    }
+
+    public void grantWeapon(String weaponName) {
+        ItemType weaponItemType = ItemType.getItemType(weaponName);
+        equipmentItems.put(0, new Item(weaponItemType, null));
     }
 }
