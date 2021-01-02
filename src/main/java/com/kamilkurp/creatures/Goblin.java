@@ -114,6 +114,10 @@ public class Goblin extends Mob {
 
         speed = 0.25f * i;
 
+        if (isAttacking) {
+            speed = speed / 2f;
+        }
+
     }
 
     @Override

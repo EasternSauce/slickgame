@@ -61,7 +61,6 @@ public class DashAbility extends Ability {
      protected void onActiveStart() {
         abilityCreature.setImmobilized(true);
 
-        activeTimer.reset();
         dashTimer.reset();
 
         abilityCreature.takeStaminaDamage(30f);

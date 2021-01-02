@@ -27,6 +27,8 @@ public class Ability {
 
     Creature abilityCreature;
 
+    protected boolean onCooldown;
+
     protected Ability(Creature abilityCreature) {
         this.abilityCreature = abilityCreature;
 
@@ -37,6 +39,8 @@ public class Ability {
 
         onPerformAction = () -> {};
         onChannelAction = () -> {};
+
+        onCooldown = false;
     }
 
     public void init() {
@@ -53,8 +57,8 @@ public class Ability {
             state = AbilityState.ABILITY_ACTIVE;
             onActiveStart();
             onPerformAction.execute();
-            abilityCreature.startStaminaRegen();
-
+            activeTimer.reset();
+            onCooldown = true;
         }
         if (state == AbilityState.ABILITY_ACTIVE && activeTimer.getTime() > activeTime) {
             state = AbilityState.ABILITY_INACTIVE;
@@ -66,6 +70,14 @@ public class Ability {
         }
         else if (state == AbilityState.ABILITY_ACTIVE) {
             onUpdateActive(i);
+        }
+
+
+        if (state == AbilityState.ABILITY_INACTIVE && onCooldown && activeTimer.getTime() > Math.min(1000, cooldownTime)) {
+            if (!abilityCreature.isStaminaOveruse()) {
+                onCooldown = false;
+                abilityCreature.startStaminaRegen();
+            }
         }
     }
 

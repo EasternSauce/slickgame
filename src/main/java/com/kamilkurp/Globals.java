@@ -14,6 +14,8 @@ public class Globals {
     public static int SCREEN_WIDTH = 1024;
     public static int SCREEN_HEIGHT = 600;
 
+    public static float MUSIC_VOLUME = 0.0f;
+
     public static Random random = new Random();
     private static final String assetsLocation = "assets/";
 

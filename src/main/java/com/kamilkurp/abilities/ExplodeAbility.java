@@ -34,7 +34,6 @@ public class ExplodeAbility extends Ability {
 
     @Override
     protected void onActiveStart() {
-        activeTimer.reset();
         explosionAnimation.restart();
 
         abilityCreature.takeStaminaDamage(25f);

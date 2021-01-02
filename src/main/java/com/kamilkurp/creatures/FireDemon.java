@@ -125,6 +125,10 @@ public class FireDemon extends Mob {
 
         speed = 0.35f * i;
 
+        if (isAttacking) {
+            speed = speed / 2f;
+        }
+
     }
 
     @Override
@@ -177,7 +181,7 @@ public class FireDemon extends Mob {
                 if (!bossBattleStarted) {
                     bossBattleStarted = true;
 
-                    fireDemonMusic.loop(1.0f, 0.6f);
+                    fireDemonMusic.loop(1.0f, Globals.MUSIC_VOLUME);
 
                     mobSpawnPoint.getBlockade().setActive(true);
                 }

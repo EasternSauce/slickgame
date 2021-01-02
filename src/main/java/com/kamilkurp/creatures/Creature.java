@@ -73,7 +73,7 @@ public abstract class Creature {
     protected Map<Integer, Item> equipmentItems;
 
     protected float healthRegen = 0.3f;
-    protected float staminaRegen = 16f;
+    protected float staminaRegen = 10f;
 
     protected Timer healthRegenTimer;
     protected Timer staminaRegenTimer;
@@ -108,6 +108,8 @@ public abstract class Creature {
     protected boolean sprinting;
 
     protected Timer staminaOveruseTimer;
+
+    protected int staminaOveruseTime = 1300;
 
     protected boolean staminaOveruse;
 
@@ -144,6 +146,8 @@ public abstract class Creature {
     protected float scale;
 
     protected String creatureType;
+
+    protected boolean isAttacking;
 
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
@@ -301,7 +305,7 @@ public abstract class Creature {
         }
 
         if (staminaRegenActive && !sprinting) {
-            if (staminaRegenTimer.getTime() > 500f && !isAbilityActive() && !staminaOveruse) {
+            if (staminaRegenTimer.getTime() > 250f && !isAbilityActive() && !staminaOveruse) {
                 if (getStaminaPoints() < getMaxStaminaPoints()) {
                     float afterRegen = getStaminaPoints() + staminaRegen;
                     staminaPoints = Math.min(afterRegen, getMaxStaminaPoints());
@@ -311,7 +315,7 @@ public abstract class Creature {
         }
 
         if (staminaOveruse) {
-            if (staminaOveruseTimer.getTime() > 800f) {
+            if (staminaOveruseTimer.getTime() > staminaOveruseTime) {
                 staminaOveruse = false;
             }
         }
@@ -515,6 +519,10 @@ public abstract class Creature {
         dirY = 0;
 
         speed = 0.2f * i;
+
+        if (isAttacking) {
+            speed = speed / 2f;
+        }
 
     }
 
@@ -817,5 +825,17 @@ public abstract class Creature {
 
     public void setStartingPosY(float startingPosY) {
         this.startingPosY = startingPosY;
+    }
+
+    public boolean isAttacking() {
+        return isAttacking;
+    }
+
+    public void setAttacking(boolean attacking) {
+        isAttacking = attacking;
+    }
+
+    public boolean isStaminaOveruse() {
+        return staminaOveruse;
     }
 }

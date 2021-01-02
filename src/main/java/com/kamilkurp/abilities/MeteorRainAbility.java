@@ -36,7 +36,6 @@ public class MeteorRainAbility extends Ability {
 
     @Override
     protected void onActiveStart() {
-        activeTimer.reset();
         abilityCreature.takeStaminaDamage(25f);
 
     }

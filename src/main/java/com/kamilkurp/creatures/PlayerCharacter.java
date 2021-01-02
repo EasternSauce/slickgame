@@ -131,9 +131,9 @@ public class PlayerCharacter extends Creature {
         abilityList.add(dashAbility);
 
 
-        swordAttackAbility.setAimed(true);
-        unarmedAttackAbility.setAimed(true);
-        tridentAttackAbility.setAimed(true);
+//        swordAttackAbility.setAimed(true);
+//        unarmedAttackAbility.setAimed(true);
+//        tridentAttackAbility.setAimed(true);
 
         updateAttackType();
     }
@@ -276,6 +276,10 @@ public class PlayerCharacter extends Creature {
         }
         else {
             speed = 0.2f * i;
+        }
+
+        if (isAttacking) {
+            speed = speed / 2f;
         }
 
     }

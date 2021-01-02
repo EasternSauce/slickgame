@@ -66,7 +66,6 @@ public class TridentAttackAbility extends Ability {
 
     @Override
     protected void onActiveStart() {
-        activeTimer.reset();
         tridentAttackAnimation.restart();
 
         swordAttackSound.play(1.0f, 0.1f);
@@ -141,6 +140,8 @@ public class TridentAttackAbility extends Ability {
         abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
 
         tridentWindupAnimation.restart();
+
+        abilityCreature.setAttacking(true);
     }
 
     public void render(Graphics g, Camera camera) {
@@ -184,5 +185,10 @@ public class TridentAttackAbility extends Ability {
         ability.init();
         ability.setTimerStartingPosition();
         return ability;
+    }
+
+    @Override
+    protected void onStop() {
+        abilityCreature.setAttacking(false);
     }
 }

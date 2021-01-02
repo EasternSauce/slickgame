@@ -33,8 +33,6 @@ public class BowAttackAbility extends Ability {
     @Override
     protected void onActiveStart() {
 
-        activeTimer.reset();
-
         bowReleaseSound.play(1.0f, 0.1f);
 
         abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
@@ -59,6 +57,7 @@ public class BowAttackAbility extends Ability {
     @Override
     public void onChannellingStart() {
         bowPullSound.play(1.0f, 0.3f);
+        abilityCreature.setAttacking(true);
     }
 
     public static BowAttackAbility newInstance(Creature abilityCreature) {
@@ -66,5 +65,10 @@ public class BowAttackAbility extends Ability {
         ability.init();
         ability.setTimerStartingPosition();
         return ability;
+    }
+
+    @Override
+    protected void onStop() {
+        abilityCreature.setAttacking(false);
     }
 }

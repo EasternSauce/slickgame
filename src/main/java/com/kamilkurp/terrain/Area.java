@@ -1,5 +1,6 @@
 package com.kamilkurp.terrain;
 
+import com.kamilkurp.Globals;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.NonPlayerCharacter;
@@ -226,7 +227,7 @@ public class Area {
     public void onEntry() {
         abandonedPlains.stop();
         if (id.equals("area1")) {
-            abandonedPlains.loop(1.0f, 0.3f);
+            abandonedPlains.loop(1.0f, Globals.MUSIC_VOLUME);
         }
 
         creaturesManager.onAreaChange();

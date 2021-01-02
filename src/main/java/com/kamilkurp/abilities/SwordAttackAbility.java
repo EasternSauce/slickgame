@@ -53,13 +53,16 @@ public class SwordAttackAbility extends Ability {
 
     @Override
     protected void onActiveStart() {
-        activeTimer.reset();
         swordAttackAnimation.restart();
 
         swordAttackSound.play(1.0f, 0.1f);
 
         abilityCreature.takeStaminaDamage(25f);
+    }
 
+    @Override
+    protected void onStop() {
+        abilityCreature.setAttacking(false);
     }
 
     @Override
@@ -118,6 +121,8 @@ public class SwordAttackAbility extends Ability {
         abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
 
         swordWindupAnimation.restart();
+
+        abilityCreature.setAttacking(true);
     }
 
     public void render(Graphics g, Camera camera) {

@@ -98,9 +98,6 @@ public class Wolf extends Mob {
             }
         }
 
-
-
-
     }
 
     @Override
