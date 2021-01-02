@@ -44,6 +44,7 @@ public class TridentAttack extends MeleeAttack {
         height = 32f;
         scale = 1.2f;
         attackRange = 30f;
+        knockbackPower = 0.5f;
 
         aimed = false;
     }

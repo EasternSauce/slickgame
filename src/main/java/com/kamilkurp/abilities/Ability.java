@@ -10,7 +10,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 
-public class Ability {
+public abstract class Ability {
     protected Action onPerformAction;
     protected Action onChannelAction;
 
@@ -45,9 +45,7 @@ public class Ability {
         onCooldown = false;
     }
 
-    public void init() {
-
-    }
+    public abstract void init();
 
     public void setTimerStartingPosition() {
         activeTimer.setTime(cooldownTime);

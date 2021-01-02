@@ -25,6 +25,8 @@ public abstract class MeleeAttack extends Attack {
     protected float scale;
     protected float attackRange;
 
+    protected float knockbackPower;
+
     protected MeleeAttack(Creature abilityCreature) {
         super(abilityCreature);
     }
@@ -55,7 +57,7 @@ public abstract class MeleeAttack extends Attack {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
                     if (!creature.isImmune()) {
                         Item weapon = this.abilityCreature.getEquipmentItems().get(0);
-                        creature.takeDamage(weapon.getDamage(), true, 0.5f, abilityCreature.getRect().getCenterX(), abilityCreature.getRect().getCenterY());
+                        creature.takeDamage(weapon.getDamage(), true, knockbackPower, abilityCreature.getRect().getCenterX(), abilityCreature.getRect().getCenterY());
                         abilityCreature.onAttack();
                         int random = Globals.random.nextInt(100);
                         if (random < weapon.getItemType().getPoisonChance() * 100f) {
@@ -77,7 +79,7 @@ public abstract class MeleeAttack extends Attack {
         }
     }
 
-    private void updateAttackRect(int i) {
+    protected void updateAttackRect(int i) {
         Vector2f attackVector = abilityCreature.getAttackingVector().getNormal();
 
         float attackWidth = width * scale;
