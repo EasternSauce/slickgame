@@ -82,8 +82,8 @@ public class FireDemon extends Mob {
     public void onInit() {
         defineAbilities();
 
-        tridentAttackAbility.setAttackRange(45f);
-        tridentAttackAbility.setScale(2.5f);
+        tridentAttack.setAttackRange(45f);
+        tridentAttack.setScale(2.5f);
 
         meteorRainAbility = new MeteorRainAbility(this);
         abilityList.add(meteorRainAbility);

@@ -95,14 +95,14 @@ public abstract class Creature {
     protected boolean immobilized = false;
 
     protected List<Ability> abilityList;
-    protected List<Ability> regularAttackList;
+    protected List<Attack> attackList;
 
-    protected Ability currentAttack;
+    protected Attack currentAttack;
 
-    protected BowAttackAbility bowAttackAbility;
-    protected UnarmedAttackAbility unarmedAttackAbility;
-    protected SwordAttackAbility swordAttackAbility;
-    protected TridentAttackAbility tridentAttackAbility;
+    protected BowAttack bowAttack;
+    protected UnarmedAttack unarmedAttack;
+    protected SwordAttack swordAttack;
+    protected TridentAttack tridentAttack;
 
     protected float unarmedDamage;
 
@@ -209,20 +209,20 @@ public abstract class Creature {
     public void defineAbilities() {
 
         abilityList = new LinkedList<>();
-        regularAttackList = new LinkedList<>();
+        attackList = new LinkedList<>();
 
 
-        bowAttackAbility = BowAttackAbility.newInstance(this);
-        unarmedAttackAbility = UnarmedAttackAbility.newInstance(this);
-        swordAttackAbility = SwordAttackAbility.newInstance(this);
-        tridentAttackAbility = TridentAttackAbility.newInstance(this);
+        bowAttack = BowAttack.newInstance(this);
+        unarmedAttack = UnarmedAttack.newInstance(this);
+        swordAttack = SwordAttack.newInstance(this);
+        tridentAttack = TridentAttack.newInstance(this);
 
-        regularAttackList.add(bowAttackAbility);
-        regularAttackList.add(unarmedAttackAbility);
-        regularAttackList.add(swordAttackAbility);
-        regularAttackList.add(tridentAttackAbility);
+        attackList.add(bowAttack);
+        attackList.add(unarmedAttack);
+        attackList.add(swordAttack);
+        attackList.add(tridentAttack);
 
-        currentAttack = unarmedAttackAbility;
+        currentAttack = unarmedAttack;
     }
 
     public abstract void onInit();
@@ -833,11 +833,11 @@ public abstract class Creature {
         Item weapon = equipmentItems.get(0);
         if (weapon != null) {
             ItemType weaponItemType = weapon.getItemType();
-            Ability attackAbility = regularAttackList.stream().filter(attack -> attack.getAttackType().equals(weaponItemType.getAttackType())).findAny().get();
+            Attack attackAbility = attackList.stream().filter(attack -> attack.getAttackType().equals(weaponItemType.getAttackType())).findAny().get();
             currentAttack = attackAbility;
         }
         else {
-            Ability attackAbility = regularAttackList.stream().filter(attack -> attack.getAttackType().equals(AttackType.UNARMED)).findAny().get();
+            Attack attackAbility = attackList.stream().filter(attack -> attack.getAttackType().equals(AttackType.UNARMED)).findAny().get();
             currentAttack = attackAbility;
         }
     }

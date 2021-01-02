@@ -30,7 +30,6 @@ public class Ability {
 
     protected boolean onCooldown;
 
-    protected AttackType attackType;
 
     protected Ability(Creature abilityCreature) {
         this.abilityCreature = abilityCreature;
@@ -149,8 +148,5 @@ public class Ability {
         return state;
     }
 
-    public AttackType getAttackType() {
-        return attackType;
-    }
 }
 

@@ -64,11 +64,11 @@ public class Ghost extends Mob {
         if (healthPoints > maxHealthPoints * 0.30) {
             if (staminaPoints > 0f) {
                 if (currentAttack.getAttackType() == AttackType.UNARMED) {
-                    unarmedAttackAbility.tryPerforming();
+                    unarmedAttack.tryPerforming();
                 } else if (currentAttack.getAttackType() == AttackType.SWORD) {
-                    swordAttackAbility.tryPerforming();
+                    swordAttack.tryPerforming();
                 } else if (currentAttack.getAttackType() == AttackType.BOW) {
-                    bowAttackAbility.tryPerforming();
+                    bowAttack.tryPerforming();
                 }
             }
         }

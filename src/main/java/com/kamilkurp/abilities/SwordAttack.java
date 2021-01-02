@@ -1,5 +1,6 @@
 package com.kamilkurp.abilities;
 
+import com.kamilkurp.Globals;
 import com.kamilkurp.animations.AttackAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.AttackType;
@@ -10,31 +11,30 @@ import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Sound;
-import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.Collection;
 
-public class UnarmedAttackAbility extends Ability {
+public class SwordAttack extends Attack {
     protected AttackAnimation swordAttackAnimation;
     protected AttackAnimation swordWindupAnimation;
-    private final Sound punchSound = Assets.punchSound;
+    private final Sound swordAttackSound = Assets.attackSound;
     private boolean aimed;
 
-    protected UnarmedAttackAbility(Creature abilityCreature) {
+    private SwordAttack(Creature abilityCreature) {
         super(abilityCreature);
 
-        attackType = AttackType.UNARMED;
+        attackType = AttackType.SWORD;
     }
 
     @Override
     public void init() {
         float weaponSpeed = 1.0f;
-        if (getCreatureWeapon() != null) {
-            weaponSpeed = getCreatureWeapon().getItemType().getWeaponSpeed();
+        if (this.abilityCreature.getEquipmentItems().get(0) != null) {
+            weaponSpeed = this.abilityCreature.getEquipmentItems().get(0).getItemType().getWeaponSpeed();
         }
 
-        float baseChannelTime = 200f;
+        float baseChannelTime = 300f;
         float baseActiveTime = 300f;
         int numOfChannelFrames = 6;
         int numOfFrames = 6;
@@ -54,18 +54,13 @@ public class UnarmedAttackAbility extends Ability {
         aimed = false;
     }
 
-    public Item getCreatureWeapon() {
-        return this.abilityCreature.getEquipmentItems().get(0);
-    }
-
     @Override
     protected void onActiveStart() {
         swordAttackAnimation.restart();
 
-        punchSound.play(1.0f, 0.1f);
+        swordAttackSound.play(1.0f, 0.1f);
 
         abilityCreature.takeStaminaDamage(25f);
-
     }
 
     @Override
@@ -79,20 +74,24 @@ public class UnarmedAttackAbility extends Ability {
 
         swordAttackAnimation.getAnimation().update(i);
 
-
         Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
         for (Creature creature : creatures) {
             if (creature == this.abilityCreature) continue;
             if (meleeAttackRect.intersects(creature.getRect())) {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
                     if (!creature.isImmune()) {
-                        creature.takeDamage(this.abilityCreature.getUnarmedDamage(), true, 0.3f, abilityCreature.getRect().getCenterX(), abilityCreature.getRect().getCenterY());
+                        Item weapon = this.abilityCreature.getEquipmentItems().get(0);
+                        creature.takeDamage(weapon.getDamage(), true, 0.35f, abilityCreature.getRect().getCenterX(), abilityCreature.getRect().getCenterY());
                         abilityCreature.onAttack();
+
+                        int random = Globals.random.nextInt(100);
+                        if (random < weapon.getItemType().getPoisonChance() * 100f) {
+                            creature.becomePoisoned();
+                        }
                     }
                 }
             }
         }
-
     }
 
     @Override
@@ -104,7 +103,6 @@ public class UnarmedAttackAbility extends Ability {
             abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
         }
     }
-
 
     private void updateAttackRect(int i) {
         float attackRange = 60f;
@@ -119,7 +117,6 @@ public class UnarmedAttackAbility extends Ability {
         float attackRectY = attackShiftY + abilityCreature.getRect().getCenterY() - attackHeight / 2f;
 
         meleeAttackRect = new Rectangle(attackRectX, attackRectY, attackWidth, attackHeight);
-
     }
 
     @Override
@@ -150,14 +147,10 @@ public class UnarmedAttackAbility extends Ability {
         this.aimed = aimed;
     }
 
-    public static UnarmedAttackAbility newInstance(Creature abilityCreature) {
-        if (abilityCreature == null) throw new RuntimeException();
-        UnarmedAttackAbility ability = new UnarmedAttackAbility(abilityCreature);
-
+    public static SwordAttack newInstance(Creature abilityCreature) {
+        SwordAttack ability = new SwordAttack(abilityCreature);
         ability.init();
         ability.setTimerStartingPosition();
-
-
         return ability;
     }
 }

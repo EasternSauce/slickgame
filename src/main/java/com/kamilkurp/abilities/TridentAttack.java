@@ -15,7 +15,7 @@ import org.newdawn.slick.geom.*;
 
 import java.util.Collection;
 
-public class TridentAttackAbility extends Ability {
+public class TridentAttack extends Attack {
     protected AttackAnimation tridentAttackAnimation;
     protected AttackAnimation tridentWindupAnimation;
     private final Sound swordAttackSound = Assets.attackSound;
@@ -26,7 +26,7 @@ public class TridentAttackAbility extends Ability {
     private float scale;
     private float attackRange;
 
-    private TridentAttackAbility(Creature abilityCreature) {
+    private TridentAttack(Creature abilityCreature) {
         super(abilityCreature);
 
         attackType = AttackType.TRIDENT;
@@ -40,7 +40,7 @@ public class TridentAttackAbility extends Ability {
         }
 
 
-        float baseChannelTime = 840;
+        float baseChannelTime = 600;
         float baseActiveTime = 275;
         int numOfChannelFrames = 7;
         int numOfFrames = 11;
@@ -50,7 +50,7 @@ public class TridentAttackAbility extends Ability {
         channelTime = (int)(baseChannelTime * 1f/weaponSpeed);
         activeTime = (int)(baseActiveTime * 1f/weaponSpeed);
 
-        cooldownTime = 800;
+        cooldownTime = 1300;
 
         tridentWindupAnimation = new AttackAnimation(Assets.tridentThrustWindupSpriteSheet, numOfChannelFrames, channelFrameDuration, true);
         tridentAttackAnimation = new AttackAnimation(Assets.tridentThrustSpriteSheet, numOfFrames, frameDuration, true);
@@ -61,7 +61,7 @@ public class TridentAttackAbility extends Ability {
 
         width = 64f;
         height = 32f;
-        scale = 1.5f;
+        scale = 1.2f;
         attackRange = 30f;
 
         aimed = false;
@@ -183,8 +183,8 @@ public class TridentAttackAbility extends Ability {
         this.scale = scale;
     }
 
-    public static TridentAttackAbility newInstance(Creature abilityCreature) {
-        TridentAttackAbility ability = new TridentAttackAbility(abilityCreature);
+    public static TridentAttack newInstance(Creature abilityCreature) {
+        TridentAttack ability = new TridentAttack(abilityCreature);
         ability.init();
         ability.setTimerStartingPosition();
         return ability;

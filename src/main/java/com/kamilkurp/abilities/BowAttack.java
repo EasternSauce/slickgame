@@ -14,13 +14,13 @@ import org.newdawn.slick.geom.Vector2f;
 import java.util.List;
 import java.util.Map;
 
-public class BowAttackAbility extends Ability {
+public class BowAttack extends Attack {
     protected AttackAnimation swordAttackAnimation;
     private final Sound bowReleaseSound = Assets.bowReleaseSound;
     private final Sound bowPullSound = Assets.bowPullSound;
 
 
-    private BowAttackAbility(Creature abilityCreature) {
+    private BowAttack(Creature abilityCreature) {
         super(abilityCreature);
 
         attackType = AttackType.BOW;
@@ -63,8 +63,8 @@ public class BowAttackAbility extends Ability {
         abilityCreature.setAttacking(true);
     }
 
-    public static BowAttackAbility newInstance(Creature abilityCreature) {
-        BowAttackAbility ability = new BowAttackAbility(abilityCreature);
+    public static BowAttack newInstance(Creature abilityCreature) {
+        BowAttack ability = new BowAttack(abilityCreature);
         ability.init();
         ability.setTimerStartingPosition();
         return ability;
