@@ -1,20 +1,18 @@
 package com.kamilkurp.abilities;
 
 import com.kamilkurp.Globals;
-import com.kamilkurp.animations.AttackAnimation;
+import com.kamilkurp.animations.AbilityAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
 import com.kamilkurp.utils.Camera;
-import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.geom.Vector2f;
 
 import java.util.Collection;
 
 public class ExplodeAbility extends Ability {
-    protected AttackAnimation explosionAnimation;
+    protected AbilityAnimation explosionAnimation;
     protected float explosionRange;
 
     private ExplodeAbility(Creature abilityCreature) {
@@ -27,7 +25,7 @@ public class ExplodeAbility extends Ability {
         activeTime = 1800;
         channelTime = 1300;
 
-        explosionAnimation = new AttackAnimation(Assets.explosionSpriteSheet, 20, 100);
+        explosionAnimation = new AbilityAnimation(Assets.explosionSpriteSheet, 20, 100);
 
         explosionRange = 200f;
     }

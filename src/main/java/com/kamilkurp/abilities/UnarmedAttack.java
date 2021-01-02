@@ -1,6 +1,6 @@
 package com.kamilkurp.abilities;
 
-import com.kamilkurp.animations.AttackAnimation;
+import com.kamilkurp.animations.AbilityAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.AttackType;
 import com.kamilkurp.creatures.Creature;
@@ -15,8 +15,8 @@ import org.newdawn.slick.geom.Rectangle;
 import java.util.Collection;
 
 public class UnarmedAttack extends Attack {
-    protected AttackAnimation swordAttackAnimation;
-    protected AttackAnimation swordWindupAnimation;
+    protected AbilityAnimation swordAbilityAnimation;
+    protected AbilityAnimation swordWindupAnimation;
     private final Sound punchSound = Assets.punchSound;
     private boolean aimed;
 
@@ -45,8 +45,8 @@ public class UnarmedAttack extends Attack {
 
         cooldownTime = 800;
 
-        swordWindupAnimation = new AttackAnimation(Assets.slashWindupSpriteSheet, numOfChannelFrames, channelFrameDuration);
-        swordAttackAnimation = new AttackAnimation(Assets.betterSlashSpriteSheet, numOfFrames, frameDuration);
+        swordWindupAnimation = new AbilityAnimation(Assets.slashWindupSpriteSheet, numOfChannelFrames, channelFrameDuration);
+        swordAbilityAnimation = new AbilityAnimation(Assets.betterSlashSpriteSheet, numOfFrames, frameDuration);
 
         meleeAttackRect = new Rectangle(-999, -999, 1, 1);
 
@@ -59,7 +59,7 @@ public class UnarmedAttack extends Attack {
 
     @Override
     protected void onActiveStart() {
-        swordAttackAnimation.restart();
+        swordAbilityAnimation.restart();
 
         punchSound.play(1.0f, 0.1f);
 
@@ -76,7 +76,7 @@ public class UnarmedAttack extends Attack {
     protected void onUpdateActive(int i) {
         updateAttackRect(i);
 
-        swordAttackAnimation.getAnimation().update(i);
+        swordAbilityAnimation.getAnimation().update(i);
 
 
         Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
@@ -138,7 +138,7 @@ public class UnarmedAttack extends Attack {
             g.drawImage(image, meleeAttackRect.getX() - camera.getPosX(), meleeAttackRect.getY() - camera.getPosY());
         }
         if (state == AbilityState.ABILITY_ACTIVE) {
-            Image image = swordAttackAnimation.getAnimation().getCurrentFrame();
+            Image image = swordAbilityAnimation.getAnimation().getCurrentFrame();
             image.setRotation((float) abilityCreature.getAttackingVector().getTheta());
 
             g.drawImage(image, meleeAttackRect.getX() - camera.getPosX(), meleeAttackRect.getY() - camera.getPosY());

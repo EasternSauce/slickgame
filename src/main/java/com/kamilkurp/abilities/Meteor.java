@@ -1,6 +1,6 @@
 package com.kamilkurp.abilities;
 
-import com.kamilkurp.animations.AttackAnimation;
+import com.kamilkurp.animations.AbilityAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.geom.Rectangle;
@@ -20,8 +20,8 @@ public class Meteor {
 
     protected boolean started;
 
-    protected AttackAnimation explosionAnimation;
-    protected AttackAnimation explosionWindupAnimation;
+    protected AbilityAnimation explosionAnimation;
+    protected AbilityAnimation explosionWindupAnimation;
 
     public Meteor(int startTime, Rectangle rect) {
         this.startTime = startTime;
@@ -33,8 +33,8 @@ public class Meteor {
         activeTime = 1800;
         channelTime = 1200;
 
-        explosionAnimation = new AttackAnimation(Assets.explosionSpriteSheet, 20, 92);
-        explosionWindupAnimation = new AttackAnimation(Assets.explosionWindupSpriteSheet, 6, 200);
+        explosionAnimation = new AbilityAnimation(Assets.explosionSpriteSheet, 20, 92);
+        explosionWindupAnimation = new AbilityAnimation(Assets.explosionWindupSpriteSheet, 6, 200);
 
 
         pos = rect;
@@ -88,11 +88,11 @@ public class Meteor {
         return pos;
     }
 
-    public AttackAnimation getExplosionAnimation() {
+    public AbilityAnimation getExplosionAnimation() {
         return explosionAnimation;
     }
 
-    public AttackAnimation getExplosionWindupAnimation() {
+    public AbilityAnimation getExplosionWindupAnimation() {
         return explosionWindupAnimation;
     }
 }

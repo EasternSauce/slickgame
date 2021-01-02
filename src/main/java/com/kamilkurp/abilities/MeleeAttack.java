@@ -1,9 +1,8 @@
 package com.kamilkurp.abilities;
 
 import com.kamilkurp.Globals;
-import com.kamilkurp.animations.AttackAnimation;
+import com.kamilkurp.animations.AbilityAnimation;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.creatures.AttackType;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
 import com.kamilkurp.items.Item;
@@ -15,63 +14,29 @@ import org.newdawn.slick.geom.*;
 
 import java.util.Collection;
 
-public class MeleeAttack extends Attack {
-    protected AttackAnimation tridentAttackAnimation;
-    protected AttackAnimation tridentWindupAnimation;
-    private final Sound swordAttackSound = Assets.attackSound;
-    private boolean aimed;
+public abstract class MeleeAttack extends Attack {
+    protected AbilityAnimation attackAnimation;
+    protected AbilityAnimation windupAnimation;
+    protected final Sound weaponSound = Assets.attackSound;
+    protected boolean aimed;
 
-    private float width;
-    private float height;
-    private float scale;
-    private float attackRange;
+    protected float width;
+    protected float height;
+    protected float scale;
+    protected float attackRange;
 
-    private MeleeAttack(Creature abilityCreature) {
+    protected MeleeAttack(Creature abilityCreature) {
         super(abilityCreature);
-
-        attackType = AttackType.TRIDENT;
     }
 
     @Override
-    public void init() {
-        float weaponSpeed = 1.0f;
-        if (this.abilityCreature.getEquipmentItems().get(0) != null) {
-            weaponSpeed = this.abilityCreature.getEquipmentItems().get(0).getItemType().getWeaponSpeed();
-        }
-
-
-        float baseChannelTime = 600;
-        float baseActiveTime = 275;
-        int numOfChannelFrames = 7;
-        int numOfFrames = 11;
-        int channelFrameDuration = (int)(baseChannelTime/numOfChannelFrames);
-        int frameDuration = (int)(baseActiveTime/numOfFrames);
-
-        channelTime = (int)(baseChannelTime * 1f/weaponSpeed);
-        activeTime = (int)(baseActiveTime * 1f/weaponSpeed);
-
-        cooldownTime = 1300;
-
-        tridentWindupAnimation = new AttackAnimation(Assets.tridentThrustWindupSpriteSheet, numOfChannelFrames, channelFrameDuration, true);
-        tridentAttackAnimation = new AttackAnimation(Assets.tridentThrustSpriteSheet, numOfFrames, frameDuration, true);
-
-        meleeAttackRect = new Rectangle(-999, -999, 1, 1);
-
-        meleeAttackHitbox = new Polygon(meleeAttackRect.getPoints());
-
-        width = 64f;
-        height = 32f;
-        scale = 1.2f;
-        attackRange = 30f;
-
-        aimed = false;
-    }
+    public abstract void init();
 
     @Override
     protected void onActiveStart() {
-        tridentAttackAnimation.restart();
+        attackAnimation.restart();
 
-        swordAttackSound.play(1.0f, 0.1f);
+        weaponSound.play(1.0f, 0.1f);
 
         abilityCreature.takeStaminaDamage(25f);
 
@@ -81,7 +46,7 @@ public class MeleeAttack extends Attack {
     protected void onUpdateActive(int i) {
         updateAttackRect(i);
 
-        tridentAttackAnimation.getAnimation().update(i);
+        attackAnimation.getAnimation().update(i);
 
         Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
         for (Creature creature : creatures) {
@@ -104,7 +69,7 @@ public class MeleeAttack extends Attack {
 
     @Override
     protected void onUpdateChanneling(int i) {
-        tridentWindupAnimation.getAnimation().update(i);
+        windupAnimation.getAnimation().update(i);
         updateAttackRect(i);
 
         if (aimed) {
@@ -142,7 +107,7 @@ public class MeleeAttack extends Attack {
     public void onChannellingStart() {
         abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
 
-        tridentWindupAnimation.restart();
+        windupAnimation.restart();
 
         abilityCreature.setAttacking(true);
     }
@@ -154,7 +119,7 @@ public class MeleeAttack extends Attack {
 
 
         if (state == AbilityState.ABILITY_CHANNELING) {
-            Image image = tridentWindupAnimation.getAnimation().getCurrentFrame();
+            Image image = windupAnimation.getAnimation().getCurrentFrame();
             image.setCenterOfRotation(0, height/2 * scale);
             image.setRotation((float) abilityCreature.getAttackingVector().getTheta());
 
@@ -162,7 +127,7 @@ public class MeleeAttack extends Attack {
             image.draw(meleeAttackRect.getX() - camera.getPosX(), meleeAttackRect.getY() - camera.getPosY() + height/2 * scale, scale);
         }
         if (state == AbilityState.ABILITY_ACTIVE) {
-            Image image = tridentAttackAnimation.getAnimation().getCurrentFrame();
+            Image image = attackAnimation.getAnimation().getCurrentFrame();
             image.setCenterOfRotation(0, height/2 * scale);
             image.setRotation((float) abilityCreature.getAttackingVector().getTheta());
 

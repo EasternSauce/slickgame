@@ -1,6 +1,6 @@
 package com.kamilkurp.abilities;
 
-import com.kamilkurp.animations.AttackAnimation;
+import com.kamilkurp.animations.AbilityAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.AttackType;
 import com.kamilkurp.creatures.Creature;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BowAttack extends Attack {
-    protected AttackAnimation swordAttackAnimation;
+    protected AbilityAnimation swordAbilityAnimation;
     private final Sound bowReleaseSound = Assets.bowReleaseSound;
     private final Sound bowPullSound = Assets.bowPullSound;
 
