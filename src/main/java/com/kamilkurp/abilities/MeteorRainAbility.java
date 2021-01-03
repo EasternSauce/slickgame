@@ -18,7 +18,7 @@ public class MeteorRainAbility extends Ability {
 
     protected List<Meteor> meteors;
 
-    public MeteorRainAbility(Creature abilityCreature) {
+    private MeteorRainAbility(Creature abilityCreature) {
         super(abilityCreature);
     }
 
@@ -28,7 +28,7 @@ public class MeteorRainAbility extends Ability {
         activeTime = 13000;
         channelTime = 300;
 
-        explosionRange = 250f;
+        explosionRange = 150f;
     }
 
     @Override

@@ -145,9 +145,7 @@ public abstract class Creature {
     protected float startingPosY;
 
     protected float scale;
-
-    protected String creatureType;
-
+    
     protected boolean isAttacking;
 
     public Creature(GameSystem gameSystem, String id) {
@@ -202,8 +200,6 @@ public abstract class Creature {
         movementVector = new Vector2f(0f,0f);
 
         scale = 1.0f;
-
-        creatureType = "regular";
     }
 
     public void defineAbilities() {

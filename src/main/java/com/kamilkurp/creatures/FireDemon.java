@@ -4,6 +4,7 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.abilities.Ability;
 import com.kamilkurp.abilities.AbilityState;
+import com.kamilkurp.abilities.FistSlamAbility;
 import com.kamilkurp.abilities.MeteorRainAbility;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class FireDemon extends Mob {
 
     protected MeteorRainAbility meteorRainAbility;
+    protected FistSlamAbility fistSlamAbility;
 
     protected boolean bossBattleStarted;
 
@@ -61,8 +63,6 @@ public class FireDemon extends Mob {
 
         grantWeapon(weapon);
 
-        creatureType = "boss";
-
         bossBattleStarted = false;
 
     }
@@ -70,8 +70,14 @@ public class FireDemon extends Mob {
     @Override
     public void attack() {
 
-        if (staminaPoints > 0f && meteorRainAbility.getState() == AbilityState.ABILITY_INACTIVE) {
-            if (healthPoints < maxHealthPoints * 0.70) meteorRainAbility.tryPerforming();
+        if (staminaPoints > 0f && !immobilized && meteorRainAbility.getState() == AbilityState.ABILITY_INACTIVE) {
+            if (healthPoints < maxHealthPoints * 0.7) {
+                meteorRainAbility.tryPerforming();
+            }
+
+            if (aggroed != null && Globals.distance(aggroed.getRect(), rect) < 40f) {
+                fistSlamAbility.tryPerforming();
+            }
 
             currentAttack.tryPerforming();
         }
@@ -85,8 +91,11 @@ public class FireDemon extends Mob {
         tridentAttack.setAttackRange(45f);
         tridentAttack.setScale(2.5f);
 
-        meteorRainAbility = new MeteorRainAbility(this);
+        meteorRainAbility = MeteorRainAbility.newInstance(this);
         abilityList.add(meteorRainAbility);
+
+        fistSlamAbility = FistSlamAbility.newInstance(this);
+        abilityList.add(fistSlamAbility);
 
         updateAttackType();
     }
@@ -150,7 +159,7 @@ public class FireDemon extends Mob {
 //
 //            }
 
-            roarSound.play(1.0f, 0.1f);
+            if (Globals.randFloat() < 0.3) roarSound.play(1.0f, 0.1f);
 
         }
 

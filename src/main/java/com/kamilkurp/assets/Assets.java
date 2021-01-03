@@ -25,6 +25,8 @@ public class Assets {
     public static SpriteSheet tridentThrustWindupSpriteSheet;
     public static SpriteSheet fireDemonSpriteSheet;
     public static SpriteSheet explosionWindupSpriteSheet;
+    public static SpriteSheet fistSlamSpriteSheet;
+    public static SpriteSheet fistSlamWindupSpriteSheet;
 
     public static Sound stepSound;
     public static Sound gruntSound;
@@ -39,6 +41,8 @@ public class Assets {
     public static Sound boneClickSound;
     public static Sound flybySound;
     public static Sound darkLaughSound;
+    public static Sound glassBreakSound;
+    public static Sound bloodSquirtSound;
 
     public static Music townMusic;
     public static Music abandonedPlains;
@@ -85,6 +89,8 @@ public class Assets {
         tridentThrustSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/trident_thrust.png", 64, 32);
         tridentThrustWindupSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/trident_thrust_windup.png", 64, 32);
         fireDemonSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/taurus.png", 80, 80);
+        fistSlamSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/fist_slam.png", 40, 160);
+        fistSlamWindupSpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "attack_animations/fist_slam_windup.png", 40, 160);
 
         stepSound = new Sound(Globals.getAssetsLocation() + "sounds/running.wav");
         gruntSound = new Sound(Globals.getAssetsLocation() + "sounds/grunt.wav");
@@ -108,7 +114,8 @@ public class Assets {
         painSound = new Sound(Globals.getAssetsLocation() + "sounds/pain.wav");
         roarSound = new Sound(Globals.getAssetsLocation() + "sounds/roar.wav");
         evilYellingSound = new Sound(Globals.getAssetsLocation() + "sounds/evil-yelling.wav");
-
+        glassBreakSound = new Sound(Globals.getAssetsLocation() + "sounds/glass-break.wav");
+        bloodSquirtSound = new Sound(Globals.getAssetsLocation() + "sounds/blood-squirt.wav");
 
         male1SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male1.png", 32, 32);
         male2SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male2.png", 32, 32);

@@ -63,6 +63,8 @@ public abstract class MeleeAttack extends Attack {
                         if (random < weapon.getItemType().getPoisonChance() * 100f) {
                             creature.becomePoisoned();
                         }
+
+                        Assets.bloodSquirtSound.play(1.0f, 0.05f);
                     }
                 }
             }

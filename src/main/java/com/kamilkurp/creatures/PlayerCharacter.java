@@ -209,6 +209,7 @@ public class PlayerCharacter extends Creature {
             setStaminaPoints(getMaxStaminaPoints());
             isAttacking = false;
             staminaOveruse = false;
+            immobilized = false;
             startStaminaRegen();
 
 
