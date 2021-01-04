@@ -23,21 +23,25 @@ public class Meteor {
     protected AbilityAnimation explosionAnimation;
     protected AbilityAnimation explosionWindupAnimation;
 
-    public Meteor(int startTime, Rectangle rect) {
+    protected float explosionRange;
+
+    public Meteor(int startTime, Rectangle rect, float explosionRange, float speed) {
         this.startTime = startTime;
         state = AbilityState.ABILITY_INACTIVE;
 
         activeTimer = new Timer();
         channelTimer = new Timer();
 
-        activeTime = 1800;
-        channelTime = 1200;
+        activeTime = (int)(1800 / speed);
+        channelTime = (int)(1200 / speed);
 
-        explosionAnimation = new AbilityAnimation(Assets.explosionSpriteSheet, 20, 92);
-        explosionWindupAnimation = new AbilityAnimation(Assets.explosionWindupSpriteSheet, 6, 200);
+        explosionAnimation = new AbilityAnimation(Assets.explosionSpriteSheet, 20, (int)(92 / speed));
+        explosionWindupAnimation = new AbilityAnimation(Assets.explosionWindupSpriteSheet, 6, (int)(200 / speed));
 
 
         pos = rect;
+
+        this.explosionRange = explosionRange;
 
     }
 
@@ -94,5 +98,9 @@ public class Meteor {
 
     public AbilityAnimation getExplosionWindupAnimation() {
         return explosionWindupAnimation;
+    }
+
+    public float getExplosionRange() {
+        return explosionRange;
     }
 }

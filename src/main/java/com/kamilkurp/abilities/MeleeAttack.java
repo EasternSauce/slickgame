@@ -40,7 +40,7 @@ public abstract class MeleeAttack extends Attack {
 
         weaponSound.play(1.0f, 0.1f);
 
-        abilityCreature.takeStaminaDamage(25f);
+        abilityCreature.takeStaminaDamage(15f);
 
     }
 

@@ -60,7 +60,7 @@ public class DashAbility extends Ability {
      protected void onActiveStart() {
         abilityCreature.setImmobilized(true);
 
-        abilityCreature.takeStaminaDamage(30f);
+        abilityCreature.takeStaminaDamage(15f);
     }
 
     @Override

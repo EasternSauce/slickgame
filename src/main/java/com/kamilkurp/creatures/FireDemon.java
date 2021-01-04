@@ -2,10 +2,7 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.abilities.Ability;
-import com.kamilkurp.abilities.AbilityState;
-import com.kamilkurp.abilities.FistSlamAbility;
-import com.kamilkurp.abilities.MeteorRainAbility;
+import com.kamilkurp.abilities.*;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.spawn.MobSpawnPoint;
@@ -25,6 +22,7 @@ public class FireDemon extends Mob {
 
     protected MeteorRainAbility meteorRainAbility;
     protected FistSlamAbility fistSlamAbility;
+    protected MeteorCrashAbility meteorCrashAbility;
 
     protected boolean bossBattleStarted;
 
@@ -78,6 +76,9 @@ public class FireDemon extends Mob {
             if (aggroed != null && Globals.distance(aggroed.getRect(), rect) < 40f) {
                 fistSlamAbility.tryPerforming();
             }
+            if (aggroed != null && Globals.distance(aggroed.getRect(), rect) > 150f) {
+                meteorCrashAbility.tryPerforming();
+            }
 
             currentAttack.tryPerforming();
         }
@@ -96,6 +97,9 @@ public class FireDemon extends Mob {
 
         fistSlamAbility = FistSlamAbility.newInstance(this);
         abilityList.add(fistSlamAbility);
+
+        meteorCrashAbility = MeteorCrashAbility.newInstance(this);
+        abilityList.add(meteorCrashAbility);
 
         updateAttackType();
     }
@@ -122,7 +126,7 @@ public class FireDemon extends Mob {
         dirX = 0;
         dirY = 0;
 
-        speed = 0.35f * i;
+        speed = 0.15f * i;
 
         if (isAttacking) {
             speed = speed / 2f;
@@ -170,7 +174,7 @@ public class FireDemon extends Mob {
 
         Map<String, Creature> areaCreatures = area.getCreatures();
 
-        int aggroDistance = 400;
+        int aggroDistance = 500;
         aggroed = null;
         for (Creature creature : areaCreatures.values()) {
             if (creature instanceof Mob || creature instanceof NonPlayerCharacter) continue;

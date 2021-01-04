@@ -8,27 +8,24 @@ import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MeteorRainAbility extends Ability {
-    protected float explosionRange;
-
+public class MeteorCrashAbility extends Ability {
     protected List<Meteor> meteors;
 
-    private MeteorRainAbility(Creature abilityCreature) {
+    private MeteorCrashAbility(Creature abilityCreature) {
         super(abilityCreature);
     }
 
     @Override
     public void init() {
-        cooldownTime = 35000;
-        activeTime = 13000;
-        channelTime = 300;
-
-        explosionRange = 150f;
+        cooldownTime = 3500;
+        activeTime = 2000;
+        channelTime = 800;
     }
 
     @Override
@@ -97,8 +94,20 @@ public class MeteorRainAbility extends Ability {
 
         meteors = new LinkedList<>();
 
-        for (int i = 0; i < 30; i++) {
-            meteors.add(new Meteor(400 * i, new Rectangle(rect.getCenterX() + Globals.randInt(-400, 400), rect.getCenterY() + Globals.randInt(-400, 400), 1, 1), explosionRange, 1.0f));
+        Vector2f facingVector = abilityCreature.getFacingVector().normalise();
+
+        for (int i = 0; i < 5; i++) {
+            meteors.add(new Meteor(100 * i, new Rectangle(rect.getCenterX() + (100 * (i + 1)) * facingVector.getX(), rect.getCenterY() + (100 * (i + 1)) * facingVector.getY(), 1, 1), 50 + 3 * i * i, 2.0f));
+        }
+        for (int i = 0; i < 5; i++) {
+            Vector2f vector = facingVector.copy();
+            vector.setTheta(vector.getTheta() + 50);
+            meteors.add(new Meteor(100 * i, new Rectangle(rect.getCenterX() + (100 * (i + 1)) * vector.getX(), rect.getCenterY() + (100 * (i + 1)) * vector.getY(), 1, 1), 50 + 3 * i * i, 2.0f));
+        }
+        for (int i = 0; i < 5; i++) {
+            Vector2f vector = facingVector.copy();
+            vector.setTheta(vector.getTheta() - 50);
+            meteors.add(new Meteor(100 * i, new Rectangle(rect.getCenterX() + (100 * (i + 1)) * vector.getX(), rect.getCenterY() + (100 * (i + 1)) * vector.getY(), 1, 1), 50 + 3 * i * i, 2.0f));
         }
 
     }
@@ -137,8 +146,8 @@ public class MeteorRainAbility extends Ability {
         abilityCreature.setImmobilized(false);
     }
 
-    public static MeteorRainAbility newInstance(Creature abilityCreature) {
-        MeteorRainAbility ability = new MeteorRainAbility(abilityCreature);
+    public static MeteorCrashAbility newInstance(Creature abilityCreature) {
+        MeteorCrashAbility ability = new MeteorCrashAbility(abilityCreature);
         ability.init();
         ability.setTimerStartingPosition();
         return ability;

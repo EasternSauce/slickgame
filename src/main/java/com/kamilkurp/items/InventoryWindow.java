@@ -97,7 +97,7 @@ public class InventoryWindow {
         for (int i = 0; i < tradeInventorySlots; i++) {
             int col = inventoryColumns + 1 + i % (tradeInventoryColumns);
             int row = i / (tradeInventoryColumns);
-            Rectangle slot = new Rectangle(background.getX() + margin + (space + slotWidth) * col,background.getY() + margin + (space + slotHeight) * row, slotWidth, slotHeight);
+            Rectangle slot = new Rectangle(background.getX() + margin + (space + slotWidth) * col,background.getY() + margin + (space + slotHeight) * row + 30, slotWidth, slotHeight);
             traderInventorySlotList.add(slot);
         }
 
@@ -410,65 +410,30 @@ public class InventoryWindow {
                         if (playerCharacter.getHealthPoints() > playerCharacter.getMaxHealthPoints()) playerCharacter.setHealthPoints(playerCharacter.getMaxHealthPoints());
                     }
                 }
-                else {
-                    if (!inTraderInventory) {
-                        if (inventoryItems.get(currentSelected) != null) {
-                            sellSelectedItem();
 
-                        }
-                    } else {
-                        if (traderInventoryItems.get(currentSelected) != null) {
-
-                            if (gold - traderInventoryItems.get(currentSelected).getItemType().getWorth() >= 0) {
-
-                                boolean stackable = traderInventoryItems.get(currentSelected).getItemType().isStackable();
-
-                                if (stackable) {
-                                    int invPos = -1;
-                                    for (Map.Entry<Integer, Item> invItem : inventoryItems.entrySet()) {
-                                        if (invItem.getValue().getItemType() == traderInventoryItems.get(currentSelected).getItemType()) {
-                                            invPos = invItem.getKey();
-                                            break;
-                                        }
-                                    }
-                                    if (invPos != -1) {
-                                        gold -= traderInventoryItems.get(currentSelected).getItemType().getWorth();
-
-                                        // add quantity to existing item
-                                        inventoryItems.get(invPos).setQuantity(inventoryItems.get(invPos).getQuantity() + traderInventoryItems.get(currentSelected).getQuantity());
-                                        traderInventoryItems.remove(currentSelected);
-
-                                    }
-                                }
-                                else {
-                                    for (int i = 0; i < inventorySlots; i++) {
-                                        if (inventoryItems.get(i) == null) {
-                                            gold -= traderInventoryItems.get(currentSelected).getItemType().getWorth();
-                                            inventoryItems.put(i, traderInventoryItems.get(currentSelected));
-                                            traderInventoryItems.remove(currentSelected);
-                                            break;
-
-                                        }
-                                    }
-                                }
-
-                            }
-
-                        }
-                    }
-
-                }
 
             }
             if (keyInput.isKeyPressed(KeyInput.Key.E)) {
                 if (inventoryOpen) {
                     if (trading) {
-                        if (!inEquipment && !inTraderInventory) {
+                        if (!inTraderInventory) {
                             if (inventoryItems.get(currentSelected) != null) {
                                 sellSelectedItem();
 
                             }
+                        } else {
+                            if (traderInventoryItems.get(currentSelected) != null) {
+
+                                if (gold - traderInventoryItems.get(currentSelected).getItemType().getWorth() >= 0) {
+                                    takeItem(traderInventoryItems.get(currentSelected));
+                                    gold -= traderInventoryItems.get(currentSelected).getItemType().getWorth();
+                                    traderInventoryItems.remove(currentSelected);
+                                }
+
+                            }
                         }
+
+
                     }
                     else {
 
@@ -609,6 +574,39 @@ public class InventoryWindow {
                 }
                 item.removeFromLoot();
                 itemList.remove(item);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean takeItem(Item item) {
+        ItemType itemType = item.getItemType();
+
+        boolean stackable = itemType.isStackable();
+
+        if (stackable) {
+            int invPos = -1;
+            for (Map.Entry<Integer, Item> invItem : inventoryItems.entrySet()) {
+                if (invItem.getValue() != null && invItem.getValue().getItemType() == itemType) {
+                    invPos = invItem.getKey();
+                    break;
+                }
+            }
+            if (invPos != -1) {
+                // add quantity to existing item
+                inventoryItems.get(invPos).setQuantity(inventoryItems.get(invPos).getQuantity() + item.getQuantity());
+
+                return true;
+            }
+        }
+
+        for (int i = 0; i < inventorySlots; i++) {
+            if (inventoryItems.get(i) == null) { // if slot empty
+
+                inventoryItems.put(i, item);
 
                 return true;
             }

@@ -49,7 +49,7 @@ public class BowAttack extends Attack {
             arrowList.add(arrow);
         }
 
-        abilityCreature.takeStaminaDamage(40f);
+        abilityCreature.takeStaminaDamage(20f);
 
     }
 
