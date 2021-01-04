@@ -11,15 +11,17 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
 public class Hud {
-    Rectangle bottomRect;
-    Rectangle maxHealthRect;
-    Rectangle healthRect;
-    Rectangle maxStaminaRect;
-    Rectangle staminaRect;
+    private Rectangle bottomRect;
+    private Rectangle maxHealthRect;
+    private Rectangle healthRect;
+    private Rectangle maxStaminaRect;
+    private Rectangle staminaRect;
 
-    Color color;
+    private Color color;
 
-    GameSystem gameSystem;
+    private GameSystem gameSystem;
+
+    private BossHealthBar bossHealthBar;
 
     public Hud(GameSystem gameSystem) {
         this.gameSystem = gameSystem;
@@ -36,6 +38,8 @@ public class Hud {
 
             maxStaminaRect = new Rectangle(10, h * proportion - 25, 100, 10);
             staminaRect = new Rectangle(10, h * proportion - 25, 100 * pc.getHealthPoints()/pc.getMaxHealthPoints(), 10);
+
+            bossHealthBar = new BossHealthBar();
         }
     }
 
@@ -81,7 +85,9 @@ public class Hud {
 
             }
 
+            bossHealthBar.render(g);
         }
+
     }
 
     public void update() {
@@ -91,5 +97,10 @@ public class Hud {
         healthRect = new Rectangle(10, h * proportion - 40, 100 * pc.getHealthPoints()/pc.getMaxHealthPoints(), 10);
         staminaRect = new Rectangle(10, h * proportion - 25, 100 * pc.getStaminaPoints()/pc.getMaxStaminaPoints(), 10);
 
+        bossHealthBar.update();
+    }
+
+    public BossHealthBar getBossHealthBar() {
+        return bossHealthBar;
     }
 }

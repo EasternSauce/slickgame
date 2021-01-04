@@ -23,6 +23,7 @@ public class FireDemon extends Mob {
     protected MeteorRainAbility meteorRainAbility;
     protected FistSlamAbility fistSlamAbility;
     protected MeteorCrashAbility meteorCrashAbility;
+    protected DashAbility dashAbility;
 
     protected boolean bossBattleStarted;
 
@@ -63,24 +64,36 @@ public class FireDemon extends Mob {
 
         bossBattleStarted = false;
 
+        name = "Magma Stalker";
+
     }
 
     @Override
     public void attack() {
 
-        if (staminaPoints > 0f && !immobilized && meteorRainAbility.getState() == AbilityState.ABILITY_INACTIVE) {
+        if (staminaPoints > 0f && !immobilized && isNoAbilityActive() && aggroed != null) {
             if (healthPoints < maxHealthPoints * 0.7) {
                 meteorRainAbility.tryPerforming();
             }
 
-            if (aggroed != null && Globals.distance(aggroed.getRect(), rect) < 40f) {
+            if (Globals.distance(aggroed.getRect(), rect) < 80f) {
                 fistSlamAbility.tryPerforming();
             }
-            if (aggroed != null && Globals.distance(aggroed.getRect(), rect) > 150f) {
+            System.out.println(Globals.distance(aggroed.getRect(), rect));
+            if (Globals.distance(aggroed.getRect(), rect) > 220f) {
                 meteorCrashAbility.tryPerforming();
             }
 
-            currentAttack.tryPerforming();
+            if (Globals.distance(aggroed.getRect(), rect) < 170f) {
+                currentAttack.tryPerforming();
+            }
+
+            if (Globals.distance(aggroed.getRect(), rect) > 200f) {
+                if (hasDestination) {
+                    dashAbility.setDashVector(new Vector2f(destinationX - rect.getX(), destinationY - rect.getY()).getNormal());
+                    dashAbility.tryPerforming();
+                }
+            }
         }
 
     }
@@ -90,7 +103,7 @@ public class FireDemon extends Mob {
         defineAbilities();
 
         tridentAttack.setAttackRange(45f);
-        tridentAttack.setScale(2.5f);
+        tridentAttack.setScale(2.0f);
 
         meteorRainAbility = MeteorRainAbility.newInstance(this);
         abilityList.add(meteorRainAbility);
@@ -100,6 +113,9 @@ public class FireDemon extends Mob {
 
         meteorCrashAbility = MeteorCrashAbility.newInstance(this);
         abilityList.add(meteorCrashAbility);
+
+        dashAbility = DashAbility.newInstance(this);
+        abilityList.add(dashAbility);
 
         updateAttackType();
     }
@@ -186,6 +202,8 @@ public class FireDemon extends Mob {
 
                     fireDemonMusic.loop(1.0f, Globals.MUSIC_VOLUME);
 
+                    gameSystem.getHud().getBossHealthBar().onBossBattleStart(this);
+
                     mobSpawnPoint.getBlockade().setActive(true);
                 }
 
@@ -219,35 +237,38 @@ public class FireDemon extends Mob {
                 circlingDirectionTimer.reset();
             }
 
-            float walkUpDistance = 300f;
+            float walkUpDistance = 1000f;
             float minimumDistance = 100f;
             float attackDistance = 130f;
             float holdDistance = 175f;
 
             if (currentAttack.getAttackType() == AttackType.UNARMED) {
                 minimumDistance = 100f;
-                walkUpDistance = 300f;
+                walkUpDistance = 1000f;
                 holdDistance = 175f;
                 attackDistance = 130f;
             } else
             if (currentAttack.getAttackType() == AttackType.SWORD) {
                 minimumDistance = 100f;
-                walkUpDistance = 300f;
+                walkUpDistance = 1000f;
                 holdDistance = 175f;
                 attackDistance = 130f;
             }
             else if (currentAttack.getAttackType() == AttackType.BOW) {
                 minimumDistance = 300f;
-                walkUpDistance = 300f;
+                walkUpDistance = 1000f;
                 holdDistance = 300f;
                 attackDistance = 300f;
             }
             else if (currentAttack.getAttackType() == AttackType.TRIDENT) {
                 minimumDistance = 180f;
-                walkUpDistance = 400f;
+                walkUpDistance = 1000f;
                 holdDistance = 220f;
                 attackDistance = 200f;
             }
+
+            //TODO: change distance ai logic
+            attackDistance = 450f;
 
             if (findNewDestinationTimer.getTime() > 200f) {
 
@@ -368,6 +389,11 @@ public class FireDemon extends Mob {
         currentAttack.stopAbility();
 
         fireDemonMusic.stop();
+
+        if (gameSystem.getHud().getBossHealthBar().getBoss() == this) {
+            gameSystem.getHud().getBossHealthBar().hide();
+        }
+
         mobSpawnPoint.getBlockade().setActive(false);
     }
 }

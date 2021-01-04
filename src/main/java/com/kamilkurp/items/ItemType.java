@@ -103,7 +103,6 @@ public class ItemType {
         ItemType itemType15 = new ItemType("steelHelmet", "Steel Helmet", "-", itemIcons.getSprite(1, 7), "helmet", 170, null, 15f, false, false);
 
         ItemType itemType16 = new ItemType("demonTrident", "Demon Trident", "-", itemIcons.getSprite(8, 5), "weapon", 900, 100f, null, false, false);
-        //itemType16.setWeaponSpeed(1.1f);
         itemType16.setAttackType(AttackType.TRIDENT);
 
         ItemType itemType17 = new ItemType("thiefRing", "Thief Ring", "Gain life on hit", itemIcons.getSprite(5, 8), "ring", 1400, null, null, false, false);

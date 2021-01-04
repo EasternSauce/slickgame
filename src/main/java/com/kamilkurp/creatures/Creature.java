@@ -148,6 +148,8 @@ public abstract class Creature {
     
     protected boolean isAttacking;
 
+    protected String name;
+
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
         this.id = id;
@@ -836,5 +838,17 @@ public abstract class Creature {
             Attack attackAbility = attackList.stream().filter(attack -> attack.getAttackType().equals(AttackType.UNARMED)).findAny().get();
             currentAttack = attackAbility;
         }
+    }
+
+    public boolean isNoAbilityActive() {
+        for (Ability ability : abilityList) {
+            if (ability.isActive()) return false;
+        }
+        return true;
+    }
+
+    public String getName() {
+        if (name != null) return name;
+        return id;
     }
 }

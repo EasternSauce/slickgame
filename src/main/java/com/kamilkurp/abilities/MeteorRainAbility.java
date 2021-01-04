@@ -53,7 +53,7 @@ public class MeteorRainAbility extends Ability {
                 if (meteor.getState() == AbilityState.ABILITY_CHANNELING) {
                     if (meteor.getChannelTimer().getTime() > meteor.getChannelTime()) {
                         meteor.setState(AbilityState.ABILITY_ACTIVE);
-                        Assets.explosionSound.play(1.0f, 0.01f);
+                        Assets.explosionSound.play(1.0f, 0.05f);
                         meteor.getExplosionAnimation().restart();
 
                         meteor.getActiveTimer().reset();

@@ -304,7 +304,10 @@ public class PlayerCharacter extends Creature {
 
         currentAttack.stopAbility();
 
+        // TODO: stop all boss battle music
         fireDemonMusic.stop();
+
+        gameSystem.getHud().getBossHealthBar().hide();
     }
 
 

@@ -23,9 +23,9 @@ public class FistSlamAbility extends Ability {
 
     @Override
     public void init() {
-        cooldownTime = 3000;
+        cooldownTime = 6500;
         activeTime = 2200;
-        channelTime = 0;
+        channelTime = 350;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class FistSlamAbility extends Ability {
         for (int i = 0; i < 10; i++) {
             int shiftX = 40;
             int shiftY = 100;
-            int range = 140;
+            int range = 155;
             fists.add(new Fist(200 * i, new Rectangle(rect.getCenterX() - shiftX + Globals.randInt(-range, range), rect.getCenterY() - shiftY + Globals.randInt(-range, range), 1, 1)));
         }
 
