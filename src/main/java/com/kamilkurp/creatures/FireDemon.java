@@ -18,16 +18,12 @@ import org.newdawn.slick.geom.Vector2f;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FireDemon extends Mob {
+public class FireDemon extends Boss {
 
     protected MeteorRainAbility meteorRainAbility;
     protected FistSlamAbility fistSlamAbility;
     protected MeteorCrashAbility meteorCrashAbility;
     protected DashAbility dashAbility;
-
-    protected boolean bossBattleStarted;
-
-    protected Music fireDemonMusic = Assets.fireDemon;
 
     protected Sound roarSound = Assets.roarSound;
 
@@ -62,16 +58,20 @@ public class FireDemon extends Mob {
 
         grantWeapon(weapon);
 
-        bossBattleStarted = false;
-
         name = "Magma Stalker";
+
+        aggroDistance = 500f;
+        attackDistance = 500f;
+        walkUpDistance = 500f;
+
+        bossMusic = Assets.fireDemon;
 
     }
 
     @Override
-    public void attack() {
+    public void performCombatAbilities() {
 
-        if (staminaPoints > 0f && !immobilized && isNoAbilityActive() && aggroed != null) {
+        if (!immobilized && isNoAbilityActive() && aggroed != null) {
             if (healthPoints < maxHealthPoints * 0.7) {
                 meteorRainAbility.tryPerforming();
             }
@@ -79,7 +79,7 @@ public class FireDemon extends Mob {
             if (Globals.distance(aggroed.getRect(), rect) < 80f) {
                 fistSlamAbility.tryPerforming();
             }
-            System.out.println(Globals.distance(aggroed.getRect(), rect));
+
             if (Globals.distance(aggroed.getRect(), rect) > 220f) {
                 meteorCrashAbility.tryPerforming();
             }
@@ -88,7 +88,7 @@ public class FireDemon extends Mob {
                 currentAttack.tryPerforming();
             }
 
-            if (Globals.distance(aggroed.getRect(), rect) > 200f) {
+            if (Globals.distance(aggroed.getRect(), rect) > 300f) {
                 if (hasDestination) {
                     dashAbility.setDashVector(new Vector2f(destinationX - rect.getX(), destinationY - rect.getY()).getNormal());
                     dashAbility.tryPerforming();
@@ -170,14 +170,14 @@ public class FireDemon extends Mob {
                 immune = true;
             }
 
-//            if (!knockback && knockbackPower > 0f) {
-//                this.knockbackPower = knockbackPower;
-//
-//                knockbackVector = new Vector2f(rect.getX() - sourceX, rect.getY() - sourceY).getNormal();
-//                knockback = true;
-//                knockbackTimer.reset();
-//
-//            }
+            if (knocbackable && !knockback && knockbackPower > 0f) {
+                this.knockbackPower = knockbackPower;
+
+                knockbackVector = new Vector2f(rect.getX() - sourceX, rect.getY() - sourceY).getNormal();
+                knockback = true;
+                knockbackTimer.reset();
+
+            }
 
             if (Globals.randFloat() < 0.3) roarSound.play(1.0f, 0.1f);
 
@@ -185,215 +185,4 @@ public class FireDemon extends Mob {
 
     }
 
-    @Override
-    public void performActions(GameContainer gc, KeyInput keyInput) {
-
-        Map<String, Creature> areaCreatures = area.getCreatures();
-
-        int aggroDistance = 500;
-        aggroed = null;
-        for (Creature creature : areaCreatures.values()) {
-            if (creature instanceof Mob || creature instanceof NonPlayerCharacter) continue;
-            if (Globals.distance(creature.rect, rect) < aggroDistance && creature.healthPoints > 0) {
-                aggroed = creature;
-
-                if (!bossBattleStarted) {
-                    bossBattleStarted = true;
-
-                    fireDemonMusic.loop(1.0f, Globals.MUSIC_VOLUME);
-
-                    gameSystem.getHud().getBossHealthBar().onBossBattleStart(this);
-
-                    mobSpawnPoint.getBlockade().setActive(true);
-                }
-
-                break;
-            }
-        }
-
-        if (actionTimer.getTime() > 500f) {
-            currentDirection = Math.abs(random.nextInt())%4;
-            stayInPlace = Math.abs(random.nextInt()) % 10 < 8;
-            actionTimer.reset();
-        }
-
-        if (aggroed != null) {
-
-            if (attackOrHoldTimer.getTime() > attackOrHoldTime) {
-                hold = Globals.randFloat() < 0.8f;
-                attackOrHoldTimer.reset();
-            }
-
-            if (circlingDirectionTimer.getTime() > circlingDirectionTime) {
-                circling = Globals.randFloat() < 0.8f;
-                if (circling) {
-                    if (Globals.randFloat() < 0.5f) {
-                        circlingDir = 0;
-                    }
-                    else {
-                        circlingDir = 1;
-                    }
-                }
-                circlingDirectionTimer.reset();
-            }
-
-            float walkUpDistance = 1000f;
-            float minimumDistance = 100f;
-            float attackDistance = 130f;
-            float holdDistance = 175f;
-
-            if (currentAttack.getAttackType() == AttackType.UNARMED) {
-                minimumDistance = 100f;
-                walkUpDistance = 1000f;
-                holdDistance = 175f;
-                attackDistance = 130f;
-            } else
-            if (currentAttack.getAttackType() == AttackType.SWORD) {
-                minimumDistance = 100f;
-                walkUpDistance = 1000f;
-                holdDistance = 175f;
-                attackDistance = 130f;
-            }
-            else if (currentAttack.getAttackType() == AttackType.BOW) {
-                minimumDistance = 300f;
-                walkUpDistance = 1000f;
-                holdDistance = 300f;
-                attackDistance = 300f;
-            }
-            else if (currentAttack.getAttackType() == AttackType.TRIDENT) {
-                minimumDistance = 180f;
-                walkUpDistance = 1000f;
-                holdDistance = 220f;
-                attackDistance = 200f;
-            }
-
-            //TODO: change distance ai logic
-            attackDistance = 450f;
-
-            if (findNewDestinationTimer.getTime() > 200f) {
-
-                float dist = Globals.distance(this.rect, aggroed.rect);
-
-
-                if (dist < holdDistance) {
-                    if (hold) {
-                        if (circling) {
-                            if (circlingDir == 0) {
-                                destinationX = aggroed.rect.getCenterX();
-                                destinationY = aggroed.rect.getCenterY();
-                                Vector2f destinationVector = new Vector2f(destinationX - rect.getCenterX(), destinationY - rect.getCenterY());
-
-                                Vector2f perpendicular = destinationVector.getPerpendicular();
-
-                                destinationX = aggroed.rect.getCenterX() + perpendicular.getX();
-                                destinationY = aggroed.rect.getCenterY() + perpendicular.getY();
-
-                                hasDestination = true;
-                            }
-                            else {
-                                destinationX = aggroed.rect.getCenterX();
-                                destinationY = aggroed.rect.getCenterY();
-                                Vector2f destinationVector = new Vector2f(destinationX - rect.getCenterX(), destinationY - rect.getCenterY());
-
-                                Vector2f perpendicular = destinationVector.getPerpendicular().negate();
-
-                                destinationX = rect.getCenterX() + perpendicular.getX();
-                                destinationY = rect.getCenterY() + perpendicular.getY();
-
-                                hasDestination = true;
-                            }
-                        }
-                        else {
-                            hasDestination = false;
-                        }
-                    }
-                    else {
-                        destinationX = aggroed.rect.getCenterX();
-                        destinationY = aggroed.rect.getCenterY();
-                        hasDestination = true;
-                    }
-                }
-                else if (dist < walkUpDistance) {
-                    destinationX = aggroed.rect.getCenterX();
-                    destinationY = aggroed.rect.getCenterY();
-                    hasDestination = true;
-                }
-                else {
-                    hasDestination = false;
-                }
-
-                findNewDestinationTimer.reset();
-            }
-
-            if (hasDestination) {
-                goTo(destinationX, destinationY);
-            }
-
-            if (Globals.distance(aggroed.rect, rect) < attackDistance) {
-                attack();
-            }
-
-            if (Globals.distance(aggroed.rect, rect) < minimumDistance) {
-                float maxDist = 0.0f;
-                int dir = 0;
-                if (rect.getCenterX() < aggroed.rect.getCenterX()) {
-                    float dist = Math.abs(rect.getCenterX() - aggroed.rect.getCenterX());
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        dir = 3;
-                    }
-                }
-                if (rect.getCenterX() > aggroed.rect.getCenterX()) {
-                    float dist = Math.abs(rect.getCenterX() - aggroed.rect.getCenterX());
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        dir = 1;
-                    }
-                }
-
-                if (rect.getCenterY() < aggroed.rect.getCenterY()) {
-                    float dist = Math.abs(rect.getCenterY() - aggroed.rect.getCenterY());
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        dir = 2;
-                    }
-                }
-                if (rect.getCenterY() > aggroed.rect.getCenterY()) {
-                    float dist = Math.abs(rect.getCenterY() - aggroed.rect.getCenterY());
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        dir = 0;
-
-                    }
-                }
-                direction = dir;
-
-
-            }
-
-        }
-
-
-
-
-    }
-
-    @Override
-    public void onDeath() {
-        gameSystem.getLootSystem().spawnLootPile(area, rect.getCenterX(), rect.getCenterY(), dropTable);
-
-        for (Ability ability : abilityList) {
-            ability.stopAbility();
-        }
-
-        currentAttack.stopAbility();
-
-        fireDemonMusic.stop();
-
-        if (gameSystem.getHud().getBossHealthBar().getBoss() == this) {
-            gameSystem.getHud().getBossHealthBar().hide();
-        }
-
-        mobSpawnPoint.getBlockade().setActive(false);
-    }
 }

@@ -150,6 +150,8 @@ public abstract class Creature {
 
     protected String name;
 
+    protected boolean knocbackable;
+
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
         this.id = id;
@@ -202,6 +204,8 @@ public abstract class Creature {
         movementVector = new Vector2f(0f,0f);
 
         scale = 1.0f;
+
+        knocbackable = true;
     }
 
     public void defineAbilities() {
@@ -400,7 +404,7 @@ public abstract class Creature {
                 immune = true;
             }
 
-            if (!knockback && knockbackPower > 0f) {
+            if (knocbackable && !knockback && knockbackPower > 0f) {
                 this.knockbackPower = knockbackPower;
 
                 knockbackVector = new Vector2f(rect.getX() - sourceX, rect.getY() - sourceY).getNormal();
@@ -565,12 +569,6 @@ public abstract class Creature {
         totalDirections++;
     }
 
-    public void attack() {
-
-        if (staminaPoints > 0f) {
-            currentAttack.tryPerforming();
-        }
-    }
 
     public void executeMovementLogic() {
         List<TerrainTile> tiles = area.getTiles();
@@ -850,5 +848,9 @@ public abstract class Creature {
     public String getName() {
         if (name != null) return name;
         return id;
+    }
+
+    public void onAggroed() {
+
     }
 }

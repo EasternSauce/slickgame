@@ -102,7 +102,7 @@ public abstract class Ability {
     }
 
     public void tryPerforming() {
-        if (abilityCreature.getStaminaPoints() != 0 && state == AbilityState.ABILITY_INACTIVE && activeTimer.getTime() > cooldownTime) {
+        if (abilityCreature.getStaminaPoints() > 0 && state == AbilityState.ABILITY_INACTIVE && activeTimer.getTime() > cooldownTime) {
             channelTimer.reset();
             state = AbilityState.ABILITY_CHANNELING;
             onChannellingStart();

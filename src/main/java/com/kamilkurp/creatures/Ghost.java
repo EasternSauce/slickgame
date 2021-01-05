@@ -59,17 +59,15 @@ public class Ghost extends Mob {
     }
 
     @Override
-    public void attack() {
+    public void performCombatAbilities() {
 
         if (healthPoints > maxHealthPoints * 0.30) {
-            if (staminaPoints > 0f) {
-                if (currentAttack.getAttackType() == AttackType.UNARMED) {
-                    unarmedAttack.tryPerforming();
-                } else if (currentAttack.getAttackType() == AttackType.SWORD) {
-                    swordAttack.tryPerforming();
-                } else if (currentAttack.getAttackType() == AttackType.BOW) {
-                    bowAttack.tryPerforming();
-                }
+            if (currentAttack.getAttackType() == AttackType.UNARMED) {
+                unarmedAttack.tryPerforming();
+            } else if (currentAttack.getAttackType() == AttackType.SWORD) {
+                swordAttack.tryPerforming();
+            } else if (currentAttack.getAttackType() == AttackType.BOW) {
+                bowAttack.tryPerforming();
             }
         }
         else {
@@ -126,7 +124,7 @@ public class Ghost extends Mob {
                 immune = true;
             }
 
-            if (!knockback && knockbackPower > 0f) {
+            if (knocbackable && !knockback && knockbackPower > 0f) {
                 this.knockbackPower = knockbackPower;
 
                 knockbackVector = new Vector2f(rect.getX() - sourceX, rect.getY() - sourceY).getNormal();

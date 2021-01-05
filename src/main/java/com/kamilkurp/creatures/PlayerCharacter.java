@@ -103,7 +103,9 @@ public class PlayerCharacter extends Creature {
 
 
         if (Mouse.isButtonDown(0)) {
-            attack();
+            if (!immobilized) {
+                currentAttack.tryPerforming();
+            }
         }
         //rewrite
         if (keyInput.isKeyPressed(KeyInput.Key.E)) {

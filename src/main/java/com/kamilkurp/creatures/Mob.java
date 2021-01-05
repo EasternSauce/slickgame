@@ -30,6 +30,7 @@ public abstract class Mob extends Creature {
 
     protected Creature aggroed;
 
+    protected float aggroDistance;
 
     protected float destinationX;
     protected float destinationY;
@@ -45,6 +46,11 @@ public abstract class Mob extends Creature {
     protected int circlingDir;
     protected MobSpawnPoint mobSpawnPoint;
 
+    protected boolean isBoss;
+
+    protected Float attackDistance;
+    protected Float walkUpDistance;
+
     public Mob(GameSystem gameSystem, MobSpawnPoint mobSpawnPoint, String id) {
         super(gameSystem, id);
 
@@ -55,6 +61,10 @@ public abstract class Mob extends Creature {
         circling = false;
         circlingDir = 0;
         this.mobSpawnPoint = mobSpawnPoint;
+
+        aggroDistance = 400;
+
+        isBoss = false;
     }
 
     @Override
@@ -99,194 +109,172 @@ public abstract class Mob extends Creature {
 
         Map<String, Creature> areaCreatures = area.getCreatures();
 
-        int aggroDistance = 400;
         aggroed = null;
         for (Creature creature : areaCreatures.values()) {
             if (creature instanceof Mob || creature instanceof NonPlayerCharacter) continue;
             if (Globals.distance(creature.rect, rect) < aggroDistance && creature.healthPoints > 0) {
                 aggroed = creature;
+
+                onAggroed();
+
                 break;
             }
         }
 
+        if (aggroed == null) {
+            performIdleBehavior();
+        }
+        else {
+            performAggroedBehavior();
+        }
+
+    }
+
+    public void performAggroedBehavior() {
+        if (attackOrHoldTimer.getTime() > attackOrHoldTime) {
+            hold = Globals.randFloat() < 0.8f;
+            attackOrHoldTimer.reset();
+        }
+
+        if (circlingDirectionTimer.getTime() > circlingDirectionTime) {
+            circling = Globals.randFloat() < 0.8f;
+            if (circling) {
+                if (Globals.randFloat() < 0.5f) {
+                    circlingDir = 0;
+                }
+                else {
+                    circlingDir = 1;
+                }
+            }
+            circlingDirectionTimer.reset();
+        }
+
+        AttackType attackType = currentAttack.getAttackType();
+
+        if (findNewDestinationTimer.getTime() > 200f) {
+
+            float dist = Globals.distance(this.rect, aggroed.rect);
+
+            if (dist < attackType.holdDistance) {
+                if (hold) {
+                    if (circling) {
+                        if (circlingDir == 0) {
+                            destinationX = aggroed.rect.getCenterX();
+                            destinationY = aggroed.rect.getCenterY();
+                            Vector2f destinationVector = new Vector2f(destinationX - rect.getCenterX(), destinationY - rect.getCenterY());
+
+                            Vector2f perpendicular = destinationVector.getPerpendicular();
+
+                            destinationX = aggroed.rect.getCenterX() + perpendicular.getX();
+                            destinationY = aggroed.rect.getCenterY() + perpendicular.getY();
+
+                            hasDestination = true;
+                        }
+                        else {
+                            destinationX = aggroed.rect.getCenterX();
+                            destinationY = aggroed.rect.getCenterY();
+                            Vector2f destinationVector = new Vector2f(destinationX - rect.getCenterX(), destinationY - rect.getCenterY());
+
+                            Vector2f perpendicular = destinationVector.getPerpendicular().negate();
+
+                            destinationX = rect.getCenterX() + perpendicular.getX();
+                            destinationY = rect.getCenterY() + perpendicular.getY();
+
+                            hasDestination = true;
+                        }
+                    }
+                    else {
+                        hasDestination = false;
+                    }
+                }
+                else {
+                    destinationX = aggroed.rect.getCenterX();
+                    destinationY = aggroed.rect.getCenterY();
+                    hasDestination = true;
+                }
+            }
+            else if (dist < (walkUpDistance == null ? attackType.walkUpDistance : walkUpDistance)) {
+                destinationX = aggroed.rect.getCenterX();
+                destinationY = aggroed.rect.getCenterY();
+                hasDestination = true;
+            }
+            else {
+                hasDestination = false;
+            }
+
+            findNewDestinationTimer.reset();
+        }
+
+        if (hasDestination) {
+            goTo(destinationX, destinationY);
+        }
+
+        if (!immobilized) {
+            if (Globals.distance(aggroed.getRect(), this.getRect()) < (attackDistance == null ? attackType.attackDistance : attackDistance)) {
+                performCombatAbilities();
+            }
+        }
+
+        if (Globals.distance(aggroed.rect, rect) < attackType.minimumDistance) {
+            float maxDist = 0.0f;
+            int dir = 0;
+            if (rect.getCenterX() < aggroed.rect.getCenterX()) {
+                float dist = Math.abs(rect.getCenterX() - aggroed.rect.getCenterX());
+                if (dist > maxDist) {
+                    maxDist = dist;
+                    dir = 3;
+                }
+            }
+            if (rect.getCenterX() > aggroed.rect.getCenterX()) {
+                float dist = Math.abs(rect.getCenterX() - aggroed.rect.getCenterX());
+                if (dist > maxDist) {
+                    maxDist = dist;
+                    dir = 1;
+                }
+            }
+
+            if (rect.getCenterY() < aggroed.rect.getCenterY()) {
+                float dist = Math.abs(rect.getCenterY() - aggroed.rect.getCenterY());
+                if (dist > maxDist) {
+                    maxDist = dist;
+                    dir = 2;
+                }
+            }
+            if (rect.getCenterY() > aggroed.rect.getCenterY()) {
+                float dist = Math.abs(rect.getCenterY() - aggroed.rect.getCenterY());
+                if (dist > maxDist) {
+                    maxDist = dist;
+                    dir = 0;
+
+                }
+            }
+            direction = dir;
+
+
+        }
+    }
+
+    public void performIdleBehavior() {
         if (actionTimer.getTime() > 500f) {
             currentDirection = Math.abs(random.nextInt())%4;
             stayInPlace = Math.abs(random.nextInt()) % 10 < 8;
             actionTimer.reset();
         }
 
-        if (aggroed == null) {
-            if (!stayInPlace && !immobilized) {
-                if (currentDirection == 0) {
-                    moveUp();
-                }
-                if (currentDirection == 1) {
-                    moveLeft();
-                }
-                if (currentDirection == 2) {
-                    moveDown();
-                }
-                if (currentDirection == 3) {
-                    moveRight();
-                }
+        if (!stayInPlace && !immobilized) {
+            if (currentDirection == 0) {
+                moveUp();
+            }
+            if (currentDirection == 1) {
+                moveLeft();
+            }
+            if (currentDirection == 2) {
+                moveDown();
+            }
+            if (currentDirection == 3) {
+                moveRight();
             }
         }
-        else {
-
-            if (attackOrHoldTimer.getTime() > attackOrHoldTime) {
-                hold = Globals.randFloat() < 0.8f;
-                attackOrHoldTimer.reset();
-            }
-
-            if (circlingDirectionTimer.getTime() > circlingDirectionTime) {
-                circling = Globals.randFloat() < 0.8f;
-                if (circling) {
-                    if (Globals.randFloat() < 0.5f) {
-                        circlingDir = 0;
-                    }
-                    else {
-                        circlingDir = 1;
-                    }
-                }
-                circlingDirectionTimer.reset();
-            }
-
-            float walkUpDistance = 300f;
-            float minimumDistance = 100f;
-            float attackDistance = 130f;
-            float holdDistance = 175f;
-
-            if (currentAttack.getAttackType() == AttackType.UNARMED) {
-                minimumDistance = 100f;
-                walkUpDistance = 300f;
-                holdDistance = 175f;
-                attackDistance = 130f;
-            } else
-            if (currentAttack.getAttackType() == AttackType.SWORD) {
-                minimumDistance = 100f;
-                walkUpDistance = 300f;
-                holdDistance = 175f;
-                attackDistance = 130f;
-            }
-            else if (currentAttack.getAttackType() == AttackType.BOW) {
-                minimumDistance = 300f;
-                walkUpDistance = 300f;
-                holdDistance = 300f;
-                attackDistance = 300f;
-            }
-            else if (currentAttack.getAttackType() == AttackType.TRIDENT) {
-                minimumDistance = 180f;
-                walkUpDistance = 400f;
-                holdDistance = 220f;
-                attackDistance = 200f;
-            }
-
-            if (findNewDestinationTimer.getTime() > 200f) {
-
-                float dist = Globals.distance(this.rect, aggroed.rect);
-
-
-                if (dist < holdDistance) {
-                    if (hold) {
-                        if (circling) {
-                            if (circlingDir == 0) {
-                                destinationX = aggroed.rect.getCenterX();
-                                destinationY = aggroed.rect.getCenterY();
-                                Vector2f destinationVector = new Vector2f(destinationX - rect.getCenterX(), destinationY - rect.getCenterY());
-
-                                Vector2f perpendicular = destinationVector.getPerpendicular();
-
-                                destinationX = aggroed.rect.getCenterX() + perpendicular.getX();
-                                destinationY = aggroed.rect.getCenterY() + perpendicular.getY();
-
-                                hasDestination = true;
-                            }
-                            else {
-                                destinationX = aggroed.rect.getCenterX();
-                                destinationY = aggroed.rect.getCenterY();
-                                Vector2f destinationVector = new Vector2f(destinationX - rect.getCenterX(), destinationY - rect.getCenterY());
-
-                                Vector2f perpendicular = destinationVector.getPerpendicular().negate();
-
-                                destinationX = rect.getCenterX() + perpendicular.getX();
-                                destinationY = rect.getCenterY() + perpendicular.getY();
-
-                                hasDestination = true;
-                            }
-                        }
-                        else {
-                            hasDestination = false;
-                        }
-                    }
-                    else {
-                        destinationX = aggroed.rect.getCenterX();
-                        destinationY = aggroed.rect.getCenterY();
-                        hasDestination = true;
-                    }
-                }
-                else if (dist < walkUpDistance) {
-                    destinationX = aggroed.rect.getCenterX();
-                    destinationY = aggroed.rect.getCenterY();
-                    hasDestination = true;
-                }
-                else {
-                    hasDestination = false;
-                }
-
-                findNewDestinationTimer.reset();
-            }
-
-            if (hasDestination) {
-                goTo(destinationX, destinationY);
-            }
-
-            if (Globals.distance(aggroed.rect, rect) < attackDistance) {
-                attack();
-            }
-
-            if (Globals.distance(aggroed.rect, rect) < minimumDistance) {
-                float maxDist = 0.0f;
-                int dir = 0;
-                if (rect.getCenterX() < aggroed.rect.getCenterX()) {
-                    float dist = Math.abs(rect.getCenterX() - aggroed.rect.getCenterX());
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        dir = 3;
-                    }
-                }
-                if (rect.getCenterX() > aggroed.rect.getCenterX()) {
-                    float dist = Math.abs(rect.getCenterX() - aggroed.rect.getCenterX());
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        dir = 1;
-                    }
-                }
-
-                if (rect.getCenterY() < aggroed.rect.getCenterY()) {
-                    float dist = Math.abs(rect.getCenterY() - aggroed.rect.getCenterY());
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        dir = 2;
-                    }
-                }
-                if (rect.getCenterY() > aggroed.rect.getCenterY()) {
-                    float dist = Math.abs(rect.getCenterY() - aggroed.rect.getCenterY());
-                    if (dist > maxDist) {
-                        maxDist = dist;
-                        dir = 0;
-
-                    }
-                }
-                direction = dir;
-
-
-            }
-
-        }
-
-
-
-
     }
 
 
@@ -325,5 +313,9 @@ public abstract class Mob extends Creature {
     public void grantWeapon(String weaponName) {
         ItemType weaponItemType = ItemType.getItemType(weaponName);
         equipmentItems.put(0, new Item(weaponItemType, null));
+    }
+
+    public void performCombatAbilities() {
+        currentAttack.tryPerforming();
     }
 }

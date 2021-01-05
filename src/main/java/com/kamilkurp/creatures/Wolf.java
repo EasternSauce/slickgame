@@ -121,7 +121,7 @@ public class Wolf extends Mob {
                 immune = true;
             }
 
-            if (!knockback && knockbackPower > 0f) {
+            if (knocbackable && !knockback && knockbackPower > 0f) {
                 this.knockbackPower = knockbackPower;
 
                 knockbackVector = new Vector2f(rect.getX() - sourceX, rect.getY() - sourceY).getNormal();
