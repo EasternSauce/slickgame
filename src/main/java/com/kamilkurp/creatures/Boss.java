@@ -5,8 +5,9 @@ import com.kamilkurp.abilities.Ability;
 import com.kamilkurp.spawn.MobSpawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import org.newdawn.slick.Music;
+import org.newdawn.slick.geom.Vector2f;
 
-public class Boss extends Mob {
+public abstract class Boss extends Mob {
 
     protected Music bossMusic;
 
@@ -18,11 +19,6 @@ public class Boss extends Mob {
         isBoss = true;
         bossBattleStarted = false;
         knocbackable = false;
-
-    }
-
-    @Override
-    public void onInit() {
 
     }
 
@@ -63,8 +59,47 @@ public class Boss extends Mob {
         mobSpawnPoint.getBlockade().setActive(false);
     }
 
+    @Override
     public void performIdleBehavior() {
         // stay put
     }
 
+    public Music getBossMusic() {
+        return bossMusic;
+    }
+
+    public void takeDamage(float damage, boolean immunityFrames, float knockbackPower, float sourceX, float sourceY) {
+
+        if (isAlive()) {
+
+            float beforeHP = healthPoints;
+
+            float actualDamage = damage * 100f/(100f + getTotalArmor());
+
+            if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
+            else healthPoints = 0f;
+
+            if (beforeHP != healthPoints && healthPoints == 0f) {
+                onDeath();
+            }
+
+            if (immunityFrames) {
+                immunityTimer.reset();
+                immune = true;
+            }
+
+            if (knocbackable && !knockback && knockbackPower > 0f) {
+                this.knockbackPower = knockbackPower;
+
+                knockbackVector = new Vector2f(rect.getX() - sourceX, rect.getY() - sourceY).getNormal();
+                knockback = true;
+                knockbackTimer.reset();
+
+            }
+
+            if (Globals.randFloat() < 0.3) onGettingHitSound.play(1.0f, 0.1f);
+
+        }
+
+    }
 }

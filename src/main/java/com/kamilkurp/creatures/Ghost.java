@@ -1,10 +1,10 @@
 package com.kamilkurp.creatures;
 
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.animations.WalkAnimation;
-import com.kamilkurp.assets.Assets;
 import com.kamilkurp.abilities.Ability;
 import com.kamilkurp.abilities.ExplodeAbility;
+import com.kamilkurp.animations.WalkAnimation;
+import com.kamilkurp.assets.Assets;
 import com.kamilkurp.spawn.MobSpawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
@@ -12,9 +12,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Vector2f;
-
-import java.util.HashMap;
 
 public class Ghost extends Mob {
     private Sound darkLaughSound = Assets.darkLaughSound;
@@ -27,8 +24,6 @@ public class Ghost extends Mob {
 
         actionTimer = new Timer(true);
 
-        dropTable = new HashMap<>();
-
         dropTable.put("healingPowder", 0.3f);
         dropTable.put("steelArmor", 0.03f);
         dropTable.put("steelGreaves", 0.05f);
@@ -39,33 +34,25 @@ public class Ghost extends Mob {
 
         walkAnimation = new WalkAnimation(Assets.ghostSpriteSheet, 3, 100, new int [] {3,1,0,2}, 0);
 
-        destinationX = 0.0f;
-        destinationY = 0.0f;
-        hasDestination = false;
-
         hitbox = new Rectangle(17, 15, 30, 46);
+
+        onGettingHitSound = Assets.evilYellingSound;
+
+        baseSpeed = 0.3f;
 
         setMaxHealthPoints(600f);
         setHealthPoints(getMaxHealthPoints());
 
         grantWeapon(weapon);
 
-
-
-
     }
 
     @Override
     public void performCombatAbilities() {
 
-        // TODO: use currentAttack?
         if (healthPoints > maxHealthPoints * 0.30) {
-            if (unarmedAttack.canPerform() && currentAttack.getAttackType() == AttackType.UNARMED) {
-                unarmedAttack.perform();
-            } else if (swordAttack.canPerform() && currentAttack.getAttackType() == AttackType.SWORD) {
-                swordAttack.perform();
-            } else if (bowAttack.canPerform() && currentAttack.getAttackType() == AttackType.BOW) {
-                bowAttack.perform();
+            if (currentAttack.canPerform()) {
+                currentAttack.perform();
             }
         }
         else {
@@ -77,7 +64,7 @@ public class Ghost extends Mob {
 
     @Override
     public void onInit() {
-        defineAbilities();
+        defineStandardAbilities();
 
         explodeAbility = ExplodeAbility.newInstance(this);
         explodeAbility.onStartChannelAction(() -> { darkLaughSound.play(1.0f, 0.1f); });
@@ -101,60 +88,6 @@ public class Ghost extends Mob {
         }
 
         currentAttack.stopAbility();
-    }
-
-    @Override
-    public void takeDamage(float damage, boolean immunityFrames, float knockbackPower, float sourceX, float sourceY) {
-
-        if (isAlive()) {
-
-            float beforeHP = healthPoints;
-
-            float actualDamage = damage * 100f/(100f + getTotalArmor());
-
-            if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
-            else healthPoints = 0f;
-
-            if (beforeHP != healthPoints && healthPoints == 0f) {
-                onDeath();
-            }
-
-            if (immunityFrames) {
-                immunityTimer.reset();
-                immune = true;
-            }
-
-            if (knocbackable && !knockback && knockbackPower > 0f) {
-                this.knockbackPower = knockbackPower;
-
-                knockbackVector = new Vector2f(rect.getX() - sourceX, rect.getY() - sourceY).getNormal();
-                knockback = true;
-                knockbackTimer.reset();
-
-            }
-
-            evilYellingSound.play(1.0f, 0.1f);
-        }
-
-    }
-
-    @Override
-    public void onUpdateStart(int i) {
-        moving = false;
-
-        totalDirections = 0;
-
-        knockbackSpeed = knockbackPower * i;
-
-        dirX = 0;
-        dirY = 0;
-
-        speed = 0.25f * i;
-
-        if (isAttacking) {
-            speed = speed / 2f;
-        }
-
     }
 
     @Override

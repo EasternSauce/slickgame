@@ -4,6 +4,7 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.creatures.Boss;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.NonPlayerCharacter;
 import com.kamilkurp.creatures.PlayerCharacter;
@@ -19,7 +20,10 @@ import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.terrain.CurrentAreaHolder;
 import com.kamilkurp.utils.Camera;
-import org.newdawn.slick.*;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -228,10 +232,9 @@ public class GameSystem {
 
             Area currentArea = currentAreaHolder.getCurrentArea();
 
-            creaturesToMove.clear();
+            currentArea.update(i, gc, keyInput);
 
-            // for current area
-            updateCreatures(gc, i, keyInput);
+            creaturesToMove.clear();
 
             // for all areas
             for (Area area : areas.values()) {
@@ -297,7 +300,6 @@ public class GameSystem {
     public void render(Graphics g) {
         if (state == GameState.MAIN_MENU) {
             mainMenu.render(g);
-            //g.drawString("Press enter to continue..." , 300, 300);
         }
         else if (state == GameState.GAMEPLAY) {
             g.setWorldClip(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT);
@@ -322,7 +324,7 @@ public class GameSystem {
                 inventoryWindow.render(g);
 
                 if (playerCharacter.isRespawning()) {
-                    Assets.verdanaHugeTtf.drawString(175, 175, "YOU DIED", Color.red);
+                    Assets.verdanaHugeTtf.drawString(Globals.SCREEN_WIDTH / 2f - 130, Globals.SCREEN_HEIGHT * Globals.SCREEN_PROPORTION / 2f - 50, "YOU DIED", Color.red);
                 }
             }
 
@@ -332,14 +334,6 @@ public class GameSystem {
 
             lootOptionWindow.render(g);
         }
-
-    }
-
-    public void updateCreatures(GameContainer gc, int i, KeyInput keyInput) {
-        Map<String, Creature> areaCreatures = getCurrentArea().getCreatures();
-
-        areaCreatures.values().forEach(creature -> creature.update(gc, i, keyInput, this));
-
 
     }
 
@@ -560,4 +554,13 @@ public class GameSystem {
     }
 
 
+    public void stopBossBattleMusic() {
+        for (Creature creature : getCurrentArea().getCreatures().values()) {
+            if (creature.isBoss()) {
+                Boss boss = (Boss)creature;
+                boss.getBossMusic().stop();
+            }
+        }
+
+    }
 }

@@ -1,6 +1,7 @@
 package com.kamilkurp.terrain;
 
 import com.kamilkurp.Globals;
+import com.kamilkurp.KeyInput;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.NonPlayerCharacter;
@@ -11,10 +12,7 @@ import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.spawn.*;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Camera;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Music;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.io.FileWriter;
@@ -319,6 +317,23 @@ public class Area {
 
     public List<Blockade> getBlockadeList() {
         return blockadeList;
+    }
+
+    public void update(int i, GameContainer gc, KeyInput keyInput) {
+        List<Arrow> toBeDeleted = new LinkedList<>();
+        for (Arrow arrow : getArrowList()) {
+            arrow.update(i);
+            if (arrow.isMarkedForDeletion()) {
+                toBeDeleted.add(arrow);
+            }
+        }
+
+        getArrowList().removeAll(toBeDeleted);
+
+        Map<String, Creature> areaCreatures = getCreatures();
+
+        areaCreatures.values().forEach(creature -> creature.update(gc, i, keyInput, gameSystem));
+
     }
 }
 

@@ -4,6 +4,7 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.spawn.SpawnLocationsContainer;
 import com.kamilkurp.terrain.TerrainLayout;
 import com.kamilkurp.terrain.TerrainTileset;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.*;
 
 import java.awt.Font;
@@ -43,6 +44,7 @@ public class Assets {
     public static Sound darkLaughSound;
     public static Sound glassBreakSound;
     public static Sound bloodSquirtSound;
+    public static Sound monsterGrowlSound;
 
     public static Music townMusic;
     public static Music abandonedPlains;
@@ -116,6 +118,7 @@ public class Assets {
         evilYellingSound = new Sound(Globals.getAssetsLocation() + "sounds/evil-yelling.wav");
         glassBreakSound = new Sound(Globals.getAssetsLocation() + "sounds/glass-break.wav");
         bloodSquirtSound = new Sound(Globals.getAssetsLocation() + "sounds/blood-squirt.wav");
+        monsterGrowlSound = new Sound(Globals.getAssetsLocation() + "sounds/monster-growl.wav");
 
         male1SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male1.png", 32, 32);
         male2SpriteSheet = new SpriteSheet(Globals.getAssetsLocation() + "creature_animations/male2.png", 32, 32);

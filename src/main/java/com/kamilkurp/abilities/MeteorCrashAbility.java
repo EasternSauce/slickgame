@@ -25,7 +25,7 @@ public class MeteorCrashAbility extends Ability {
     public void init() {
         cooldownTime = 6500;
         activeTime = 2000;
-        channelTime = 850;
+        channelTime = 1250;
     }
 
     @Override

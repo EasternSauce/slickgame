@@ -4,7 +4,8 @@ import com.kamilkurp.animations.AbilityAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.AttackType;
 import com.kamilkurp.creatures.Creature;
-import org.newdawn.slick.geom.*;
+import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.geom.Rectangle;
 
 public class TridentAttack extends MeleeAttack {
     private TridentAttack(Creature abilityCreature) {

@@ -28,7 +28,7 @@ public class MeteorRainAbility extends Ability {
         activeTime = 13000;
         channelTime = 300;
 
-        explosionRange = 150f;
+        explosionRange = 200f;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class MeteorRainAbility extends Ability {
         meteors = new LinkedList<>();
 
         for (int i = 0; i < 30; i++) {
-            meteors.add(new Meteor(400 * i, new Rectangle(rect.getCenterX() + Globals.randInt(-400, 400), rect.getCenterY() + Globals.randInt(-400, 400), 1, 1), explosionRange, 1.0f));
+            meteors.add(new Meteor(400 * i, new Rectangle(rect.getCenterX() + Globals.randInt(-400, 400), rect.getCenterY() + Globals.randInt(-400, 400), 1, 1), explosionRange, 1.25f));
         }
 
     }

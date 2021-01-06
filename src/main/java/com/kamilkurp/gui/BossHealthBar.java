@@ -2,7 +2,6 @@ package com.kamilkurp.gui;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.creatures.Creature;
-import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;

@@ -1,22 +1,9 @@
 package com.kamilkurp;
 
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.creatures.Creature;
-import com.kamilkurp.creatures.PlayerCharacter;
-import com.kamilkurp.items.Item;
-import com.kamilkurp.items.ItemType;
-import com.kamilkurp.items.Treasure;
-import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.systems.GameSystem;
-import com.kamilkurp.terrain.Area;
-import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

@@ -2,10 +2,10 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
+import com.kamilkurp.abilities.*;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
-import com.kamilkurp.abilities.*;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.spawn.Blockade;
@@ -19,10 +19,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public abstract class Creature {
 
@@ -152,6 +149,15 @@ public abstract class Creature {
 
     protected boolean knocbackable;
 
+    protected boolean isBoss;
+
+    protected Map<String, Float> dropTable;
+
+    protected Sound onGettingHitSound;
+
+    protected float baseSpeed;
+
+
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
         this.id = id;
@@ -208,9 +214,17 @@ public abstract class Creature {
         scale = 1.0f;
 
         knocbackable = true;
+
+        isBoss = false;
+
+        dropTable = new HashMap<>();
+
+        onGettingHitSound = Assets.painSound;
+
+        baseSpeed = 0.2f;
     }
 
-    public void defineAbilities() {
+    public void defineStandardAbilities() {
 
         abilityList = new LinkedList<>();
         attackList = new LinkedList<>();
@@ -229,7 +243,17 @@ public abstract class Creature {
         currentAttack = unarmedAttack;
     }
 
-    public abstract void onInit();
+    public void onInit() {
+        defineStandardAbilities();
+
+        defineCustomAbilities();
+
+        updateAttackType();
+    }
+
+    protected void defineCustomAbilities() {
+
+    }
 
     public void render(Graphics g, Camera camera) {
         Image sprite = walkAnimation.getRestPosition(direction);
@@ -244,16 +268,16 @@ public abstract class Creature {
                 sprite.rotate(90f);
             }
             sprite.draw(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight());
-            if (isAlive() && immune && (immunityTimer.getElapsed() % 350) < 175) {
-                sprite.drawFlash(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight());
+            if (isAlive() && immune && (immunityTimer.getElapsed() % 250) < 125) {
+                sprite.draw(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight(), Color.red);
             }
             else {
                 sprite.draw(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight());
 
             }
         } else {
-            if (isAlive() && immune && (immunityTimer.getElapsed() % 350) < 175) {
-                walkAnimation.getAnimation(direction).drawFlash((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight());
+            if (isAlive() && immune && (immunityTimer.getElapsed() % 250) < 125) {
+                walkAnimation.getAnimation(direction).draw((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight(), Color.red);
             }
             else {
                 walkAnimation.getAnimation(direction).draw((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight());
@@ -431,7 +455,7 @@ public abstract class Creature {
 
             }
 
-            gruntSound.play(1.0f, 0.1f);
+            onGettingHitSound.play(1.0f, 0.1f);
         }
 
     }
@@ -549,7 +573,7 @@ public abstract class Creature {
         dirX = 0;
         dirY = 0;
 
-        speed = 0.2f * i;
+        speed = baseSpeed * i;
 
         if (isAttacking) {
             speed = speed / 2f;
@@ -870,5 +894,9 @@ public abstract class Creature {
 
     public void onAggroed() {
 
+    }
+
+    public boolean isBoss() {
+        return isBoss;
     }
 }

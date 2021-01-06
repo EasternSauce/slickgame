@@ -6,7 +6,6 @@ import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.PlayerCharacter;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
-import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;

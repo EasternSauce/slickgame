@@ -2,8 +2,8 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.abilities.Ability;
+import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.systems.GameSystem;
@@ -11,7 +11,10 @@ import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SpriteSheet;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class NonPlayerCharacter extends Creature {
     private final Timer actionTimer;
@@ -23,9 +26,6 @@ public class NonPlayerCharacter extends Creature {
     private final List<Item> traderInventory;
 
     private boolean trader = false;
-
-    private final Map<String, Float> dropTable;
-
 
     public NonPlayerCharacter(GameSystem gameSystem, String id, String dialogueStartId, boolean trader, SpriteSheet spriteSheet) {
         super(gameSystem, id);
@@ -40,8 +40,6 @@ public class NonPlayerCharacter extends Creature {
 
         walkAnimation = new WalkAnimation(spriteSheet, 3, 100, new int [] {3,1,0,2}, 1);
 
-
-        dropTable = new HashMap<>();
         dropTable.put("lifeRing", 0.05f);
         dropTable.put("poisonDagger", 0.08f);
         dropTable.put("healingPowder", 0.3f);
@@ -75,13 +73,6 @@ public class NonPlayerCharacter extends Creature {
     @Override
     public String getCreatureType() {
         return "nonPlayerCharacter";
-    }
-
-    @Override
-    public void onInit() {
-        defineAbilities();
-
-        updateAttackType();
     }
 
     @Override

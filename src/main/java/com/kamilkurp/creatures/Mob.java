@@ -24,8 +24,6 @@ public abstract class Mob extends Creature {
 
     public Random random = Globals.random;
 
-    protected Map<String, Float> dropTable;
-
     protected Timer findNewDestinationTimer;
 
     protected Creature aggroed;
@@ -46,8 +44,6 @@ public abstract class Mob extends Creature {
     protected int circlingDir;
     protected MobSpawnPoint mobSpawnPoint;
 
-    protected boolean isBoss;
-
     protected Float attackDistance;
     protected Float walkUpDistance;
 
@@ -64,9 +60,11 @@ public abstract class Mob extends Creature {
 
         aggroDistance = 400;
 
-        isBoss = false;
-
         findNewDestinationTimer = new Timer(true);
+
+        destinationX = 0.0f;
+        destinationY = 0.0f;
+        hasDestination = false;
     }
 
     @Override

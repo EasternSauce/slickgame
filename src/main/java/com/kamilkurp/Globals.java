@@ -3,7 +3,6 @@ package com.kamilkurp;
 import com.kamilkurp.utils.Rect;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
 
 import java.util.LinkedList;
 import java.util.List;

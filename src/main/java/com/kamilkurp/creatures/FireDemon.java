@@ -1,20 +1,18 @@
 package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
-import com.kamilkurp.KeyInput;
-import com.kamilkurp.abilities.*;
+import com.kamilkurp.abilities.DashAbility;
+import com.kamilkurp.abilities.FistSlamAbility;
+import com.kamilkurp.abilities.MeteorCrashAbility;
+import com.kamilkurp.abilities.MeteorRainAbility;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.spawn.MobSpawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
-
-import java.util.HashMap;
 
 public class FireDemon extends Boss {
 
@@ -23,11 +21,8 @@ public class FireDemon extends Boss {
     protected MeteorCrashAbility meteorCrashAbility;
     protected DashAbility dashAbility;
 
-    protected Sound roarSound = Assets.roarSound;
-
     public FireDemon(GameSystem gameSystem, MobSpawnPoint mobSpawnPoint, String id, String weapon) throws SlickException {
         super(gameSystem, mobSpawnPoint, id);
-
 
         scale = 2.0f;
 
@@ -36,7 +31,6 @@ public class FireDemon extends Boss {
 
         actionTimer = new Timer(true);
 
-        dropTable = new HashMap<>();
         dropTable.put("ironSword", 0.3f);
         dropTable.put("poisonDagger", 0.3f);
         dropTable.put("steelArmor", 0.8f);
@@ -44,10 +38,6 @@ public class FireDemon extends Boss {
         dropTable.put("thiefRing", 1.0f);
 
         walkAnimation = new WalkAnimation(Assets.fireDemonSpriteSheet, 4, 300, new int [] {3,1,0,2}, 0);
-
-        destinationX = 0.0f;
-        destinationY = 0.0f;
-        hasDestination = false;
 
         setMaxHealthPoints(2500f);
         setHealthPoints(getMaxHealthPoints());
@@ -62,6 +52,10 @@ public class FireDemon extends Boss {
 
         bossMusic = Assets.fireDemon;
 
+        onGettingHitSound = Assets.roarSound;
+
+        baseSpeed = 0.15f;
+
     }
 
     @Override
@@ -70,6 +64,7 @@ public class FireDemon extends Boss {
         if (!immobilized && isNoAbilityActive() && aggroed != null) {
             if (meteorRainAbility.canPerform() && healthPoints < maxHealthPoints * 0.7) {
                 meteorRainAbility.perform();
+                Assets.monsterGrowlSound.play(1.0f, 0.5f);
             }
             else if (fistSlamAbility.canPerform() && Globals.distance(aggroed.getRect(), rect) < 80f) {
                 fistSlamAbility.perform();
@@ -91,32 +86,20 @@ public class FireDemon extends Boss {
     }
 
     @Override
-    public void onInit() {
-        defineAbilities();
-
+    protected void defineCustomAbilities() {
         tridentAttack.setAttackRange(45f);
         tridentAttack.setScale(2.0f);
 
         meteorRainAbility = MeteorRainAbility.newInstance(this);
-        abilityList.add(meteorRainAbility);
-
         fistSlamAbility = FistSlamAbility.newInstance(this);
-        abilityList.add(fistSlamAbility);
-
         meteorCrashAbility = MeteorCrashAbility.newInstance(this);
-        abilityList.add(meteorCrashAbility);
-
         dashAbility = DashAbility.newInstance(this);
+
+        abilityList.add(meteorRainAbility);
+        abilityList.add(fistSlamAbility);
+        abilityList.add(meteorCrashAbility);
         abilityList.add(dashAbility);
-
-        updateAttackType();
     }
-
-    @Override
-    public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
-        super.update(gc, i, keyInput, gameSystem);
-    }
-
 
     @Override
     public String getCreatureType() {
@@ -124,57 +107,17 @@ public class FireDemon extends Boss {
     }
 
     @Override
-    public void onUpdateStart(int i) {
-        moving = false;
+    public void onAggroed() {
+        if (!bossBattleStarted) {
+            bossBattleStarted = true;
 
-        totalDirections = 0;
+            bossMusic.loop(1.0f, Globals.MUSIC_VOLUME);
 
-        knockbackSpeed = knockbackPower * i;
+            gameSystem.getHud().getBossHealthBar().onBossBattleStart(this);
 
-        dirX = 0;
-        dirY = 0;
+            mobSpawnPoint.getBlockade().setActive(true);
 
-        speed = 0.15f * i;
-
-        if (isAttacking) {
-            speed = speed / 2f;
+            Assets.monsterGrowlSound.play(1.0f, 0.5f);
         }
-
     }
-
-    @Override
-    public void takeDamage(float damage, boolean hasImmunityFrames, float knockbackPower, float sourceX, float sourceY) {
-        if (isAlive()) {
-
-            float beforeHP = healthPoints;
-
-            float actualDamage = damage * 100f/(100f + getTotalArmor());
-
-            if (healthPoints - actualDamage > 0) healthPoints -= actualDamage;
-            else healthPoints = 0f;
-
-            if (beforeHP != healthPoints && healthPoints == 0f) {
-                onDeath();
-            }
-
-            if (hasImmunityFrames) {
-                immunityTimer.reset();
-                immune = true;
-            }
-
-            if (knocbackable && !knockback && knockbackPower > 0f) {
-                this.knockbackPower = knockbackPower;
-
-                knockbackVector = new Vector2f(rect.getX() - sourceX, rect.getY() - sourceY).getNormal();
-                knockback = true;
-                knockbackTimer.reset();
-
-            }
-
-            if (Globals.randFloat() < 0.3) roarSound.play(1.0f, 0.1f);
-
-        }
-
-    }
-
 }

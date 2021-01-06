@@ -2,7 +2,6 @@ package com.kamilkurp.items;
 
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.AttackType;
-import com.kamilkurp.creatures.Creature;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 

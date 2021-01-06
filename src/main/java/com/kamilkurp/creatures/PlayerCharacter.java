@@ -2,10 +2,9 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.assets.Assets;
 import com.kamilkurp.abilities.Ability;
 import com.kamilkurp.abilities.DashAbility;
-import com.kamilkurp.projectile.Arrow;
+import com.kamilkurp.assets.Assets;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
@@ -15,9 +14,6 @@ import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class PlayerCharacter extends Creature {
     private final Sound stepSound = Assets.stepSound;
@@ -125,21 +121,24 @@ public class PlayerCharacter extends Creature {
     public void onInit() {
         currentRespawnPoint = area.getRespawnList().get(0);
         respawning = false;
+
         setMaxHealthPoints(300f);
         setHealthPoints(getMaxHealthPoints());
 
-        defineAbilities();
+        defineStandardAbilities();
+        defineCustomAbilities();
+        updateAttackType();
+    }
 
+    @Override
+    protected void defineCustomAbilities() {
         dashAbility = DashAbility.newInstance(this);
         dashAbility.onStartChannelAction(() -> { flybySound.play(1.0f, 0.1f); });
         abilityList.add(dashAbility);
 
-
 //        swordAttackAbility.setAimed(true);
 //        unarmedAttackAbility.setAimed(true);
 //        tridentAttackAbility.setAimed(true);
-
-        updateAttackType();
     }
 
     public void render(Graphics g, Camera camera) {
@@ -191,22 +190,6 @@ public class PlayerCharacter extends Creature {
             stepSound.stop();
         }
 
-
-
-        // _____ TODO: why is it here? and not in area.update?
-
-        List<Arrow> toBeDeleted = new LinkedList<>();
-        for (Arrow arrow : area.getArrowList()) {
-            arrow.update(i);
-            if (arrow.isMarkedForDeletion()) {
-                toBeDeleted.add(arrow);
-            }
-        }
-
-        area.getArrowList().removeAll(toBeDeleted);
-
-        // _____
-
         if (respawning && respawnTimer.getElapsed() > 3000f) {
             respawning = false;
             //setPosition(currentRespawnPoint.getPosX(), currentRespawnPoint.getPosY());
@@ -227,6 +210,7 @@ public class PlayerCharacter extends Creature {
 
             poisoned = false;
 
+            gameSystem.stopBossBattleMusic();
         }
 
         if (passedGateRecently) {
@@ -314,9 +298,6 @@ public class PlayerCharacter extends Creature {
         }
 
         currentAttack.stopAbility();
-
-        // TODO: stop all boss battle music
-        fireDemonMusic.stop();
 
         gameSystem.getHud().getBossHealthBar().hide();
     }

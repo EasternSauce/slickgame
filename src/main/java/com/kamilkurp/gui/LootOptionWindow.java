@@ -4,7 +4,6 @@ import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.systems.GameSystem;
-import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
 
 import java.util.ArrayList;

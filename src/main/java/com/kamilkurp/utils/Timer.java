@@ -45,12 +45,4 @@ public class Timer {
     public void stop() {
         isStarted = false;
     }
-
-    public boolean checkTimePassed(int time) { // TODO: use this method where appropriate
-        if (time > elapsed) {
-            reset();
-            return true;
-        }
-        return false;
-    }
 }
