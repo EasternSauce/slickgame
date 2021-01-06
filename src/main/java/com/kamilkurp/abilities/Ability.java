@@ -34,8 +34,8 @@ public abstract class Ability {
     protected Ability(Creature abilityCreature) {
         this.abilityCreature = abilityCreature;
 
-        activeTimer = new Timer(false);
-        channelTimer = new Timer(false);
+        activeTimer = new Timer();
+        channelTimer = new Timer();
 
         state = AbilityState.ABILITY_INACTIVE;
 

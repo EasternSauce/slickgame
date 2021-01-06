@@ -34,7 +34,7 @@ public class FireDemon extends Boss {
         rect = new Rectangle(0, 0, 80 * scale, 80 * scale);
         hitbox = new Rectangle(0, 0, 80 * scale, 80 * scale);
 
-        actionTimer = new Timer();
+        actionTimer = new Timer(true);
 
         dropTable = new HashMap<>();
         dropTable.put("ironSword", 0.3f);
@@ -42,8 +42,6 @@ public class FireDemon extends Boss {
         dropTable.put("steelArmor", 0.8f);
         dropTable.put("steelHelmet", 0.5f);
         dropTable.put("thiefRing", 1.0f);
-
-        findNewDestinationTimer = new Timer();
 
         walkAnimation = new WalkAnimation(Assets.fireDemonSpriteSheet, 4, 300, new int [] {3,1,0,2}, 0);
 
@@ -145,7 +143,7 @@ public class FireDemon extends Boss {
     }
 
     @Override
-    public void takeDamage(float damage, boolean immunityFrames, float knockbackPower, float sourceX, float sourceY) {
+    public void takeDamage(float damage, boolean hasImmunityFrames, float knockbackPower, float sourceX, float sourceY) {
         if (isAlive()) {
 
             float beforeHP = healthPoints;
@@ -159,7 +157,7 @@ public class FireDemon extends Boss {
                 onDeath();
             }
 
-            if (immunityFrames) {
+            if (hasImmunityFrames) {
                 immunityTimer.reset();
                 immune = true;
             }

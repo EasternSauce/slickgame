@@ -23,7 +23,7 @@ public class Skeleton extends Mob {
     public Skeleton(GameSystem gameSystem, MobSpawnPoint mobSpawnPoint, String id, String weapon) throws SlickException {
         super(gameSystem, mobSpawnPoint, id);
 
-        actionTimer = new Timer();
+        actionTimer = new Timer(true);
 
         dropTable = new HashMap<>();
 
@@ -33,9 +33,6 @@ public class Skeleton extends Mob {
         dropTable.put("leatherHelmet", 0.1f);
         dropTable.put("woodenSword", 0.1f);
         dropTable.put("healingPowder", 0.5f);
-
-
-        findNewDestinationTimer = new Timer();
 
         walkAnimation = new WalkAnimation(Assets.skeletonSpriteSheet, 9, 100, new int [] {0,1,2,3}, 0);
 

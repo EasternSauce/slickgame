@@ -166,6 +166,8 @@ public abstract class Creature {
         staminaRegenTimer = new Timer();
         knockbackTimer = new Timer();
 
+        staminaRegenTimer.start();
+
         facingVector = new Vector2f(0f, 0f);
 
         equipmentItems = new TreeMap<>();
@@ -232,18 +234,32 @@ public abstract class Creature {
     public void render(Graphics g, Camera camera) {
         Image sprite = walkAnimation.getRestPosition(direction);
 
+        if (Globals.SHOW_HITBOXES) {
+            g.setColor(Color.pink);
+            g.fillRect(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight());
+        }
+
         if (!running) {
             if (!isAlive()) {
                 sprite.rotate(90f);
             }
             sprite.draw(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight());
+            if (isAlive() && immune && (immunityTimer.getElapsed() % 350) < 175) {
+                sprite.drawFlash(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight());
+            }
+            else {
+                sprite.draw(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight());
+
+            }
         } else {
+            if (isAlive() && immune && (immunityTimer.getElapsed() % 350) < 175) {
+                walkAnimation.getAnimation(direction).drawFlash((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight());
+            }
+            else {
+                walkAnimation.getAnimation(direction).draw((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight());
 
-//            Image currentFrame = walkAnimation.getAnimation(direction).getCurrentFrame();
-//
-//            currentFrame.draw(rect.getX() - camera.getPosX() + rect.getWidth()/2 * scale, rect.getY() - camera.getPosY() + rect.getHeight()/2 * scale, scale);
+            }
 
-            walkAnimation.getAnimation(direction).draw((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight());
         }
 
         Assets.verdanaTtf.drawString((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY() - 30f, (int) Math.ceil(healthPoints) + "/" + (int) Math.ceil(getMaxHealthPoints()), Color.red);

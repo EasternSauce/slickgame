@@ -16,6 +16,8 @@ public class Globals {
 
     public static float MUSIC_VOLUME = 0.8f;
 
+    public static boolean SHOW_HITBOXES = false;
+
     public static Random random = new Random();
     private static final String assetsLocation = "assets/";
 

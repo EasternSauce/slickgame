@@ -32,7 +32,7 @@ public class NonPlayerCharacter extends Creature {
 
         this.dialogueStartId = dialogueStartId;
 
-        actionTimer = new Timer();
+        actionTimer = new Timer(true);
 
         this.trader = trader;
 

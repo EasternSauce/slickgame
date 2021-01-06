@@ -8,7 +8,7 @@ public class Timer {
 
     public Timer() {
         this.elapsed = 0;
-        isStarted = true;
+        isStarted = false;
         Globals.addTimer(this);
     }
 

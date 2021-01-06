@@ -25,7 +25,7 @@ public class Ghost extends Mob {
     public Ghost(GameSystem gameSystem, MobSpawnPoint mobSpawnPoint, String id, String weapon) throws SlickException {
         super(gameSystem, mobSpawnPoint, id);
 
-        actionTimer = new Timer();
+        actionTimer = new Timer(true);
 
         dropTable = new HashMap<>();
 
@@ -36,9 +36,6 @@ public class Ghost extends Mob {
         dropTable.put("steelHelmet", 0.05f);
         dropTable.put("ironSword", 0.03f);
         dropTable.put("lifeRing", 0.01f);
-
-
-        findNewDestinationTimer = new Timer();
 
         walkAnimation = new WalkAnimation(Assets.ghostSpriteSheet, 3, 100, new int [] {3,1,0,2}, 0);
 

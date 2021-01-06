@@ -54,10 +54,10 @@ public abstract class Mob extends Creature {
     public Mob(GameSystem gameSystem, MobSpawnPoint mobSpawnPoint, String id) {
         super(gameSystem, id);
 
-        attackOrHoldTimer = new Timer();
+        attackOrHoldTimer = new Timer(true);
         hold = false;
 
-        circlingDirectionTimer = new Timer();
+        circlingDirectionTimer = new Timer(true);
         circling = false;
         circlingDir = 0;
         this.mobSpawnPoint = mobSpawnPoint;
@@ -65,6 +65,8 @@ public abstract class Mob extends Creature {
         aggroDistance = 400;
 
         isBoss = false;
+
+        findNewDestinationTimer = new Timer(true);
     }
 
     @Override
@@ -206,7 +208,7 @@ public abstract class Mob extends Creature {
         }
 
         if (hasDestination) {
-            goTo(destinationX, destinationY);
+            walkTowards(destinationX, destinationY);
         }
 
         if (!immobilized) {
@@ -278,7 +280,7 @@ public abstract class Mob extends Creature {
     }
 
 
-    void goTo(float gotoPosX, float gotoPosY) {
+    void walkTowards(float gotoPosX, float gotoPosY) {
         if (rect.getCenterX() < gotoPosX - 5f) {
             moveRight();
         }

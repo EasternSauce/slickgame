@@ -23,7 +23,7 @@ public class Goblin extends Mob {
     public Goblin(GameSystem gameSystem, MobSpawnPoint mobSpawnPoint, String id, String weapon) throws SlickException {
         super(gameSystem, mobSpawnPoint, id);
 
-        actionTimer = new Timer();
+        actionTimer = new Timer(true);
 
         dropTable = new HashMap<>();
         dropTable.put("ironSword", 0.03f);
@@ -33,8 +33,6 @@ public class Goblin extends Mob {
         dropTable.put("steelGreaves", 0.05f);
         dropTable.put("steelGloves", 0.05f);
         dropTable.put("steelHelmet", 0.05f);
-
-        findNewDestinationTimer = new Timer();
 
         walkAnimation = new WalkAnimation(Assets.goblinSpriteSheet, 3, 100, new int [] {3,1,0,2}, 0);
 

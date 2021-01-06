@@ -7,6 +7,7 @@ import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.utils.Camera;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Sound;
@@ -53,7 +54,7 @@ public abstract class MeleeAttack extends Attack {
         Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
         for (Creature creature : creatures) {
             if (creature == this.abilityCreature) continue;
-            if (meleeAttackHitbox.intersects(creature.getRect())) {
+            if (meleeAttackHitbox.intersects(creature.getRect()) || meleeAttackHitbox.contains(creature.getRect()) || creature.getRect().contains(meleeAttackHitbox)) {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob)) { // mob can't hurt a mob?
                     if (!creature.isImmune()) {
                         Item weapon = this.abilityCreature.getEquipmentItems().get(0);
@@ -117,9 +118,7 @@ public abstract class MeleeAttack extends Attack {
     }
 
     public void render(Graphics g, Camera camera) {
-        //draw attack rect
-        //polygonCopy = (Polygon)meleeAttackPolygon.transform(Transform.createTranslateTransform(-camera.getPosX(), -camera.getPosY()));
-        //g.fill(polygonCopy);
+
 
 
         if (state == AbilityState.ABILITY_CHANNELING) {
@@ -131,6 +130,14 @@ public abstract class MeleeAttack extends Attack {
             image.draw(meleeAttackRect.getX() - camera.getPosX(), meleeAttackRect.getY() - camera.getPosY() + height/2 * scale, scale);
         }
         if (state == AbilityState.ABILITY_ACTIVE) {
+            if (Globals.SHOW_HITBOXES) {
+                g.setColor(Color.pink);
+                // draw attack rect
+                Polygon polygonCopy = (Polygon)meleeAttackHitbox.transform(Transform.createTranslateTransform(-camera.getPosX(), -camera.getPosY()));
+                g.fill(polygonCopy);
+            }
+
+
             Image image = attackAnimation.getAnimation().getCurrentFrame();
             image.setCenterOfRotation(0, height/2 * scale);
             image.setRotation((float) abilityCreature.getAttackingVector().getTheta());

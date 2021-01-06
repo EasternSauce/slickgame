@@ -27,7 +27,7 @@ public class Wolf extends Mob {
     public Wolf(GameSystem gameSystem, MobSpawnPoint mobSpawnPoint, String id) throws SlickException {
         super(gameSystem, mobSpawnPoint, id);
 
-        actionTimer = new Timer();
+        actionTimer = new Timer(true);
 
         dropTable = new HashMap<>();
         dropTable.put("ringmailGreaves", 0.1f);
@@ -35,8 +35,6 @@ public class Wolf extends Mob {
         dropTable.put("hideGloves", 0.1f);
         dropTable.put("leatherHelmet", 0.1f);
         dropTable.put("healingPowder", 0.5f);
-
-        findNewDestinationTimer = new Timer();
 
         walkAnimation = new WalkAnimation(Assets.wolfSpriteSheet, 4, 100, new int [] {3,1,0,2}, 0);
 
