@@ -3,26 +3,54 @@ package com.kamilkurp.utils;
 import com.kamilkurp.Globals;
 
 public class Timer {
-    private int time;
+    private int elapsed;
+    private boolean isStarted;
 
     public Timer() {
-        this.time = 0;
+        this.elapsed = 0;
+        isStarted = true;
         Globals.addTimer(this);
     }
 
+    public Timer(boolean isStarted) {
+        this.elapsed = 0;
+        this.isStarted = isStarted;
+        Globals.addTimer(this);
+    }
+
+
     public void update(int delta) {
-        time += delta;
+        if (isStarted) {
+            elapsed += delta;
+        }
     }
 
-    public int getTime() {
-        return time;
+    public int getElapsed() {
+        return elapsed;
     }
 
-    public void setTime(int time) {
-        this.time = time;
+    public void setElapsed(int elapsed) {
+        this.elapsed = elapsed;
     }
 
     public void reset() {
-        time = 0;
+        if (!isStarted) isStarted = true;
+        elapsed = 0;
+    }
+
+    public void start() {
+        isStarted = true;
+    }
+
+    public void stop() {
+        isStarted = false;
+    }
+
+    public boolean checkTimePassed(int time) { // TODO: use this method where appropriate
+        if (time > elapsed) {
+            reset();
+            return true;
+        }
+        return false;
     }
 }

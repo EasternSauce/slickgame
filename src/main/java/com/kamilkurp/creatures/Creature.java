@@ -190,8 +190,8 @@ public abstract class Creature {
         poisonTickTimer = new Timer();
         poisonTimer = new Timer();
 
-        poisonTickTimer.setTime(poisonTickTime);
-        poisonTimer.setTime(poisonTime);
+        poisonTickTimer.setElapsed(poisonTickTime);
+        poisonTimer.setElapsed(poisonTime);
 
         healingTimer = new Timer();
         healingTickTimer = new Timer();
@@ -270,20 +270,22 @@ public abstract class Creature {
 
             performActions(gc, keyInput);
 
-            regenerate();
-
             executeMovementLogic();
 
             setFacingDirection(gc);
 
+            regenerate();
+
+            for (Ability ability : abilityList) {
+                ability.update(i);
+            }
+
+            currentAttack.update(i);
         }
 
 
 
-        for (Ability ability : abilityList) {
-            ability.update(i);
-        }
-        currentAttack.update(i);
+
     }
 
     public void onPassedGate(List<AreaGate> gatesList) {
@@ -307,13 +309,13 @@ public abstract class Creature {
     }
 
     public void regenerate() {
-        if (healthRegenTimer.getTime() > 500f) {
+        if (healthRegenTimer.getElapsed() > 500f) {
             heal(healthRegen);
             healthRegenTimer.reset();
         }
 
         if (staminaRegenActive && !sprinting) {
-            if (staminaRegenTimer.getTime() > 250f && !isAbilityActive() && !staminaOveruse) {
+            if (staminaRegenTimer.getElapsed() > 250f && !isAbilityActive() && !staminaOveruse) {
                 if (getStaminaPoints() < getMaxStaminaPoints()) {
                     float afterRegen = getStaminaPoints() + staminaRegen;
                     staminaPoints = Math.min(afterRegen, getMaxStaminaPoints());
@@ -323,27 +325,27 @@ public abstract class Creature {
         }
 
         if (staminaOveruse) {
-            if (staminaOveruseTimer.getTime() > staminaOveruseTime) {
+            if (staminaOveruseTimer.getElapsed() > staminaOveruseTime) {
                 staminaOveruse = false;
             }
         }
 
         if (poisoned) {
-            if (poisonTickTimer.getTime() > poisonTickTime) {
+            if (poisonTickTimer.getElapsed() > poisonTickTime) {
                 takeDamage(15f, false, 0, 0, 0);
                 poisonTickTimer.reset();
             }
-            if (poisonTimer.getTime() > poisonTime) {
+            if (poisonTimer.getElapsed() > poisonTime) {
                 poisoned = false;
             }
         }
 
         if (healing) {
-            if (healingTickTimer.getTime() > healingTickTime) {
+            if (healingTickTimer.getElapsed() > healingTickTime) {
                 heal(healingPower);
                 healingTickTimer.reset();
             }
-            if (healingTimer.getTime() > healingTime || getHealthPoints() >= getMaxHealthPoints()) {
+            if (healingTimer.getElapsed() > healingTime || getHealthPoints() >= getMaxHealthPoints()) {
                 healing = false;
             }
         }
@@ -621,7 +623,7 @@ public abstract class Creature {
 
             }
 
-            if (knockbackTimer.getTime() > 200f) {
+            if (knockbackTimer.getElapsed() > 200f) {
                 knockback = false;
             }
         }

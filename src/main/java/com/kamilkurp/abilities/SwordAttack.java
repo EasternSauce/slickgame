@@ -49,10 +49,10 @@ public class SwordAttack extends MeleeAttack {
         aimed = false;
     }
 
+    // TODO: try to create generic static method?
     public static SwordAttack newInstance(Creature abilityCreature) {
         SwordAttack ability = new SwordAttack(abilityCreature);
         ability.init();
-        ability.setTimerStartingPosition();
         return ability;
     }
 }

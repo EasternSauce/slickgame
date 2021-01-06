@@ -2,7 +2,6 @@ package com.kamilkurp.creatures;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.KeyInput;
-import com.kamilkurp.abilities.Ability;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.abilities.DashAbility;
@@ -91,9 +90,9 @@ public class Wolf extends Mob {
 
         if (aggroed != null) {
             if (hasDestination) {
-                if (Globals.distance(aggroed.rect, rect) < dashDistance) {
+                if (dashAbility.canPerform() && Globals.distance(aggroed.rect, rect) < dashDistance) {
                     dashAbility.setDashVector(new Vector2f(destinationX - rect.getX(), destinationY - rect.getY()).getNormal());
-                    dashAbility.tryPerforming();
+                    dashAbility.perform();
                 }
             }
         }

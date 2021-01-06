@@ -9,14 +9,12 @@ import com.kamilkurp.spawn.MobSpawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class FireDemon extends Boss {
 
@@ -72,26 +70,22 @@ public class FireDemon extends Boss {
     public void performCombatAbilities() {
 
         if (!immobilized && isNoAbilityActive() && aggroed != null) {
-            if (healthPoints < maxHealthPoints * 0.7) {
-                meteorRainAbility.tryPerforming();
+            if (meteorRainAbility.canPerform() && healthPoints < maxHealthPoints * 0.7) {
+                meteorRainAbility.perform();
             }
-
-            if (Globals.distance(aggroed.getRect(), rect) < 80f) {
-                fistSlamAbility.tryPerforming();
+            else if (fistSlamAbility.canPerform() && Globals.distance(aggroed.getRect(), rect) < 80f) {
+                fistSlamAbility.perform();
             }
-
-            if (Globals.distance(aggroed.getRect(), rect) > 220f) {
-                meteorCrashAbility.tryPerforming();
+            else if (meteorCrashAbility.canPerform() && Globals.distance(aggroed.getRect(), rect) > 220f) {
+                meteorCrashAbility.perform();
             }
-
-            if (Globals.distance(aggroed.getRect(), rect) < 170f) {
-                currentAttack.tryPerforming();
+            else if (currentAttack.canPerform() && Globals.distance(aggroed.getRect(), rect) < 170f) {
+                currentAttack.perform();
             }
-
-            if (Globals.distance(aggroed.getRect(), rect) > 300f) {
+            else if (dashAbility.canPerform() && Globals.distance(aggroed.getRect(), rect) > 300f) {
                 if (hasDestination) {
                     dashAbility.setDashVector(new Vector2f(destinationX - rect.getX(), destinationY - rect.getY()).getNormal());
-                    dashAbility.tryPerforming();
+                    dashAbility.perform();
                 }
             }
         }

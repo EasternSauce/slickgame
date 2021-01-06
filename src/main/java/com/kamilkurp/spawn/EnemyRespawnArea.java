@@ -2,9 +2,6 @@ package com.kamilkurp.spawn;
 
 import com.kamilkurp.Globals;
 import com.kamilkurp.creatures.Creature;
-import com.kamilkurp.creatures.FireDemon;
-import com.kamilkurp.creatures.Skeleton;
-import com.kamilkurp.creatures.Wolf;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
 import com.kamilkurp.utils.Camera;
@@ -99,7 +96,7 @@ public class EnemyRespawnArea {
                 spawnTimer.reset();
             }
             else {
-                if (spawnTimer.getTime() > spawnTimeout) {
+                if (spawnTimer.getElapsed() > spawnTimeout) {
                     spawning = false;
                     spawn();
                 }

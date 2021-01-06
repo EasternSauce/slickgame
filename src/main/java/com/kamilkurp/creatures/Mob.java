@@ -71,7 +71,7 @@ public abstract class Mob extends Creature {
     public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
         super.update(gc, i , keyInput, gameSystem);
 
-        if (runningTimer.getTime() > 200) {
+        if (runningTimer.getElapsed() > 200) {
             running = false;
         }
 
@@ -79,7 +79,7 @@ public abstract class Mob extends Creature {
 //            attacking = false;
 //        }
 
-        if (immunityTimer.getTime() > 500) {
+        if (immunityTimer.getElapsed() > 500) {
             immune = false;
         }
     }
@@ -131,12 +131,12 @@ public abstract class Mob extends Creature {
     }
 
     public void performAggroedBehavior() {
-        if (attackOrHoldTimer.getTime() > attackOrHoldTime) {
+        if (attackOrHoldTimer.getElapsed() > attackOrHoldTime) {
             hold = Globals.randFloat() < 0.8f;
             attackOrHoldTimer.reset();
         }
 
-        if (circlingDirectionTimer.getTime() > circlingDirectionTime) {
+        if (circlingDirectionTimer.getElapsed() > circlingDirectionTime) {
             circling = Globals.randFloat() < 0.8f;
             if (circling) {
                 if (Globals.randFloat() < 0.5f) {
@@ -151,7 +151,7 @@ public abstract class Mob extends Creature {
 
         AttackType attackType = currentAttack.getAttackType();
 
-        if (findNewDestinationTimer.getTime() > 200f) {
+        if (findNewDestinationTimer.getElapsed() > 200f) {
 
             float dist = Globals.distance(this.rect, aggroed.rect);
 
@@ -255,7 +255,7 @@ public abstract class Mob extends Creature {
     }
 
     public void performIdleBehavior() {
-        if (actionTimer.getTime() > 500f) {
+        if (actionTimer.getElapsed() > 500f) {
             currentDirection = Math.abs(random.nextInt())%4;
             stayInPlace = Math.abs(random.nextInt()) % 10 < 8;
             actionTimer.reset();
@@ -316,6 +316,8 @@ public abstract class Mob extends Creature {
     }
 
     public void performCombatAbilities() {
-        currentAttack.tryPerforming();
+        if (currentAttack.canPerform()) {
+            currentAttack.perform();
+        }
     }
 }

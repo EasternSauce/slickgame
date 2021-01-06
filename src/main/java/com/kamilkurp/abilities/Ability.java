@@ -1,8 +1,6 @@
 package com.kamilkurp.abilities;
 
-import com.kamilkurp.creatures.AttackType;
 import com.kamilkurp.creatures.Creature;
-import com.kamilkurp.creatures.FireDemon;
 import com.kamilkurp.utils.Action;
 import com.kamilkurp.utils.Camera;
 import com.kamilkurp.utils.Timer;
@@ -30,12 +28,14 @@ public abstract class Ability {
 
     protected boolean onCooldown;
 
+    protected boolean isAttack;
+
 
     protected Ability(Creature abilityCreature) {
         this.abilityCreature = abilityCreature;
 
-        activeTimer = new Timer();
-        channelTimer = new Timer();
+        activeTimer = new Timer(false);
+        channelTimer = new Timer(false);
 
         state = AbilityState.ABILITY_INACTIVE;
 
@@ -43,24 +43,21 @@ public abstract class Ability {
         onChannelAction = () -> {};
 
         onCooldown = false;
+
+        isAttack = false;
     }
 
     public abstract void init();
 
-    public void setTimerStartingPosition() {
-        activeTimer.setTime(cooldownTime);
-        channelTimer.setTime(channelTime);
-    }
-
     public void update(int i) {
-        if (state == AbilityState.ABILITY_CHANNELING && channelTimer.getTime() > channelTime) {
+        if (state == AbilityState.ABILITY_CHANNELING && channelTimer.getElapsed() > channelTime) {
             state = AbilityState.ABILITY_ACTIVE;
             onActiveStart();
             onPerformAction.execute();
             activeTimer.reset();
             onCooldown = true;
         }
-        if (state == AbilityState.ABILITY_ACTIVE && activeTimer.getTime() > activeTime) {
+        if (state == AbilityState.ABILITY_ACTIVE && activeTimer.getElapsed() > activeTime) {
             state = AbilityState.ABILITY_INACTIVE;
             onStop();
         }
@@ -73,10 +70,21 @@ public abstract class Ability {
         }
 
 
-        if (state == AbilityState.ABILITY_INACTIVE && onCooldown && activeTimer.getTime() > Math.min(1000, cooldownTime)) {
+
+
+        if (state == AbilityState.ABILITY_INACTIVE && onCooldown) {
             if (!abilityCreature.isStaminaOveruse()) {
+                if (!isAttack) {
+                    if (activeTimer.getElapsed() > 1000f) {
+                        abilityCreature.startStaminaRegen();
+                    }
+                }
+            }
+            if (activeTimer.getElapsed() > cooldownTime) {
                 onCooldown = false;
-                abilityCreature.startStaminaRegen();
+                if (isAttack) {
+                    abilityCreature.startStaminaRegen();
+                }
             }
         }
     }
@@ -101,15 +109,20 @@ public abstract class Ability {
 
     }
 
-    public void tryPerforming() {
-        if (abilityCreature.getStaminaPoints() > 0 && state == AbilityState.ABILITY_INACTIVE && activeTimer.getTime() > cooldownTime) {
-            channelTimer.reset();
-            state = AbilityState.ABILITY_CHANNELING;
-            onChannellingStart();
-            onChannelAction.execute();
-
-            abilityCreature.stopStaminaRegen();
+    public boolean canPerform() {
+        if (abilityCreature.getStaminaPoints() > 0 && state == AbilityState.ABILITY_INACTIVE && !onCooldown) {
+            return true;
         }
+        return false;
+    }
+
+    public void perform() {
+        channelTimer.reset();
+        state = AbilityState.ABILITY_CHANNELING;
+        onChannellingStart();
+        onChannelAction.execute();
+
+        abilityCreature.stopStaminaRegen();
     }
 
     protected void onActiveStart() {
@@ -145,5 +158,8 @@ public abstract class Ability {
         return state;
     }
 
+    public boolean isOnCooldown() {
+        return onCooldown;
+    }
 }
 

@@ -8,6 +8,8 @@ public abstract class Attack extends Ability {
 
     protected Attack(Creature abilityCreature) {
         super(abilityCreature);
+
+        isAttack = true;
     }
 
     public AttackType getAttackType() {

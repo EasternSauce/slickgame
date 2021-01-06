@@ -64,7 +64,7 @@ public class NonPlayerCharacter extends Creature {
     @Override
     public void performActions(GameContainer gc, KeyInput keyInput) {
 
-        if (actionTimer.getTime() > 4000) {
+        if (actionTimer.getElapsed() > 4000) {
             direction = Math.abs(random.nextInt()%4);
 
             actionTimer.reset();
@@ -90,7 +90,7 @@ public class NonPlayerCharacter extends Creature {
 
         // CHANGE THESE to only update once...
 
-        if (runningTimer.getTime() > 200) {
+        if (runningTimer.getElapsed() > 200) {
             running = false;
         }
 
@@ -98,7 +98,7 @@ public class NonPlayerCharacter extends Creature {
 //            attacking = false;
 //        }
 
-        if (immunityTimer.getTime() > 500) {
+        if (immunityTimer.getElapsed() > 500) {
             immune = false;
         }
 

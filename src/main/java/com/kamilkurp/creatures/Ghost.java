@@ -61,17 +61,20 @@ public class Ghost extends Mob {
     @Override
     public void performCombatAbilities() {
 
+        // TODO: use currentAttack?
         if (healthPoints > maxHealthPoints * 0.30) {
-            if (currentAttack.getAttackType() == AttackType.UNARMED) {
-                unarmedAttack.tryPerforming();
-            } else if (currentAttack.getAttackType() == AttackType.SWORD) {
-                swordAttack.tryPerforming();
-            } else if (currentAttack.getAttackType() == AttackType.BOW) {
-                bowAttack.tryPerforming();
+            if (unarmedAttack.canPerform() && currentAttack.getAttackType() == AttackType.UNARMED) {
+                unarmedAttack.perform();
+            } else if (swordAttack.canPerform() && currentAttack.getAttackType() == AttackType.SWORD) {
+                swordAttack.perform();
+            } else if (bowAttack.canPerform() && currentAttack.getAttackType() == AttackType.BOW) {
+                bowAttack.perform();
             }
         }
         else {
-            explodeAbility.tryPerforming();
+            if (explodeAbility.canPerform()) {
+                explodeAbility.perform();
+            }
         }
     }
 

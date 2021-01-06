@@ -80,9 +80,9 @@ public class PlayerCharacter extends Creature {
         }
 
         if (input.isKeyDown(Input.KEY_SPACE)) {
-            if (walking) {
+            if (dashAbility.canPerform() && walking) {
                 dashAbility.setDashVector(movementVector.getNormal());
-                dashAbility.tryPerforming();
+                dashAbility.perform();
             }
         }
 
@@ -104,7 +104,9 @@ public class PlayerCharacter extends Creature {
 
         if (Mouse.isButtonDown(0)) {
             if (!immobilized) {
-                currentAttack.tryPerforming();
+                if (currentAttack.canPerform()) {
+                    currentAttack.perform();
+                }
             }
         }
         //rewrite
@@ -160,7 +162,6 @@ public class PlayerCharacter extends Creature {
             currentAttack.performOnUpdateStart(i);
 
 
-            regenerate();
 
             if (!(gameSystem.getInventoryWindow().isInventoryOpen() || gameSystem.getDialogueWindow().isActivated() || gameSystem.getLootOptionWindow().isActivated())) {
                 performActions(gc, keyInput);
@@ -170,24 +171,29 @@ public class PlayerCharacter extends Creature {
                 setFacingDirection(gc);
             }
 
+            regenerate();
+
+            for (Ability ability : abilityList) {
+                ability.update(i);
+            }
+
+            currentAttack.update(i);
+
+            if (runningTimer.getElapsed() > 200) {
+                running = false;
+            }
+
+            if (immunityTimer.getElapsed() > 500) {
+                immune = false;
+            }
 
         } else {
             stepSound.stop();
         }
 
-        for (Ability ability : abilityList) {
-            ability.update(i);
-        }
 
-        currentAttack.update(i);
 
-        if (runningTimer.getTime() > 200) {
-            running = false;
-        }
-
-        if (immunityTimer.getTime() > 500) {
-            immune = false;
-        }
+        // _____ TODO: why is it here? and not in area.update?
 
         List<Arrow> toBeDeleted = new LinkedList<>();
         for (Arrow arrow : area.getArrowList()) {
@@ -199,8 +205,9 @@ public class PlayerCharacter extends Creature {
 
         area.getArrowList().removeAll(toBeDeleted);
 
+        // _____
 
-        if (respawning && respawnTimer.getTime() > 3000f) {
+        if (respawning && respawnTimer.getElapsed() > 3000f) {
             respawning = false;
             //setPosition(currentRespawnPoint.getPosX(), currentRespawnPoint.getPosY());
             pendingArea = currentRespawnPoint.getArea();
@@ -299,6 +306,8 @@ public class PlayerCharacter extends Creature {
     public void onDeath() {
         respawnTimer.reset();
         respawning = true;
+        running = false;
+        immune = false;
 
         for (Ability ability : abilityList) {
             ability.stopAbility();

@@ -52,7 +52,6 @@ public class TridentAttack extends MeleeAttack {
     public static TridentAttack newInstance(Creature abilityCreature) {
         TridentAttack ability = new TridentAttack(abilityCreature);
         ability.init();
-        ability.setTimerStartingPosition();
         return ability;
     }
 }

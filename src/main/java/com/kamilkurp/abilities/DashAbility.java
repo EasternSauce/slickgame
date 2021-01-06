@@ -96,7 +96,6 @@ public class DashAbility extends Ability {
     public static DashAbility newInstance(Creature abilityCreature) {
         DashAbility ability = new DashAbility(abilityCreature);
         ability.init();
-        ability.setTimerStartingPosition();
         return ability;
     }
 }

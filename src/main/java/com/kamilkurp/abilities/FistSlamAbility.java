@@ -5,7 +5,6 @@ import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.Creature;
 import com.kamilkurp.creatures.Mob;
 import com.kamilkurp.utils.Camera;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Rectangle;
@@ -38,7 +37,7 @@ public class FistSlamAbility extends Ability {
     protected void onUpdateActive(int i) {
 
         for (Fist fist : fists) {
-            if (!fist.isStarted() && activeTimer.getTime() > fist.getStartTime()) {
+            if (!fist.isStarted() && activeTimer.getElapsed() > fist.getStartTime()) {
                 fist.start();
             }
 
@@ -48,7 +47,7 @@ public class FistSlamAbility extends Ability {
 
 
                 if (fist.getState() == AbilityState.ABILITY_CHANNELING) {
-                    if (fist.getChannelTimer().getTime() > fist.getChannelTime()) {
+                    if (fist.getChannelTimer().getElapsed() > fist.getChannelTime()) {
                         fist.setState(AbilityState.ABILITY_ACTIVE);
                         Assets.glassBreakSound.play(1.0f, 0.1f);
                         fist.getAbilityAnimation().restart();
@@ -58,7 +57,7 @@ public class FistSlamAbility extends Ability {
                     }
                 }
                 if (fist.getState() == AbilityState.ABILITY_ACTIVE) {
-                    if (fist.getActiveTimer().getTime() > fist.getActiveTime()) {
+                    if (fist.getActiveTimer().getElapsed() > fist.getActiveTime()) {
                         fist.setState(AbilityState.ABILITY_INACTIVE);
                     }
                 }
@@ -74,7 +73,7 @@ public class FistSlamAbility extends Ability {
             for (Fist fist : fists) {
                 if (fist.getState() == AbilityState.ABILITY_ACTIVE &&
                         fist.getHitbox().intersects(creature.getRect())
-                        && fist.getActiveTimer().getTime() > 100f) {
+                        && fist.getActiveTimer().getElapsed() < 150f) {
                     if (!(this.abilityCreature instanceof Mob && creature instanceof Mob) && creature.isAlive()) { // mob can't hurt a mob?
                         if (!creature.isImmune()) {
                             creature.takeDamage(50f, true, 0, 0, 0);
@@ -139,7 +138,6 @@ public class FistSlamAbility extends Ability {
     public static FistSlamAbility newInstance(Creature abilityCreature) {
         FistSlamAbility ability = new FistSlamAbility(abilityCreature);
         ability.init();
-        ability.setTimerStartingPosition();
         return ability;
     }
 }

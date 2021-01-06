@@ -50,7 +50,7 @@ public class ExplodeAbility extends Ability {
         Collection<Creature> creatures = abilityCreature.getArea().getCreatures().values();
         for (Creature creature : creatures) {
             if (creature == this.abilityCreature) continue;
-            if (Globals.distance(abilityCreature.getRect(), creature.getRect()) < explosionRange && activeTimer.getTime() < 350f) {
+            if (Globals.distance(abilityCreature.getRect(), creature.getRect()) < explosionRange && activeTimer.getElapsed() < 350f) {
                 if (!(this.abilityCreature instanceof Mob && creature instanceof Mob) && creature.isAlive()) { // mob can't hurt a mob?
                     if (!creature.isImmune()) {
                         creature.takeDamage(700f, true, 0, 0, 0);
@@ -82,7 +82,6 @@ public class ExplodeAbility extends Ability {
     public static ExplodeAbility newInstance(Creature abilityCreature) {
         ExplodeAbility ability = new ExplodeAbility(abilityCreature);
         ability.init();
-        ability.setTimerStartingPosition();
         return ability;
     }
 }

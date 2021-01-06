@@ -34,7 +34,7 @@ public class Fist {
         activeTimer = new Timer();
         channelTimer = new Timer();
 
-        activeTime = 300;
+        activeTime = 200;
         channelTime = 400;
 
         abilityAnimation = new AbilityAnimation(Assets.fistSlamSpriteSheet, 5, 60);

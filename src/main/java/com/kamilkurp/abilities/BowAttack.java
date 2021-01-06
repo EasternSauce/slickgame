@@ -66,7 +66,6 @@ public class BowAttack extends Attack {
     public static BowAttack newInstance(Creature abilityCreature) {
         BowAttack ability = new BowAttack(abilityCreature);
         ability.init();
-        ability.setTimerStartingPosition();
         return ability;
     }
 

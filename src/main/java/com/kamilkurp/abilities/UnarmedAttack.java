@@ -65,8 +65,6 @@ public class UnarmedAttack extends MeleeAttack {
         UnarmedAttack ability = new UnarmedAttack(abilityCreature);
 
         ability.init();
-        ability.setTimerStartingPosition();
-
 
         return ability;
     }

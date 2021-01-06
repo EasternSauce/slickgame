@@ -29,12 +29,12 @@ public class PlayerRespawnPoint {
         this.rect = new Rectangle(posX, posY, width, height);
 
         respawnSetTimer = new Timer();
-        respawnSetTimer.setTime(respawnSetTime);
+        respawnSetTimer.setElapsed(respawnSetTime);
 
     }
 
     public void render(Graphics g, Camera camera) {
-        if (respawnSetTimer.getTime() < respawnSetTime) {
+        if (respawnSetTimer.getElapsed() < respawnSetTime) {
             g.setColor(Color.red);
         }
         else {

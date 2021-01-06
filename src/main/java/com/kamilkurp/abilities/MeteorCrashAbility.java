@@ -58,7 +58,7 @@ public class MeteorCrashAbility extends Ability {
     protected void onUpdateActive(int i) {
 
         for (Meteor meteor : meteors) {
-            if (!meteor.isStarted() && activeTimer.getTime() > meteor.getStartTime()) {
+            if (!meteor.isStarted() && activeTimer.getElapsed() > meteor.getStartTime()) {
                 meteor.start();
             }
 
@@ -68,7 +68,7 @@ public class MeteorCrashAbility extends Ability {
 
 
                 if (meteor.getState() == AbilityState.ABILITY_CHANNELING) {
-                    if (meteor.getChannelTimer().getTime() > meteor.getChannelTime()) {
+                    if (meteor.getChannelTimer().getElapsed() > meteor.getChannelTime()) {
                         meteor.setState(AbilityState.ABILITY_ACTIVE);
                         Assets.explosionSound.play(1.0f, 0.03f);
                         meteor.getExplosionAnimation().restart();
@@ -78,7 +78,7 @@ public class MeteorCrashAbility extends Ability {
                     }
                 }
                 if (meteor.getState() == AbilityState.ABILITY_ACTIVE) {
-                    if (meteor.getActiveTimer().getTime() > meteor.getActiveTime()) {
+                    if (meteor.getActiveTimer().getElapsed() > meteor.getActiveTime()) {
                         meteor.setState(AbilityState.ABILITY_INACTIVE);
                     }
                 }
@@ -92,7 +92,7 @@ public class MeteorCrashAbility extends Ability {
             if (creature == this.abilityCreature) continue;
 
             for (Meteor meteor : meteors) {
-                if (meteor.getState() == AbilityState.ABILITY_ACTIVE && Globals.distance(meteor.getPos(), creature.getRect()) < meteor.getExplosionRange() + creature.getRect().getWidth() / 2f && meteor.getActiveTimer().getTime() < 200f) {
+                if (meteor.getState() == AbilityState.ABILITY_ACTIVE && Globals.distance(meteor.getPos(), creature.getRect()) < meteor.getExplosionRange() + creature.getRect().getWidth() / 2f && meteor.getActiveTimer().getElapsed() < 200f) {
                     if (!(this.abilityCreature instanceof Mob && creature instanceof Mob) && creature.isAlive()) { // mob can't hurt a mob?
                         if (!creature.isImmune()) {
                             creature.takeDamage(50f, true, 0, 0, 0);
@@ -149,7 +149,6 @@ public class MeteorCrashAbility extends Ability {
     public static MeteorCrashAbility newInstance(Creature abilityCreature) {
         MeteorCrashAbility ability = new MeteorCrashAbility(abilityCreature);
         ability.init();
-        ability.setTimerStartingPosition();
         return ability;
     }
 }
