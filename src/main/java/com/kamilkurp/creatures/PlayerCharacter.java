@@ -101,7 +101,7 @@ public class PlayerCharacter extends Creature {
 
 
         if (Mouse.isButtonDown(0)) {
-            if (!effectMap.get("immobility").isActive()) {
+            if (!effectMap.get("immobilized").isActive()) {
                 if (currentAttack.canPerform()) {
                     currentAttack.perform();
                 }
@@ -202,8 +202,6 @@ public class PlayerCharacter extends Creature {
 
             gameSystem.getCurrentAreaHolder().setCurrentArea(currentRespawnPoint.getArea());
             gameSystem.resetArea();
-
-            poisoned = false;
 
             gameSystem.stopBossBattleMusic();
         }

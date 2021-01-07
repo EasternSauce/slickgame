@@ -66,7 +66,6 @@ public abstract class Creature {
     protected Timer healthRegenTimer;
     protected Timer staminaRegenTimer;
     protected Timer poisonTickTimer;
-    protected Timer poisonTimer;
 
     protected Area area;
 
@@ -100,8 +99,6 @@ public abstract class Creature {
     protected int staminaOveruseTime = 1300;
 
     protected boolean staminaOveruse;
-
-    protected boolean poisoned;
 
     protected int poisonTickTime = 1500;
 
@@ -187,14 +184,10 @@ public abstract class Creature {
 
         attackingVector = new Vector2f(0f, 0f);
 
-        poisonTickTimer = new Timer();
-        poisonTimer = new Timer();
+        healingTimer = new Timer(true);
+        healingTickTimer = new Timer(true);
+        poisonTickTimer = new Timer(true);
 
-        poisonTickTimer.setElapsed(poisonTickTime);
-        poisonTimer.setElapsed(poisonTime);
-
-        healingTimer = new Timer();
-        healingTickTimer = new Timer();
         healing = false;
 
         healingPower = 0f;
@@ -217,9 +210,10 @@ public abstract class Creature {
 
         effectMap = new HashMap<>();
 
-        effectMap.put("immunityFrames", new Effect(this));
-        effectMap.put("immobility", new Effect(this));
+        effectMap.put("immune", new Effect(this));
+        effectMap.put("immobilized", new Effect(this));
         effectMap.put("staminaRegenStopped", new Effect(this));
+        effectMap.put("poisoned", new Effect(this));
     }
 
     public void defineStandardAbilities() {
@@ -267,7 +261,7 @@ public abstract class Creature {
                 sprite.rotate(90f);
             }
             sprite.draw(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight());
-            if (isAlive() && isImmune() && (effectMap.get("immunityFrames").getRemainingTime() % 250) < 125) {
+            if (isAlive() && isImmune() && (effectMap.get("immune").getRemainingTime() % 250) < 125) {
                 sprite.draw(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight(), Color.red);
             }
             else {
@@ -275,7 +269,7 @@ public abstract class Creature {
 
             }
         } else {
-            if (isAlive() && isImmune() && (effectMap.get("immunityFrames").getRemainingTime() % 250) < 125) {
+            if (isAlive() && isImmune() && (effectMap.get("immune").getRemainingTime() % 250) < 125) {
                 walkAnimation.getAnimation(direction).draw((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight(), Color.red);
             }
             else {
@@ -373,13 +367,10 @@ public abstract class Creature {
             }
         }
 
-        if (poisoned) {
+        if (getEffect("poisoned").isActive()) {
             if (poisonTickTimer.getElapsed() > poisonTickTime) {
                 takeDamage(15f, false, 0, 0, 0);
                 poisonTickTimer.reset();
-            }
-            if (poisonTimer.getElapsed() > poisonTime) {
-                poisoned = false;
             }
         }
 
@@ -424,9 +415,8 @@ public abstract class Creature {
     protected abstract void setFacingDirection(GameContainer gc);
 
     public void becomePoisoned() {
-        poisoned = true;
         poisonTickTimer.reset();
-        poisonTimer.reset();
+        getEffect("poisoned").applyEffect(poisonTime);
     }
 
     public void takeDamage(float damage, boolean immunityFrames, float knockbackPower, float sourceX, float sourceY) {
@@ -444,12 +434,13 @@ public abstract class Creature {
                 onDeath();
             }
 
-            // immunity frames on hit
-            effectMap.get("immunityFrames").applyEffect(750);
+            if (immunityFrames) {
+                // immunity frames on hit
+                effectMap.get("immune").applyEffect(750);
 
-            // stagger on hit
-            effectMap.get("immobility").applyEffect(350);
-
+                // stagger on hit
+                effectMap.get("immobilized").applyEffect(350);
+            }
 
             if (knocbackable && !knockback && knockbackPower > 0f) {
                 this.knockbackPower = knockbackPower;
@@ -620,7 +611,7 @@ public abstract class Creature {
     public void executeMovementLogic() {
         List<TerrainTile> tiles = area.getTiles();
 
-        if (!isEffectActive("immobility") && !knockback) {
+        if (!isEffectActive("immobilized") && !knockback) {
             if (totalDirections > 1) {
                 speed /= Math.sqrt(2);
             }
@@ -831,7 +822,7 @@ public abstract class Creature {
     }
 
     public boolean isImmune() {
-        return isEffectActive("immunityFrames");
+        return isEffectActive("immune");
     }
 
     public void setStartingPosX(float startingPosX) {

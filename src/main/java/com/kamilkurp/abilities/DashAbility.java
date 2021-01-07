@@ -70,7 +70,7 @@ public class DashAbility extends Ability {
 
     @Override
      protected void onActiveStart() {
-        abilityCreature.getEffect("immobility").applyEffect(channelTime + activeTime);
+        abilityCreature.getEffect("immobilized").applyEffect(channelTime + activeTime);
 
         abilityCreature.takeStaminaDamage(15f);
     }

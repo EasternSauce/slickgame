@@ -78,7 +78,7 @@ public abstract class Boss extends Mob {
                 onDeath();
             }
 
-            effectMap.get("immunityFrames").applyEffect(500);
+            effectMap.get("immune").applyEffect(500);
 
             if (knocbackable && !knockback && knockbackPower > 0f) {
                 this.knockbackPower = knockbackPower;

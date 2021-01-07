@@ -91,7 +91,7 @@ public class MeteorRainAbility extends Ability {
 
     @Override
     public void onChannellingStart() {
-        abilityCreature.getEffect("immobility").applyEffect(channelTime + activeTime);
+        abilityCreature.getEffect("immobilized").applyEffect(channelTime + activeTime);
 
         Rectangle rect = abilityCreature.getRect();
 

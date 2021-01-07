@@ -108,7 +108,7 @@ public class MeteorCrashAbility extends Ability {
 
     @Override
     public void onChannellingStart() {
-        abilityCreature.getEffect("immobility").applyEffect(channelTime + activeTime);
+        abilityCreature.getEffect("immobilized").applyEffect(channelTime + activeTime);
 
     }
 
