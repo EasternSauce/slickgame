@@ -23,11 +23,6 @@ public abstract class Boss extends Mob {
     }
 
     @Override
-    public String getCreatureType() {
-        return null;
-    }
-
-    @Override
     public void onAggroed() {
         if (!bossBattleStarted) {
             bossBattleStarted = true;
@@ -83,10 +78,7 @@ public abstract class Boss extends Mob {
                 onDeath();
             }
 
-            if (immunityFrames) {
-                immunityTimer.reset();
-                immune = true;
-            }
+            effectMap.get("immunityFrames").applyEffect(500);
 
             if (knocbackable && !knockback && knockbackPower > 0f) {
                 this.knockbackPower = knockbackPower;

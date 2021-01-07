@@ -6,6 +6,7 @@ import com.kamilkurp.abilities.*;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.areagate.AreaGate;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.effect.Effect;
 import com.kamilkurp.items.Item;
 import com.kamilkurp.items.ItemType;
 import com.kamilkurp.spawn.Blockade;
@@ -31,10 +32,6 @@ public abstract class Creature {
 
     protected boolean running = false;
 
-//    protected boolean attacking = false;
-
-    private final Sound gruntSound = Assets.painSound;
-
     protected int direction = 0;
 
 
@@ -54,10 +51,6 @@ public abstract class Creature {
 
     protected float maxStaminaPoints = 100f;
     protected float staminaPoints = maxStaminaPoints;
-
-    protected Timer immunityTimer;
-
-    protected boolean immune;
 
     protected Vector2f facingVector;
     protected Vector2f attackingVector;
@@ -157,6 +150,10 @@ public abstract class Creature {
 
     protected float baseSpeed;
 
+    protected String creatureType;
+
+    protected Map<String, Effect> effectMap;
+
 
     public Creature(GameSystem gameSystem, String id) {
         this.gameSystem = gameSystem;
@@ -167,7 +164,6 @@ public abstract class Creature {
         walkAnimation = new WalkAnimation(Assets.male1SpriteSheet, 3, 100, new int[]{3, 1, 0, 2}, 1);
 
         runningTimer = new Timer();
-        immunityTimer = new Timer();
         healthRegenTimer = new Timer();
         staminaRegenTimer = new Timer();
         knockbackTimer = new Timer();
@@ -222,6 +218,10 @@ public abstract class Creature {
         onGettingHitSound = Assets.painSound;
 
         baseSpeed = 0.2f;
+
+        effectMap = new HashMap<>();
+
+        effectMap.put("immunityFrames", new Effect("immunityFrames", this));
     }
 
     public void defineStandardAbilities() {
@@ -263,12 +263,13 @@ public abstract class Creature {
             g.fillRect(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight());
         }
 
+
         if (!running) {
             if (!isAlive()) {
                 sprite.rotate(90f);
             }
             sprite.draw(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight());
-            if (isAlive() && immune && (immunityTimer.getElapsed() % 250) < 125) {
+            if (isAlive() && isImmune() && (effectMap.get("immunityFrames").getRemainingTime() % 250) < 125) {
                 sprite.draw(rect.getX() - camera.getPosX(), rect.getY() - camera.getPosY(), rect.getWidth(), rect.getHeight(), Color.red);
             }
             else {
@@ -276,7 +277,7 @@ public abstract class Creature {
 
             }
         } else {
-            if (isAlive() && immune && (immunityTimer.getElapsed() % 250) < 125) {
+            if (isAlive() && isImmune() && (effectMap.get("immunityFrames").getRemainingTime() % 250) < 125) {
                 walkAnimation.getAnimation(direction).draw((int) rect.getX() - (int) camera.getPosX(), (int) rect.getY() - (int) camera.getPosY(), rect.getWidth(), rect.getHeight(), Color.red);
             }
             else {
@@ -321,6 +322,10 @@ public abstract class Creature {
             }
 
             currentAttack.update(i);
+        }
+
+        for (Effect effect : effectMap.values()) {
+            effect.update();
         }
 
 
@@ -441,10 +446,7 @@ public abstract class Creature {
                 onDeath();
             }
 
-            if (immunityFrames) {
-                immunityTimer.reset();
-                immune = true;
-            }
+            effectMap.get("immunityFrames").applyEffect(500);
 
             if (knocbackable && !knockback && knockbackPower > 0f) {
                 this.knockbackPower = knockbackPower;
@@ -808,8 +810,6 @@ public abstract class Creature {
         return toBeRemoved;
     }
 
-    abstract public String getCreatureType();
-
     public Float getPendingX() {
         return pendingX;
     }
@@ -840,7 +840,7 @@ public abstract class Creature {
     }
 
     public boolean isImmune() {
-        return immune;
+        return effectMap.get("immunityFrames").isActive();
     }
 
     public void setStartingPosX(float startingPosX) {
@@ -889,7 +889,7 @@ public abstract class Creature {
 
     public String getName() {
         if (name != null) return name;
-        return id;
+        return creatureType;
     }
 
     public void onAggroed() {

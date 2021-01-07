@@ -15,10 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 public class BowAttack extends Attack {
-    protected AbilityAnimation swordAbilityAnimation;
-    private final Sound bowReleaseSound = Assets.bowReleaseSound;
-    private final Sound bowPullSound = Assets.bowPullSound;
-
 
     private BowAttack(Creature abilityCreature) {
         super(abilityCreature);
@@ -36,7 +32,7 @@ public class BowAttack extends Attack {
     @Override
     protected void onActiveStart() {
 
-        bowReleaseSound.play(1.0f, 0.1f);
+        Assets.bowReleaseSound.play(1.0f, 0.1f);
 
         abilityCreature.setAttackingVector(abilityCreature.getFacingVector());
 
@@ -59,7 +55,7 @@ public class BowAttack extends Attack {
 
     @Override
     public void onChannellingStart() {
-        bowPullSound.play(1.0f, 0.3f);
+        Assets.bowPullSound.play(1.0f, 0.3f);
         abilityCreature.setAttacking(true);
     }
 

@@ -36,6 +36,8 @@ public class Wolf extends Mob {
 
         onGettingHitSound = Assets.dogWhimperSound;
 
+        creatureType = "wolf";
+
     }
 
     @Override
@@ -47,11 +49,6 @@ public class Wolf extends Mob {
         abilityList.add(dashAbility);
 
         updateAttackType();
-    }
-
-    @Override
-    public String getCreatureType() {
-        return "wolf";
     }
 
     @Override

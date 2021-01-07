@@ -74,14 +74,6 @@ public abstract class Mob extends Creature {
         if (runningTimer.getElapsed() > 200) {
             running = false;
         }
-
-//        if (attackingTimer.getTime() > 300) {
-//            attacking = false;
-//        }
-
-        if (immunityTimer.getElapsed() > 500) {
-            immune = false;
-        }
     }
 
     @Override

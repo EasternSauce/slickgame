@@ -5,6 +5,7 @@ import com.kamilkurp.KeyInput;
 import com.kamilkurp.abilities.Ability;
 import com.kamilkurp.abilities.DashAbility;
 import com.kamilkurp.assets.Assets;
+import com.kamilkurp.effect.Effect;
 import com.kamilkurp.spawn.PlayerRespawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.terrain.Area;
@@ -46,6 +47,8 @@ public class PlayerCharacter extends Creature {
         hitbox = new Rectangle(17 * scale, 15 * scale, 30 * scale, 46 * scale);
 
         respawnTimer = new Timer();
+
+        creatureType = "playerCharacter";
 
     }
 
@@ -113,11 +116,6 @@ public class PlayerCharacter extends Creature {
     }
 
     @Override
-    public String getCreatureType() {
-        return "playerCharacter";
-    }
-
-    @Override
     public void onInit() {
         currentRespawnPoint = area.getRespawnList().get(0);
         respawning = false;
@@ -149,7 +147,6 @@ public class PlayerCharacter extends Creature {
 
     @Override
     public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
-//        System.out.println("character pos: " + rect.getX() + " " + rect.getY());
 
         if (isAlive()) {
             onUpdateStart(i);
@@ -182,12 +179,12 @@ public class PlayerCharacter extends Creature {
                 running = false;
             }
 
-            if (immunityTimer.getElapsed() > 500) {
-                immune = false;
-            }
-
         } else {
             stepSound.stop();
+        }
+
+        for (Effect effect : effectMap.values()) {
+            effect.update();
         }
 
         if (respawning && respawnTimer.getElapsed() > 3000f) {
@@ -291,7 +288,6 @@ public class PlayerCharacter extends Creature {
         respawnTimer.reset();
         respawning = true;
         running = false;
-        immune = false;
 
         for (Ability ability : abilityList) {
             ability.stopAbility();

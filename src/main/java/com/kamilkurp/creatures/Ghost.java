@@ -40,6 +40,8 @@ public class Ghost extends Mob {
 
         baseSpeed = 0.3f;
 
+        creatureType = "ghost";
+
         setMaxHealthPoints(600f);
         setHealthPoints(getMaxHealthPoints());
 
@@ -74,11 +76,6 @@ public class Ghost extends Mob {
     }
 
     @Override
-    public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
-        super.update(gc, i, keyInput, gameSystem);
-    }
-
-    @Override
     public void onDeath() {
         gameSystem.getLootSystem().spawnLootPile(area, rect.getCenterX(), rect.getCenterY(), dropTable);
 
@@ -90,8 +87,4 @@ public class Ghost extends Mob {
         currentAttack.stopAbility();
     }
 
-    @Override
-    public String getCreatureType() {
-        return "ghost";
-    }
 }

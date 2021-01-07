@@ -40,6 +40,8 @@ public class NonPlayerCharacter extends Creature {
 
         walkAnimation = new WalkAnimation(spriteSheet, 3, 100, new int [] {3,1,0,2}, 1);
 
+        creatureType = "nonPlayerCharacter";
+
         dropTable.put("lifeRing", 0.05f);
         dropTable.put("poisonDagger", 0.08f);
         dropTable.put("healingPowder", 0.3f);
@@ -71,29 +73,12 @@ public class NonPlayerCharacter extends Creature {
     }
 
     @Override
-    public String getCreatureType() {
-        return "nonPlayerCharacter";
-    }
-
-    @Override
     public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
         super.update(gc, i, keyInput, gameSystem);
-
-        // CHANGE THESE to only update once...
 
         if (runningTimer.getElapsed() > 200) {
             running = false;
         }
-
-//        if (attackingTimer.getTime() > 300) {
-//            attacking = false;
-//        }
-
-        if (immunityTimer.getElapsed() > 500) {
-            immune = false;
-        }
-
-
     }
 
     @Override

@@ -30,6 +30,8 @@ public class Skeleton extends Mob {
 
         onGettingHitSound = Assets.boneClickSound;
 
+        creatureType = "skeleton";
+
         setMaxHealthPoints(200f);
         setHealthPoints(getMaxHealthPoints());
 
@@ -37,14 +39,4 @@ public class Skeleton extends Mob {
 
     }
 
-    @Override
-    public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
-        super.update(gc, i, keyInput, gameSystem);
-    }
-
-
-    @Override
-    public String getCreatureType() {
-        return "skeleton";
-    }
 }

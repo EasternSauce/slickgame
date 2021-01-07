@@ -56,6 +56,8 @@ public class FireDemon extends Boss {
 
         baseSpeed = 0.15f;
 
+        creatureType = "fireDemon";
+
     }
 
     @Override
@@ -99,11 +101,6 @@ public class FireDemon extends Boss {
         abilityList.add(fistSlamAbility);
         abilityList.add(meteorCrashAbility);
         abilityList.add(dashAbility);
-    }
-
-    @Override
-    public String getCreatureType() {
-        return "fireDemon";
     }
 
     @Override

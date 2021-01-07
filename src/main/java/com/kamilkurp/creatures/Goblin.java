@@ -33,6 +33,8 @@ public class Goblin extends Mob {
 
         baseSpeed = 0.3f;
 
+        creatureType = "goblin";
+
         setMaxHealthPoints(300f);
         setHealthPoints(getMaxHealthPoints());
 
@@ -40,13 +42,4 @@ public class Goblin extends Mob {
 
     }
 
-    @Override
-    public void update(GameContainer gc, int i, KeyInput keyInput, GameSystem gameSystem) {
-        super.update(gc, i, keyInput, gameSystem);
-    }
-
-    @Override
-    public String getCreatureType() {
-        return "goblin";
-    }
 }
