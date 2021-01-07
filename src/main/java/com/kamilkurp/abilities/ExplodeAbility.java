@@ -27,7 +27,7 @@ public class ExplodeAbility extends Ability {
 
         explosionAnimation = new AbilityAnimation(Assets.explosionSpriteSheet, 20, 100);
 
-        explosionRange = 200f;
+        explosionRange = 300f;
     }
 
     @Override

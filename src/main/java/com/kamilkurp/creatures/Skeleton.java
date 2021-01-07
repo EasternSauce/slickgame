@@ -1,12 +1,10 @@
 package com.kamilkurp.creatures;
 
-import com.kamilkurp.KeyInput;
 import com.kamilkurp.animations.WalkAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.spawn.MobSpawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
@@ -37,6 +35,7 @@ public class Skeleton extends Mob {
 
         grantWeapon(weapon);
 
+        baseSpeed = 0.3f;
     }
 
 }

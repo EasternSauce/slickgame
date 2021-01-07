@@ -1,6 +1,5 @@
 package com.kamilkurp.creatures;
 
-import com.kamilkurp.KeyInput;
 import com.kamilkurp.abilities.Ability;
 import com.kamilkurp.abilities.ExplodeAbility;
 import com.kamilkurp.animations.WalkAnimation;
@@ -8,16 +7,12 @@ import com.kamilkurp.assets.Assets;
 import com.kamilkurp.spawn.MobSpawnPoint;
 import com.kamilkurp.systems.GameSystem;
 import com.kamilkurp.utils.Timer;
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
 
 public class Ghost extends Mob {
-    private Sound darkLaughSound = Assets.darkLaughSound;
-    private Sound evilYellingSound = Assets.evilYellingSound;
 
-    ExplodeAbility explodeAbility;
+    private ExplodeAbility explodeAbility;
 
     public Ghost(GameSystem gameSystem, MobSpawnPoint mobSpawnPoint, String id, String weapon) throws SlickException {
         super(gameSystem, mobSpawnPoint, id);
@@ -38,7 +33,7 @@ public class Ghost extends Mob {
 
         onGettingHitSound = Assets.evilYellingSound;
 
-        baseSpeed = 0.3f;
+        baseSpeed = 0.35f;
 
         creatureType = "ghost";
 
@@ -69,7 +64,7 @@ public class Ghost extends Mob {
         defineStandardAbilities();
 
         explodeAbility = ExplodeAbility.newInstance(this);
-        explodeAbility.onStartChannelAction(() -> { darkLaughSound.play(1.0f, 0.1f); });
+        explodeAbility.onStartChannelAction(() -> { Assets.darkLaughSound.play(1.0f, 0.1f); });
         abilityList.add(explodeAbility);
 
         updateAttackType();

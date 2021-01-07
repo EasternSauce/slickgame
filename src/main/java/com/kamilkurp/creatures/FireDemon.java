@@ -54,7 +54,7 @@ public class FireDemon extends Boss {
 
         onGettingHitSound = Assets.roarSound;
 
-        baseSpeed = 0.15f;
+        baseSpeed = 0.1f;
 
         creatureType = "fireDemon";
 

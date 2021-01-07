@@ -79,7 +79,6 @@ public class UnarmedAttack extends MeleeAttack {
                     if (!creature.isImmune()) {
                         creature.takeDamage(this.abilityCreature.getUnarmedDamage(), true, 0.3f, abilityCreature.getRect().getCenterX(), abilityCreature.getRect().getCenterY());
                         abilityCreature.onAttack();
-                        Assets.bloodSquirtSound.play(1.0f, 0.05f);
                     }
                 }
             }

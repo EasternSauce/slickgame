@@ -164,6 +164,7 @@ public abstract class Creature {
         knockbackTimer = new Timer();
 
         staminaRegenTimer.start();
+        healthRegenTimer.start();
 
         facingVector = new Vector2f(0f, 0f);
 
@@ -313,17 +314,17 @@ public abstract class Creature {
             setFacingDirection(gc);
 
             regenerate();
-
-            for (Ability ability : abilityList) {
-                ability.update(i);
-            }
-
-            currentAttack.update(i);
         }
 
         for (Effect effect : effectMap.values()) {
             effect.update();
         }
+
+        for (Ability ability : abilityList) {
+            ability.update(i);
+        }
+
+        currentAttack.update(i);
 
 
 
@@ -444,7 +445,7 @@ public abstract class Creature {
             }
 
             // immunity frames on hit
-            effectMap.get("immunityFrames").applyEffect(500);
+            effectMap.get("immunityFrames").applyEffect(750);
 
             // stagger on hit
             effectMap.get("immobility").applyEffect(350);

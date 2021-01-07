@@ -1,6 +1,5 @@
 package com.kamilkurp.abilities;
 
-import com.kamilkurp.animations.AbilityAnimation;
 import com.kamilkurp.assets.Assets;
 import com.kamilkurp.creatures.AttackType;
 import com.kamilkurp.creatures.Creature;
@@ -8,7 +7,6 @@ import com.kamilkurp.projectile.Arrow;
 import com.kamilkurp.terrain.TerrainTile;
 import com.kamilkurp.utils.Camera;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Vector2f;
 
 import java.util.List;

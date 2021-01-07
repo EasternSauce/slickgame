@@ -38,6 +38,8 @@ public class Wolf extends Mob {
 
         creatureType = "wolf";
 
+        baseSpeed = 0.3f;
+
     }
 
     @Override
