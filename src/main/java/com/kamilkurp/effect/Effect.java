@@ -8,18 +8,14 @@ public class Effect {
 
     protected boolean effectActive;
 
-    protected String effectName;
-
     protected Timer effectTimer;
 
     protected int effectEndTime = 0;
 
-    public Effect(String effectName, Creature creature) {
+    public Effect(Creature creature) {
         this.effectCreature = creature;
 
         effectActive = false;
-
-        this.effectName = effectName;
 
         effectTimer = new Timer();
     }
@@ -52,5 +48,10 @@ public class Effect {
         return effectEndTime - effectTimer.getElapsed();
     }
 
-
+    public void stop() {
+        effectActive = false;
+        effectEndTime = 0;
+        effectTimer.stop();
+        effectTimer.reset();
+    }
 }

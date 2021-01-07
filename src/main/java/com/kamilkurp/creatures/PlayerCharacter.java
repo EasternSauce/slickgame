@@ -49,7 +49,6 @@ public class PlayerCharacter extends Creature {
         respawnTimer = new Timer();
 
         creatureType = "playerCharacter";
-
     }
 
 
@@ -102,7 +101,7 @@ public class PlayerCharacter extends Creature {
 
 
         if (Mouse.isButtonDown(0)) {
-            if (!immobilized) {
+            if (!effectMap.get("immobility").isActive()) {
                 if (currentAttack.canPerform()) {
                     currentAttack.perform();
                 }
@@ -189,7 +188,7 @@ public class PlayerCharacter extends Creature {
 
         if (respawning && respawnTimer.getElapsed() > 3000f) {
             respawning = false;
-            //setPosition(currentRespawnPoint.getPosX(), currentRespawnPoint.getPosY());
+
             pendingArea = currentRespawnPoint.getArea();
             pendingX = (float)currentRespawnPoint.getPosX();
             pendingY = (float)currentRespawnPoint.getPosY();
@@ -198,9 +197,8 @@ public class PlayerCharacter extends Creature {
             setStaminaPoints(getMaxStaminaPoints());
             isAttacking = false;
             staminaOveruse = false;
-            immobilized = false;
-            startStaminaRegen();
 
+            effectMap.get("staminaRegenStopped").stop();
 
             gameSystem.getCurrentAreaHolder().setCurrentArea(currentRespawnPoint.getArea());
             gameSystem.resetArea();
@@ -274,7 +272,7 @@ public class PlayerCharacter extends Creature {
             staminaDrain += i;
         }
         else {
-            speed = 0.2f * i;
+            speed = baseSpeed * i;
         }
 
         if (isAttacking) {

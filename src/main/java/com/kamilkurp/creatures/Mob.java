@@ -201,7 +201,7 @@ public abstract class Mob extends Creature {
             walkTowards(destinationX, destinationY);
         }
 
-        if (!immobilized) {
+        if (!effectMap.get("immobility").isActive()) {
             if (Globals.distance(aggroed.getRect(), this.getRect()) < (attackDistance == null ? attackType.attackDistance : attackDistance)) {
                 performCombatAbilities();
             }
@@ -253,7 +253,7 @@ public abstract class Mob extends Creature {
             actionTimer.reset();
         }
 
-        if (!stayInPlace && !immobilized) {
+        if (!stayInPlace && !effectMap.get("immobility").isActive()) {
             if (currentDirection == 0) {
                 moveUp();
             }

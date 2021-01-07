@@ -63,7 +63,7 @@ public class ExplodeAbility extends Ability {
 
     @Override
     public void onChannellingStart() {
-        abilityCreature.setImmobilized(true);
+        abilityCreature.getEffect("immobility").applyEffect(channelTime + activeTime);
 
     }
 

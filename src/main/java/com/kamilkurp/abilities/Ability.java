@@ -73,18 +73,8 @@ public abstract class Ability {
 
 
         if (state == AbilityState.ABILITY_INACTIVE && onCooldown) {
-            if (!abilityCreature.isStaminaOveruse()) {
-                if (!isAttack) {
-                    if (activeTimer.getElapsed() > 1000f) {
-                        abilityCreature.startStaminaRegen();
-                    }
-                }
-            }
             if (activeTimer.getElapsed() > cooldownTime) {
                 onCooldown = false;
-                if (isAttack) {
-                    abilityCreature.startStaminaRegen();
-                }
             }
         }
     }
@@ -122,7 +112,15 @@ public abstract class Ability {
         onChannellingStart();
         onChannelAction.execute();
 
-        abilityCreature.stopStaminaRegen();
+
+        if (isAttack) {
+            // + 10 to ensure regen doesnt start if we hold attack button
+            abilityCreature.getEffect("staminaRegenStopped").applyEffect(channelTime + cooldownTime + 10);
+        }
+        else {
+            abilityCreature.getEffect("staminaRegenStopped").applyEffect(1000);
+
+        }
     }
 
     protected void onActiveStart() {

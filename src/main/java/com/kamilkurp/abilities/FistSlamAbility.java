@@ -89,7 +89,7 @@ public class FistSlamAbility extends Ability {
 
     @Override
     public void onChannellingStart() {
-        abilityCreature.setImmobilized(true);
+        abilityCreature.getEffect("immobility").applyEffect(channelTime + activeTime);
 
         Rectangle rect = abilityCreature.getRect();
 
@@ -128,11 +128,6 @@ public class FistSlamAbility extends Ability {
                 }
             }
         }
-    }
-
-    @Override
-    protected void onStop() {
-        abilityCreature.setImmobilized(false);
     }
 
     public static FistSlamAbility newInstance(Creature abilityCreature) {

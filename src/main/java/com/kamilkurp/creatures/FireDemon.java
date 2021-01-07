@@ -63,7 +63,7 @@ public class FireDemon extends Boss {
     @Override
     public void performCombatAbilities() {
 
-        if (!immobilized && isNoAbilityActive() && aggroed != null) {
+        if (!effectMap.get("immobility").isActive() && isNoAbilityActive() && aggroed != null) {
             if (meteorRainAbility.canPerform() && healthPoints < maxHealthPoints * 0.7) {
                 meteorRainAbility.perform();
                 Assets.monsterGrowlSound.play(1.0f, 0.5f);

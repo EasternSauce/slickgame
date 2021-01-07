@@ -81,9 +81,6 @@ public abstract class Creature {
 
     protected GameSystem gameSystem;
 
-
-    protected boolean immobilized = false;
-
     protected List<Ability> abilityList;
     protected List<Attack> attackList;
 
@@ -119,8 +116,6 @@ public abstract class Creature {
 
     protected int healingTime = 8000;
     private float healingPower;
-
-    private boolean staminaRegenActive = true;
 
     protected boolean knockback = false;
     protected Timer knockbackTimer;
@@ -221,7 +216,9 @@ public abstract class Creature {
 
         effectMap = new HashMap<>();
 
-        effectMap.put("immunityFrames", new Effect("immunityFrames", this));
+        effectMap.put("immunityFrames", new Effect(this));
+        effectMap.put("immobility", new Effect(this));
+        effectMap.put("staminaRegenStopped", new Effect(this));
     }
 
     public void defineStandardAbilities() {
@@ -359,7 +356,7 @@ public abstract class Creature {
             healthRegenTimer.reset();
         }
 
-        if (staminaRegenActive && !sprinting) {
+        if (!isEffectActive("staminaRegenStopped") && !sprinting) {
             if (staminaRegenTimer.getElapsed() > 250f && !isAbilityActive() && !staminaOveruse) {
                 if (getStaminaPoints() < getMaxStaminaPoints()) {
                     float afterRegen = getStaminaPoints() + staminaRegen;
@@ -446,7 +443,12 @@ public abstract class Creature {
                 onDeath();
             }
 
+            // immunity frames on hit
             effectMap.get("immunityFrames").applyEffect(500);
+
+            // stagger on hit
+            effectMap.get("immobility").applyEffect(350);
+
 
             if (knocbackable && !knockback && knockbackPower > 0f) {
                 this.knockbackPower = knockbackPower;
@@ -617,7 +619,7 @@ public abstract class Creature {
     public void executeMovementLogic() {
         List<TerrainTile> tiles = area.getTiles();
 
-        if (!immobilized && !knockback) {
+        if (!isEffectActive("immobility") && !knockback) {
             if (totalDirections > 1) {
                 speed /= Math.sqrt(2);
             }
@@ -716,10 +718,6 @@ public abstract class Creature {
         pendingY = posY;
     }
 
-    public void setImmobilized(boolean immobilized) {
-        this.immobilized = immobilized;
-    }
-
     public void takeStaminaDamage(float staminaDamage) {
         if (staminaPoints - staminaDamage > 0) staminaPoints -= staminaDamage;
         else {
@@ -741,14 +739,6 @@ public abstract class Creature {
         healingTickTimer.reset();
         healing = true;
         this.healingPower = healingPower;
-    }
-
-    public void stopStaminaRegen() {
-        staminaRegenActive = false;
-    }
-
-    public void startStaminaRegen() {
-        staminaRegenActive = true;
     }
 
     public void reset() {
@@ -840,7 +830,7 @@ public abstract class Creature {
     }
 
     public boolean isImmune() {
-        return effectMap.get("immunityFrames").isActive();
+        return isEffectActive("immunityFrames");
     }
 
     public void setStartingPosX(float startingPosX) {
@@ -898,5 +888,13 @@ public abstract class Creature {
 
     public boolean isBoss() {
         return isBoss;
+    }
+
+    public Effect getEffect(String effectName) {
+        return effectMap.get(effectName);
+    }
+
+    public boolean isEffectActive(String effect) {
+        return effectMap.get(effect).isActive();
     }
 }

@@ -91,7 +91,7 @@ public class MeteorRainAbility extends Ability {
 
     @Override
     public void onChannellingStart() {
-        abilityCreature.setImmobilized(true);
+        abilityCreature.getEffect("immobility").applyEffect(channelTime + activeTime);
 
         Rectangle rect = abilityCreature.getRect();
 
@@ -130,11 +130,6 @@ public class MeteorRainAbility extends Ability {
                 }
             }
         }
-    }
-
-    @Override
-    protected void onStop() {
-        abilityCreature.setImmobilized(false);
     }
 
     public static MeteorRainAbility newInstance(Creature abilityCreature) {
